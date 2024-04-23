@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block mytitle %}
+        {% endblock %}
+    </title>
+</head>
+<body>
+    <div id="nav">
+        <a href="home"><p >Homepage</p></a>
+        <a href="aboutme"><p>Aboutme</p></a>
+        <a href="booklist"><p>Book list</p></a>
+        <a style="color:red;" href="register"><p>Register</p></a>
+    </div>
+
+    {% block mycontent %}
+    {% endblock %}
+</body>
+</html>

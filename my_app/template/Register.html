@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block mytitle %}
+    Register
+{% endblock %}
+
+{% block mycontent %}
+
+    <form action="receive/" id="register" method="post">
+        {% csrf_token %}
+        Name <input type="text" id="user" name="name">
+        Password <input type="text" id="pwd" name="password">
+        <input type="submit">
+    </form>
+
+{% endblock %}
