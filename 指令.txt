@@ -1,0 +1,3 @@
+顯示所有指令python manage.py help
+製作數據表python manage.py migrate
+建立管理員賬號python manage.py createsuperuser
