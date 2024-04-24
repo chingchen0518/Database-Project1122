@@ -4,73 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>房屋介紹</title>
-    <style>
-        /* 您可以在這裡添加自定義的 CSS 樣式 */
-        body {
-            font-family: Arial, sans-serif;
-        }
-        .house-title {
-            font-size: 24px;
-            font-weight: bold;
-            margin-top: 20px;
-        }
-        .house-info {
-            margin-top: 20px;
-        }
-        .house-info h2 {
-            font-size: 18px;
-            font-weight: bold;
-        }
-        .house-info ul {
-            list-style: none;
-            padding: 0;
-        }
-        .house-info li {
-            margin-bottom: 10px;
-        }
-        .add-to-favorites {
-            margin-top: 20px;
-        }
-        .add-to-favorites button {
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        .detailed-info {
-            margin-top: 20px;
-        }
-        .detailed-info h2 {
-            font-size: 18px;
-            font-weight: bold;
-        }
-        .detailed-info ul {
-            list-style: none;
-            padding: 0;
-        }
-        .detailed-info li {
-            margin-bottom: 10px;
-        }
-        .features {
-            margin-top: 20px;
-        }
-        .features h2 {
-            font-size: 18px;
-            font-weight: bold;
-        }
-        .features p {
-            font-size: 14px;
-        }
-    </style>
-</head>
+<link rel="stylesheet" href="house_rent_cont.css"></head>
 <body>
-    <header>
-        <h1 class="house-title">房屋名稱</h1>
-        <!-- 其他頁面頂部元素，例如導航欄、標語等 -->
-    </header>
-    <main>
+   <div class="container">
+    <div class="short_describe">
+        <div class="objects-name-phone">
+       <div class="house-name">張三狗窩</div>
+    </div>
+        <div class="image">
+            <img src="file:///C:/Users/YOYOBILL/Downloads/A.jpg" alt="房屋">
+        </div>
         <div class="house-info">
             <h2>簡介</h2>
             <ul>
@@ -85,6 +28,9 @@
         <div class="add-to-favorites">
             <button>添加收藏</button>
         </div>
+    </div>
+</div>
+
         <div class="detailed-info">
             <h2>詳細資料</h2>
             <ul>
@@ -93,8 +39,28 @@
                 <li>Transport: <span class="transport">地鐵/火車/公車/自行車</span></li>
                 <li>Live: <span class="live">寵物/烹飪</span></li>
                 <li>Period: <span class="period">長期</span></li>
-                <li>Equipment: <span class="equipment">家電齊全</span></li>
             </ul>
+            <div>
+                Equipment: <span class="equipment"></span>
+            <ul>
+                <li><img src="../static/img/equipment_icon/balcony.png" alt="balcony"></li>
+                <li><img src="../static/img/equipment_icon/bed.png" alt="bed"></li>
+                <li><img src="../static/img/equipment_icon/closet.png" alt="closet"></li>
+                <li><img src="../static/img/equipment_icon/cold.png" alt="cold"></li>
+                <li><img src="../static/img/equipment_icon/fourth.png" alt="fourth"></li>
+                <li><img src="../static/img/equipment_icon/fridge.png" alt="fridge"></li>
+                <li><img src="../static/img/equipment_icon/gas.png" alt="gas"></li>
+                <li><img src="../static/img/equipment_icon/lift.png" alt="lift"></li>
+                <li><img src="../static/img/equipment_icon/heater.png" alt="heater"></li>
+                <li><img src="../static/img/equipment_icon/net.png" alt="net"></li>
+                <li><img src="../static/img/equipment_icon/park.png" alt="park"></li>
+                <li><img src="../static/img/equipment_icon/sofa.png" alt="sofa"></li>
+                <li><img src="../static/img/equipment_icon/table_chairs.png" alt="table chairs"></li>
+                <li><img src="../static/img/equipment_icon/tv.png" alt="tv"></li>
+                <li><img src="../static/img/equipment_icon/washer.png" alt="washer"></li>
+                <li><img src="../static/img/equipment_icon/messageImage_1713876546883.jpg" alt="monitor"></li>
+            </ul>
+            </div>
         </div>
         <div class="features">
             <h2>特色描寫</h2>
@@ -107,4 +73,5 @@
         <div class="map">
             <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3281.327868243799!2d135.72841531522985!3d34.68504748043798!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6001064a3f3e5e4b%3A0x8e2b70a2609e4266!2sKyoto%2C%20Japan!5e0!3m2!1sen!2sus!4v1631541373926!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
         </div>
-        
+</body>
+</html>

@@ -1,0 +1,86 @@
+.container {
+    display: flex;
+    flex-direction: column;
+        position: relative; /* 添加此行以確保具有絕對定位的子元素相對於此容器定位 */
+    justify-content: center; /* 水平居中對齊 */
+    align-items: center; /* 垂直居中對齊 */
+}
+
+.short_describe {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start; /* 將子元素上對齊 */
+    margin-top: 70px; /* 調整上邊距，使其往下移動 */
+}
+.image img {
+    max-width: 550px; /* 設定圖片的最大寬度 */
+    height: auto; /* 讓高度根據寬度自動調整，以保持圖片比例 */
+}
+
+.image {
+    flex: 0 0 auto; /* 圖片不會被拉伸 */
+    margin-right: 20px; /* 調整圖片和內容之間的間距 */
+
+}
+
+.house-info {
+    flex: 1; /* 其他內容占據剩餘的空間 */
+    display: flex;
+    flex-direction: column;
+}
+
+.add-to-favorites {
+    margin-top: 10px; /* 將添加收藏按鈕的上邊距設置為10px */
+}
+
+/* 將房屋名稱移到圖片上方 */
+.house-name {
+  position: absolute;
+  top: 10px; /* 調整這個數值以達到你想要的位置 */
+  left: 50%; /* 如果需要居中，可以調整這個數值 */
+  transform: translateX(-50%);
+  font-size: 16px; /* 調整字體大小 */
+  color: #ffffff; /* 字體顏色 */
+  background-color: rgba(0, 0, 0, 0.7); /* 背景顏色 */
+  padding: 5px 10px; /* 調整內邊距 */
+  border-radius: 5px; /* 圓角 */
+}
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* 水平居中對齊 */
+    align-items: center; /* 垂直居中對齊 */
+}
+.detailed-info {
+    margin-right: 80px;
+}
+.detailed-info ul {
+    width: 100%; /* 設置 ul 元素寬度為100% */
+    list-style: none; /* 去除點點符號 */
+}
+
+.detailed-info li {
+    display: inline-block; /* 將 li 元素設置為內聯塊元素 */
+    width: 48%; /* 設置 li 元素的寬度為 48%，留出 2% 作為間距 */
+    margin-right: 2%; /* 設置右邊間距 */
+    float: left; /* 將 li 元素向左浮動 */
+    box-sizing: border-box; /* 使寬度包含內邊距和邊框 */
+}
+.equipment ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.equipment li {
+    display: inline-block;
+    width: 40px; /* 圖片寬度 */
+    height: 40px; /* 圖片高度 */
+    margin-right: 10px; /* 右邊間距，可以調整 */
+    margin-bottom: 10px; /* 下邊間距，可以調整 */
+    float: left; /* 左浮動 */
+}
+
+.equipment li:nth-child(8n) {
+    clear: both; /* 每 8 個元素清除浮動，開始新的一行 */
+}
