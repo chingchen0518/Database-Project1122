@@ -12,10 +12,10 @@
        <div class="house-name">張三狗窩</div>
     </div>
         <div class="image">
-            <img src="file:///C:/Users/YOYOBILL/Downloads/A.jpg" alt="房屋">
+            <img src="../static/img/A.jpg" alt="房屋">
         </div>
         <div class="house-info">
-            <h2>簡介</h2>
+            <h2 class="house_info_title">簡介</h2>
             <ul>
                 <li>Rent Price: <span class="price">¥100,000</span></li>
                 <li>Address: <span class="address">東京都千代田区</span></li>
@@ -23,42 +23,49 @@
                 <li>Size: <span class="size">120 平方米</span></li>
                 <li>Type: <span class="type">公寓</span></li>
                 <li>Level: <span class="level">5 樓</span></li>
+                <li>
+                    <div class="add-to-favorites">
+                        <button>添加收藏</button>
+                    </div>
+                </li>
             </ul>
         </div>
-        <div class="add-to-favorites">
-            <button>添加收藏</button>
-        </div>
+
     </div>
 </div>
 
         <div class="detailed-info">
-            <h2>詳細資料</h2>
-            <ul>
+            <h2 class="detail_title">詳細資料</h2>
+            <ul class="detail_list">
                 <li>Parking: <span class="parking">有</span></li>
                 <li>Basic: <span class="basic">電梯/停車場/保全</span></li>
                 <li>Transport: <span class="transport">地鐵/火車/公車/自行車</span></li>
                 <li>Live: <span class="live">寵物/烹飪</span></li>
                 <li>Period: <span class="period">長期</span></li>
+                <li>Address: <span class="address">東京都千代田区</span></li>
+                <li>Pattern: <span class="pattern">3房/2衛/1客廳</span></li>
+                <li>Size: <span class="size">120 平方米</span></li>
+                <li>Type: <span class="type">公寓</span></li>
+                <li>Level: <span class="level">5 樓</span></li>
             </ul>
-            <div>
-                Equipment: <span class="equipment"></span>
+            <div class="equip">
             <ul>
-                <li><img src="../static/img/equipment_icon/balcony.png" alt="balcony"></li>
-                <li><img src="../static/img/equipment_icon/bed.png" alt="bed"></li>
-                <li><img src="../static/img/equipment_icon/closet.png" alt="closet"></li>
-                <li><img src="../static/img/equipment_icon/cold.png" alt="cold"></li>
-                <li><img src="../static/img/equipment_icon/fourth.png" alt="fourth"></li>
-                <li><img src="../static/img/equipment_icon/fridge.png" alt="fridge"></li>
-                <li><img src="../static/img/equipment_icon/gas.png" alt="gas"></li>
-                <li><img src="../static/img/equipment_icon/lift.png" alt="lift"></li>
-                <li><img src="../static/img/equipment_icon/heater.png" alt="heater"></li>
-                <li><img src="../static/img/equipment_icon/net.png" alt="net"></li>
-                <li><img src="../static/img/equipment_icon/park.png" alt="park"></li>
-                <li><img src="../static/img/equipment_icon/sofa.png" alt="sofa"></li>
-                <li><img src="../static/img/equipment_icon/table_chairs.png" alt="table chairs"></li>
-                <li><img src="../static/img/equipment_icon/tv.png" alt="tv"></li>
-                <li><img src="../static/img/equipment_icon/washer.png" alt="washer"></li>
-                <li><img src="../static/img/equipment_icon/messageImage_1713876546883.jpg" alt="monitor"></li>
+                <li><img src="../static/img/equipment_icon/balcony.png" class="equ_img" alt="balcony"></li>
+                <li><img src="../static/img/equipment_icon/bed.png" class="equ_img" alt="bed"></li>
+                <li><img src="../static/img/equipment_icon/closet.png" class="equ_img" alt="closet"></li>
+                <li><img src="../static/img/equipment_icon/cold.png" class="equ_img" alt="cold"></li>
+                <li><img src="../static/img/equipment_icon/fourth.png" class="equ_img" alt="fourth"></li>
+                <li><img src="../static/img/equipment_icon/fridge.png" class="equ_img" alt="fridge"></li>
+                <li><img src="../static/img/equipment_icon/gas.png" class="equ_img" alt="gas"></li>
+                <li><img src="../static/img/equipment_icon/lift.png" class="equ_img" alt="lift"></li>
+                <li><img src="../static/img/equipment_icon/heater.png" class="equ_img" alt="heater"></li>
+                <li><img src="../static/img/equipment_icon/net.png" class="equ_img" alt="net"></li>
+                <li><img src="../static/img/equipment_icon/park.png" class="equ_img" alt="park"></li>
+                <li><img src="../static/img/equipment_icon/sofa.png" class="equ_img" alt="sofa"></li>
+                <li><img src="../static/img/equipment_icon/table_chairs.png" class="equ_img" alt="table chairs"></li>
+                <li><img src="../static/img/equipment_icon/tv.png" class="equ_img" alt="tv"></li>
+                <li><img src="../static/img/equipment_icon/washer.png" class="equ_img" alt="washer"></li>
+                <li><img src="../static/img/equipment_icon/messageImage_1713876546883.jpg" class="equ_img" alt="monitor"></li>
             </ul>
             </div>
         </div>
@@ -68,9 +75,11 @@
         </div>
         <div class="all_images">
             <h2>所有圖片</h2>
-            
+            <img src="../static/img/B.jpg" class="imgs" alt="描述第一張圖片">
+            <img src="../static/img/C.jpg" class="imgs" alt="描述第二張圖片">
         </div>
         <div class="map">
+            <h2>地圖</h2>
             <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3281.327868243799!2d135.72841531522985!3d34.68504748043798!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6001064a3f3e5e4b%3A0x8e2b70a2609e4266!2sKyoto%2C%20Japan!5e0!3m2!1sen!2sus!4v1631541373926!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
         </div>
 </body>

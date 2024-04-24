@@ -1,7 +1,7 @@
 .container {
     display: flex;
     flex-direction: column;
-        position: relative; /* 添加此行以確保具有絕對定位的子元素相對於此容器定位 */
+    position: relative; /* 添加此行以確保具有絕對定位的子元素相對於此容器定位 */
     justify-content: center; /* 水平居中對齊 */
     align-items: center; /* 垂直居中對齊 */
 }
@@ -29,15 +29,15 @@
     flex-direction: column;
 }
 
-.add-to-favorites {
-    margin-top: 10px; /* 將添加收藏按鈕的上邊距設置為10px */
+.house-info ul {
+    list-style-type: none; /* 移除列表項目前的圓圈 */
 }
 
 /* 將房屋名稱移到圖片上方 */
 .house-name {
   position: absolute;
   top: 10px; /* 調整這個數值以達到你想要的位置 */
-  left: 50%; /* 如果需要居中，可以調整這個數值 */
+  left: 43px; /* 如果需要居中，可以調整這個數值 */
   transform: translateX(-50%);
   font-size: 16px; /* 調整字體大小 */
   color: #ffffff; /* 字體顏色 */
@@ -51,9 +51,8 @@ body {
     justify-content: center; /* 水平居中對齊 */
     align-items: center; /* 垂直居中對齊 */
 }
-.detailed-info {
-    margin-right: 80px;
-}
+
+
 .detailed-info ul {
     width: 100%; /* 設置 ul 元素寬度為100% */
     list-style: none; /* 去除點點符號 */
@@ -72,7 +71,7 @@ body {
     margin: 0;
 }
 
-.equipment li {
+.equ_img {
     display: inline-block;
     width: 40px; /* 圖片寬度 */
     height: 40px; /* 圖片高度 */
@@ -83,4 +82,31 @@ body {
 
 .equipment li:nth-child(8n) {
     clear: both; /* 每 8 個元素清除浮動，開始新的一行 */
+}
+
+.objects-name-phone {
+    top: 20px; /* 距離容器頂部 20 像素 */
+    left: 30px; /* 距離容器左側 30 像素 */
+}
+
+.add-to-favorites button {
+    margin-top: 10px; /* 往下移動 10px */
+}
+
+.house_info_title {
+    margin-left: 38px;
+}
+
+.imgs {
+    max-width: 783px; /* 設置最大寬度為 783px */
+    height: auto; /* 根據寬度自動調整高度，保持比例 */
+
+}
+.all_images, .features, .map, .detail_title {
+    margin: 0 auto; /* 將左右 margin 設置為 auto，實現水平居中 */
+    text-align: center; /* 將內容居中對齊 */
+}
+.detail_list li,.equip li {
+    display: flex; /* 使用 Flexbox 佈局 */
+    justify-content: center; /* 將內容水平居中 */
 }
