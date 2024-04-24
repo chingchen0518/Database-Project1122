@@ -21,18 +21,7 @@ def getdata(request):
     # return HttpResponse("I am "+list2["name"]+" from "+list2["school"]+", and I am "+list2["Age"]+" years old.")
 
 def homepage(request):
-    tiga_bahasa=[{"bahasa":"Malay","salam":"selamat pagi"},
-                 {"bahasa":"English","salam":"Good morning"},
-                {"bahasa":"Cina","salam":"早安"},
-                {"bahasa": "French", "salam": "Bonjour"}
-    ]
-    myname="Ching Chen"
-    yes_or_no = 2;
-    statements = ["Yes,it is successful","It is still ongoing","It is fail"]
-
-    return render(request,
-                  "index.html",
-                  {"salamat":tiga_bahasa,"name":myname,"yes_or_no":yes_or_no,"statements":statements})
+    return render(request,"homepage.html")
 
 def aboutme(request):
     return render(request,"aboutme.html")
@@ -41,7 +30,7 @@ def map(request):
     return render(request,"map.html")
 
 def register(request):
-    return render(request,"Register.html")
+    return render(request,"register2.html")
 
 def register_received(request):
     # name=request.POST['name']

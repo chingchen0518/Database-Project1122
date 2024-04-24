@@ -21,7 +21,7 @@ import my_app.views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', my_app.views.login_page),
+    path('', my_app.views.homepage),
     path('register/', my_app.views.register),
     path('register/receive/', my_app.views.register_received),
     path('login/', my_app.views.login_page, name='login_page'),
