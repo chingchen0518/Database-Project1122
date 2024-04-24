@@ -21,12 +21,10 @@ import my_app.views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('123/',my_app.views.index),
-    path('456/678/',my_app.views.getdata),
-    path('home/',my_app.views.homepage),
-    path('', my_app.views.aboutme),
-    path('aboutme/',my_app.views.aboutme),
-    path('map/', my_app.views.map),
+    path('', my_app.views.login_page),
     path('register/', my_app.views.register),
     path('register/receive/', my_app.views.register_received),
+    path('login/', my_app.views.login_page, name='login_page'),
+    path('login/login_act/', my_app.views.login_act, name='login_act'),
+
 ]

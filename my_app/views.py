@@ -1,9 +1,11 @@
-from django.shortcuts import HttpResponse,render
+from django.shortcuts import HttpResponse,render,redirect
 import json
 from django.http import JsonResponse
 from django.db import connection
 
-cursor=connection.cursor()
+#引入 Table
+from my_app.models import Member
+#引入 Table結束
 
 def index(request):
     variables=request.GET['id']
@@ -42,7 +44,18 @@ def register(request):
     return render(request,"Register.html")
 
 def register_received(request):
-    name=request.POST['name']
-    pwd=request.POST['password']
-    cursor.execute("insert into testing(name,password) values(%s,%s)",(name,pwd))
-    return HttpResponse(pwd)
+    # name=request.POST['name']
+    # pwd=request.POST['password']
+    # cursor.execute("insert into testing(name,password) values(%s,%s)",(name,pwd))
+    return HttpResponse("")
+
+def login_page(request):
+    return render(request,"login.html")
+
+def login_act(request):
+    username = request.POST['username']
+    pwd = request.POST['password']
+
+    members = Member.objects.filter(username=username)
+
+    return redirect('/login/')
