@@ -26,5 +26,5 @@ urlpatterns = [
     path('register/receive/', my_app.views.register_received),
     path('login/', my_app.views.login_page, name='login_page'),
     path('login/login_act/', my_app.views.login_act, name='login_act'),
-
+    path('house_list/',my_app.views.house_list),
 ]
