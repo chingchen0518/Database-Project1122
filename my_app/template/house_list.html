@@ -1,0 +1,50 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{#    <link href= "{%static '/css/house_list.css' %}" type="text/css" rel="stylesheet"/>#}
+    <meta charset="UTF-8">
+    <title>house_list</title>
+</head>
+<body>
+    <div id="navbar">
+        <div id="nav_logo">
+            <a href=""><img src="{%static '\img\equipment_icon\net.png' %}"></a>
+        </div>
+        <div id="search_bar">
+            <input type="text" placeholder="Search bar">
+        </div>
+        <div id="nav_menu">
+            <div id="nav_content">
+                <a href="">租屋</a>
+                <a href="">售屋</a>
+                <a href="">登入</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="gate"></div>
+
+    <div id="content">
+        <div id="left_content">
+            <div class="search_results">
+                <p id="amount">已為您找到<span> 999 </span>間房屋</p>    {# 搜尋到符合條件的房屋數量 #}
+                <ul id="switch_way">    {# 列表排序方式 #}
+                    <li>預設</li>
+                    <li>最新</li>
+                    <li>價格</li>
+                    <li>坪數</li>
+                </ul>
+            </div>
+            <div id="content_R">
+                {% include 'product_template.html' %}
+                <hr>
+                {% include 'product_template.html' %}
+                <hr>
+                {% include 'product_template.html' %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
