@@ -48,3 +48,6 @@ def login_act(request):
     members = Member.objects.filter(username=username)
 
     return redirect('/login/')
+
+def house_list(request):
+    return render(request, "house_list.html")
