@@ -37,9 +37,9 @@
 .house-name {
   position: absolute;
   top: 10px; /* 調整這個數值以達到你想要的位置 */
-  left: 43px; /* 如果需要居中，可以調整這個數值 */
+  left: 80px; /* 如果需要居中，可以調整這個數值 */
   transform: translateX(-50%);
-  font-size: 16px; /* 調整字體大小 */
+  font-size: 35px; /* 調整字體大小 */
   color: #ffffff; /* 字體顏色 */
   background-color: rgba(0, 0, 0, 0.7); /* 背景顏色 */
   padding: 5px 10px; /* 調整內邊距 */
@@ -109,4 +109,25 @@ body {
 .detail_list li,.equip li {
     display: flex; /* 使用 Flexbox 佈局 */
     justify-content: center; /* 將內容水平居中 */
+}
+
+.equip li {
+    background-color: #f0f0f0; /* 背景顏色 */
+    padding: 5px; /* 添加一些內邊距，使其看起來更好 */
+    margin-bottom: 5px; /* 添加一些間距，使其與其他元素分開 */
+}
+
+.title, .detail_title, .house_info_title {
+    color: brown; /* 改變字的顏色 */
+    font-weight: bold; /* 加粗字體 */
+    text-decoration: underline; /* 添加底線 */
+}
+
+.features, .all_images, .detailed-info, .container {
+    border-bottom: 1px dashed #ccc; /* 添加虛線分隔 */
+    padding-bottom: 20px; /* 添加一些底邊距，使其看起來更好 */
+}
+
+.detail_list li {
+    margin-bottom: 10px; /* 添加底邊距 */
 }
