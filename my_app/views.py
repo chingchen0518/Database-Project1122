@@ -2,10 +2,20 @@ from django.shortcuts import HttpResponse,render,redirect
 import json
 from django.http import JsonResponse
 from django.db import connection
+from django.db.models import Min
 
 #引入 Table
-from my_app.models import Member
+from my_app.models import Member, House, Image,Equipment
+
+
 #引入 Table結束
+
+# def testingsql(request):
+#     with connection.cursor() as cursor:
+#         cursor.execute("SELECT * FROM myapp_mymodel WHERE id = %s", [1])
+#         row = cursor.fetchone()
+#     return row
+
 
 def index(request):
     variables=request.GET['id']
@@ -50,4 +60,12 @@ def login_act(request):
     return redirect('/login/')
 
 def house_list(request):
-    return render(request, "house_list.html")
+    rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId LIKE %s AND House.hId=Info.hId_id',['KH%'])
+    return render(request, "house_list.html",{'rows': rows})
+
+def house_rent_cont(request,hId):
+    rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId=%s AND House.hId=Info.hId_id', [hId])
+    image = Image.objects.raw('SELECT path FROM Image WHERE Image.hId_id=%s', [hId])
+    equipment = Equipment.objects.raw('SELECT * FROM Equipment WHERE Equipment.hId_id=%s', [hId])
+
+    return render(request, "house_rent_cont.html",{'row': rows[0],'images':image,'equipment':equipment[0]})
