@@ -69,3 +69,7 @@ def house_rent_cont(request,hId):
     equipment = Equipment.objects.raw('SELECT * FROM Equipment WHERE Equipment.hId_id=%s', [hId])
 
     return render(request, "house_rent_cont.html",{'row': rows[0],'images':image,'equipment':equipment[0]})
+
+def upload_page(request):
+    return render(request, "upload.html")
+
