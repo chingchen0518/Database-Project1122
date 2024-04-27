@@ -3,19 +3,19 @@ import json
 from django.http import JsonResponse
 from django.db import connection
 from django.db.models import Min
+from django.urls import reverse_lazy
+from django.views.generic import DeleteView
+
 
 #引入 Table
 from my_app.models import Member, House, Image,Equipment
-
-
 #引入 Table結束
 
-# def testingsql(request):
-#     with connection.cursor() as cursor:
-#         cursor.execute("SELECT * FROM myapp_mymodel WHERE id = %s", [1])
-#         row = cursor.fetchone()
-#     return row
-
+class HouseDeleteView(DeleteView):
+    model = House
+    success_url = reverse_lazy("house_lists")
+    template_name = 'delete.html'
+    pk_url_kwarg = 'hId' #告訴他用url中的哪個東西作爲primarykey
 
 def index(request):
     variables=request.GET['id']
@@ -72,4 +72,5 @@ def house_rent_cont(request,hId):
 
 def upload_page(request):
     return render(request, "upload.html")
+
 

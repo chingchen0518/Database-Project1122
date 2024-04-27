@@ -21,7 +21,7 @@ class House(models.Model):
      class Meta:
         db_table = 'House'
 class Equipment(models.Model):
-     hId = models.OneToOneField(House,primary_key=True,on_delete=models.PROTECT,to_field='hId',auto_created=False)
+     hId = models.OneToOneField(House,primary_key=True,on_delete=models.CASCADE,to_field='hId',auto_created=False)
      sofa = models.IntegerField(default=0)
      tv = models.IntegerField(default=0)
      wash_machine = models.IntegerField(default=0)
@@ -38,7 +38,7 @@ class Equipment(models.Model):
         db_table = 'Equipment'
 
 class Info(models.Model):
-     hId = models.OneToOneField(House,primary_key=True,on_delete=models.PROTECT,to_field='hId',auto_created=False)
+     hId = models.OneToOneField(House,primary_key=True,on_delete=models.CASCADE,to_field='hId',auto_created=False)
      price = models.IntegerField(default=0)
      size = models.IntegerField(default=5)
      address = models.CharField(max_length=1000,default="--")
@@ -76,3 +76,9 @@ class Rdetail(models.Model):
      mrt = models.IntegerField(default=0)
      class Meta:
         db_table = 'Rdetail'
+
+class Userssss(models.Model):
+     mId = models.CharField(max_length=100, primary_key=True,unique=True)
+     password= models.CharField(max_length=100, default="0")
+     class Meta:
+        db_table = 'Userssss'
