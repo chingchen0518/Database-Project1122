@@ -120,3 +120,42 @@ a{
 }
 
 
+
+.situation, .layout{
+    padding: 0px;
+}
+
+.type, .size, .room, .living{
+    padding-right: 10px;
+    border-right: 2px solid rgb(148, 148, 148);
+}
+
+.size, .level, .bath, .living{
+    padding-left: 10px;
+}
+
+.address{
+    font-size: 20px;
+}
+
+.favorite{
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    margin: 0px;
+    font-size: 16px;
+}
+
+.price{
+    position: absolute;
+    right: 50px;
+    bottom: 10px;
+    font-size: 20px;
+    color: red;
+    margin: 0px;
+}
+
+.price span{
+    font-size: 35px;
+}
+

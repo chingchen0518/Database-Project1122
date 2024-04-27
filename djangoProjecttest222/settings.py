@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'djangoProjecttest222.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'house2.sqlite3',
     }
 }
 
@@ -116,7 +116,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'abcd/'
+STATIC_URL = 'static/'
 STATICFILES_DIRS = [str(BASE_DIR)+"/my_app/static"]
 
 # Default primary key field type

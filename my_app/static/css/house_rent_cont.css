@@ -78,6 +78,12 @@ body {
     margin-right: 10px; /* 右邊間距，可以調整 */
     margin-bottom: 10px; /* 下邊間距，可以調整 */
     float: left; /* 左浮動 */
+    opacity: 1;
+}
+
+
+.equ_img_no{
+    opacity: 0.3;
 }
 
 .equipment li:nth-child(8n) {
