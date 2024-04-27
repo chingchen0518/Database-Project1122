@@ -50,4 +50,10 @@ class Info(models.Model):
      class Meta:
         db_table = 'Info'
 
+class Image(models.Model):
+     path = models.CharField(max_length=100, primary_key=True,unique=True)
+     hId = models.ForeignKey(House,to_field='hId',auto_created=False,on_delete=models.CASCADE)
+
+     class Meta:
+        db_table = 'Image'
 
