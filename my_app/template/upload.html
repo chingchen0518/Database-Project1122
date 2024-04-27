@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>新增房屋</title>
+</head>
+<body>
+
+    <form action="" id="new_house" method="POST">
+        <h2>基礎資料</h2>
+        區域
+        <select name="region" id="region">
+            <option value="1">臺北市</option>
+            <option value="2">新北市</option>
+            <option value="3">桃園市</option>
+            <option value="4">臺中市</option>
+            <option value="5">臺南市</option>
+            <option value="6">高雄市</option>
+            <option value="7">宜蘭縣</option>
+            <option value="8">新竹縣</option>
+            <option value="9">苗栗縣</option>
+            <option value="10">彰化縣</option>
+            <option value="11">南投縣</option>
+            <option value="12">雲林縣</option>
+            <option value="13">嘉義縣</option>
+            <option value="14">屏東縣</option>
+            <option value="15">臺東縣</option>
+            <option value="16">花蓮縣</option>
+            <option value="17">澎湖縣</option>
+            <option value="18">基隆市</option>
+            <option value="19">新竹市</option>
+            <option value="20">嘉義市</option>
+            <option value="21">金門縣</option>
+            <option value="22">連江縣</option>
+            <option value="17">澎湖縣</option>
+            <option value="18">基隆市</option>
+        </select>
+        <br/>
+        地址<input type="text" name="address">
+        <br/>
+        格局:<input type="text" name="room">房<input type="text" name="living">廳<input type="text" name="bath">衛
+        <br/>
+        樓層<input type="text" name="level">
+        <br/>
+        坪數樓層<input type="text" name="size">
+        <br/>
+        屋齡<input type="text" name="age">
+        <hr>
+
+        <p>設備</p>
+        <label><input type="checkbox" name="tv" value="1"><span>電視機</span></label>
+        <label><input type="checkbox" name="washer" value="1"><span>洗衣機</span></label>
+        <label><input type="checkbox" name="wifi" value="1"><span>網絡</span></label>
+        <label><input type="checkbox" name="refrigerator" value="1"><span>冰箱</span></label>
+        <label><input type="checkbox" name="gas" value="1"><span>瓦斯爐</span></label>
+        <label><input type="checkbox" name="aircond" value="1"><span>冷氣</span></label>
+        <label><input type="checkbox" name="heater" value="1"><span>熱水器</span></label>
+        <label><input type="checkbox" name="channel4" value="1"><span>第四台</span></label>
+
+        <p>家具</p>
+        <label><input type="checkbox" name="sofa" value="1"><span>沙發</span></label>
+        <label><input type="checkbox" name="bed" value="1"><span>床組</span></label>
+        <label><input type="checkbox" name="cabinet" value="1"><span>櫃子</span></label>
+
+        <p>附近交通</p>
+        <label><input type="checkbox" name="sofa" value="1"><span>捷運</span></label>
+        <label><input type="checkbox" name="bed" value="1"><span>公車</span></label>
+        <label><input type="checkbox" name="cabinet" value="1"><span>火車</span></label>
+
+        <p>電梯</p>
+        <select name="lift" id="cc_lift">
+            <option value="1">有</option>
+            <option value="0">無</option>
+        </select>
+        <br/>
+        <p>開伙</p>
+        <select name="cook" id="cc_cook">
+            <option value="1">可以</option>
+            <option value="0">不可以</option>
+        </select>
+        <p>寵物</p>
+        <select name="pet" id="cc_pet">
+            <option value="1">可以</option>
+            <option value="0">不可以</option>
+        </select>
+        <p>警衛</p>
+        <select name="security" id="cc_security">
+            <option value="有(日閒)">有(日閒)</option>
+            <option value="有(全天)">有(全天)</option>
+            <option value="無">無</option>
+            <option value="有(全天)">有(全天)</option>
+        </select>
+        <p>停車位</p>
+        <select name="parking" id="cc_parking">
+            <option value="無">無</option>
+            <option value="有">有</option>
+        </select>
+        <hr>
+
+        <h2>租金</h2>
+        月租<input type="text" name="rent">/月<br/>
+        管理費<input type="text" name="management" value="0">
+        <p>最短租期</p>
+        <select name="period" id="period">
+            <option value="半年">半年</option>
+            <option value="一年">一年</option>
+            <option value="兩年">兩年</option>
+        </select>
+        <hr>
+        <h2>描述</h2>
+        廣告標題<input type="text" name="title"><br/>
+    </form>
+
+</body>
+</html>
