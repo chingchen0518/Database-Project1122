@@ -1,23 +1,27 @@
 {% load static %}
 
 <link href= "{%static '/css/house_list.css' %}" type="text/css" rel="stylesheet"/>
-<div class="product">
-    <a href=""><img src="{%static '/img/222.jpg' %}" alt="house1">  {# 房屋照片 #}
-        <div class="detail">
-            <h4 class="title">房屋標題</h4>
-            <ul class="situation">
-                <li class="type">獨立套房</li>    {# 房屋類型 #}
-                <li class="size">10坪</li>   {# 坪數大小 #}
-                <li class="level">10F</li>    {# 樓層 #}
-            </ul>
-            <p class="address">蓮海路 70 號</p>   {# 房屋地址 #}
-            <ul class="layout">
-                <li class="room">2室</li>  {# 幾室 #}
-                <li class="bath">1衛浴</li>  {# 幾衛浴 #}
-                <li class="living">1廳</li>    {# 幾廳 #}
-            </ul>
-            <p class="favorite">收藏</p>
-            <p class="price"><span>10000</span>元/月</p>   {# 房屋售價 #}
-        </div>
-    </a>
-</div>
+
+{% for row in rows %}
+    <div class="product">
+        <a href="/house_rent_cont/{{ row.hId }}"><img src="{%static '/img/house/'|add:row.hId|add:'-2.jpg' %}" alt="house">  {# 房屋照片 #}
+            <div class="detail">
+                <h4 class="title">{{ row.title }}</h4>
+                <ul class="situation">
+                    <li class="type">{{ row.type }}</li>    {# 房屋類型 #}
+                    <li class="size">{{ row.size }}坪</li>   {# 坪數大小 #}
+                    <li class="level">{{ row.level }}樓</li>    {# 樓層 #}
+                </ul>
+                <p class="address">{{ row.address }}</p>   {# 房屋地址 #}
+                <ul class="layout">
+                    <li class="room">{{ row.room }}室</li>  {# 幾室 #}
+                    <li class="living">{{ row.living }}廳</li>    {# 幾廳 #}
+                    <li class="bath">{{ row.bath }}衛浴</li>  {# 幾衛浴 #}
+                </ul>
+                <p class="favorite">收藏</p>
+                <p class="price"><span>{{ row.price }}</span>元/月</p>   {# 房屋售價 #}
+            </div>
+        </a>
+    </div>
+    <hr>
+{% endfor %}

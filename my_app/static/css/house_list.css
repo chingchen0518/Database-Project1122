@@ -157,7 +157,7 @@ a{
     padding: 0px;
 }
 
-.type, .size, .room, .bath{
+.type, .size, .room, .living{
     padding-right: 10px;
     border-right: 2px solid rgb(148, 148, 148);
 }
