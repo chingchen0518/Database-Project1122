@@ -1,28 +1,32 @@
+{% load static %}
+
+
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>房屋介紹</title>
-<link rel="stylesheet" href="house_rent_cont.css"></head>
+    <link href= "{%static '/css/house_rent_cont.css' %}" type="text/css" rel="stylesheet"/>
+</head>
 <body>
    <div class="container">
     <div class="short_describe">
         <div class="objects-name-phone">
-       <div class="house-name">張三狗窩</div>
+       <div class="house-name">{{ row.title }}</div>
     </div>
         <div class="image">
-            <img src="../static/img/A.jpg" alt="房屋">
+            <img src="{%static '/img/house/'|add:row.hId|add:'-2.jpg' %}" alt="房屋">
         </div>
         <div class="house-info">
             <h2 class="house_info_title">簡介</h2>
             <ul>
-                <li>租屋價格: <span class="price">$500,000</span></li>
-                <li>地址: <span class="address">東京都千代田区</span></li>
-                <li>格局: <span class="pattern">3房/2衛/1客廳</span></li>
-                <li>坪數: <span class="size">138.17坪</span></li>
-                <li>類型: <span class="type">公寓</span></li>
-                <li>樓層: <span class="level">5 樓</span></li>
+                <li>租屋價格: <span class="price">{{ row.price }}/月</span></li>
+                <li>地址: <span class="address">{{ row.address }}</span></li>
+                <li>格局: <span class="pattern">{{ row.room }}房/{{ row.living }}客廳/{{ row.bath }}衛</span></li>
+                <li>坪數: <span class="size">{{ row.size }}坪</span></li>
+                <li>類型: <span class="type">{{ row.type }}</span></li>
+                <li>樓層: <span class="level">{{ row.level }}樓</span></li>
                 <li>
                     <div class="add-to-favorites">
                         <button>添加收藏</button>
@@ -44,23 +48,20 @@
                 </ul>
             <div class="equip">
             <ul>
-                <li><img src="../static/img/equipment_icon/balcony.png" class="equ_img" alt="balcony"></li>
-                <li><img src="../static/img/equipment_icon/bed.png" class="equ_img" alt="bed"></li>
-                <li><img src="../static/img/equipment_icon/closet.png" class="equ_img" alt="closet"></li>
-                <li><img src="../static/img/equipment_icon/cold.png" class="equ_img" alt="cold"></li>
-                <li><img src="../static/img/equipment_icon/fourth.png" class="equ_img" alt="fourth"></li>
-                <li><img src="../static/img/equipment_icon/fridge.png" class="equ_img" alt="fridge"></li>
-                <li><img src="../static/img/equipment_icon/gas.png" class="equ_img" alt="gas"></li>
-                <li><img src="../static/img/equipment_icon/lift.png" class="equ_img" alt="lift"></li>
-                <li><img src="../static/img/equipment_icon/heater.png" class="equ_img" alt="heater"></li>
-                <li><img src="../static/img/equipment_icon/net.png" class="equ_img" alt="net"></li>
-                <li><img src="../static/img/equipment_icon/park.png" class="equ_img" alt="park"></li>
-                <li><img src="../static/img/equipment_icon/sofa.png" class="equ_img" alt="sofa"></li>
-                <li><img src="../static/img/equipment_icon/table_chairs.png" class="equ_img" alt="table chairs"></li>
-                <li><img src="../static/img/equipment_icon/tv.png" class="equ_img" alt="tv"></li>
-                <li><img src="../static/img/equipment_icon/washer.png" class="equ_img" alt="washer"></li>
-                <li><img src="../static/img/equipment_icon/pngtree-you-have-entered-the-surveillance-area-camera-material-png-image_4208588.png" class="equ_img" alt="monitor"></li>
+                <li><img src="{% static '/img/equipment/bed.png' %}" class="equ_img {% if equipment.bed == 0 %}equ_img_no{% endif %}" alt="bed"></li>
+                <li><img src="{% static '/img/equipment/closet.png' %}" class="equ_img  {% if equipment.cabinet == 0  %}equ_img_no{% endif %}" alt="cabinet"></li>
+                <li><img src="{% static '/img/equipment/cold.png' %}" class="equ_img {% if equipment.aircond == 0  %}equ_img_no{% endif %}" alt="cold"></li>
+                <li><img src="{% static '/img/equipment/fourth.png' %}" class="equ_img {% if equipment.channel4 == 0  %}equ_img_no{% endif %}" alt="fourth"></li>
+                <li><img src="{% static '/img/equipment/fridge.png' %}" class="equ_img {% if equipment.refrigerator == 0  %}equ_img_no{% endif %}" alt="fridge"></li>
+                <li><img src="{% static '/img/equipment/gas.png' %}" class="equ_img {% if equipment.gas == 0  %}equ_img_no{% endif %}" alt="gas"></li>
+                <li><img src="{% static '/img/equipment/heater.png' %}" class="equ_img {% if equipment.hot_water == 0  %}equ_img_no{% endif %}" alt="heater"></li>
+                <li><img src="{% static '/img/equipment/sofa.png' %}" class="equ_img {% if equipment.sofa == 0  %}equ_img_no{% endif %}" alt="sofa"></li>
+                <li><img src="{% static '/img/equipment/tv.png' %}" class="equ_img {% if equipment.table == 0  %}equ_img_no{% endif %}" alt="tv"></li>
+                <li><img src="{% static '/img/equipment/washer.png'%}" class="equ_img {% if equipment.wash_machine == 0  %}equ_img_no{% endif %}" alt="washer"></li>
+                <li><img src="{% static '/img/equipment/net.png'%}" class="equ_img {% if equipment.wifi == 0  %}equ_img_no{% endif %}" alt="wifi"></li>
+
             </ul>
+
             </div>
         </div>
         <div class="features">
@@ -70,8 +71,9 @@
 
         <div class="all_images">
             <h2 class="title">所有圖片</h2>
-            <img src="../static/img/B.jpg" class="imgs" alt="描述第一張圖片">
-            <img src="../static/img/C.jpg" class="imgs" alt="描述第二張圖片">
+            {% for image in images %}
+                <img src="{% static '/img/house/'|add:image.path %}" class="imgs" alt={{ row.hId }}>
+            {% endfor %}
         </div>
         <div class="map">
             <h2 class="title">地圖</h2>
