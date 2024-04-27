@@ -57,3 +57,22 @@ class Image(models.Model):
      class Meta:
         db_table = 'Image'
 
+class Rdetail(models.Model):
+     hId = models.OneToOneField(House,primary_key=True,on_delete=models.CASCADE,unique=True,to_field='hId',auto_created=False)
+     status = models.IntegerField(default=0)
+     parking = models.CharField(max_length=20, default="無")
+     pet = models.IntegerField(default=0)
+     cook = models.IntegerField(default=0)
+
+     direction = models.CharField(max_length=10, default="--")
+     in_level = models.IntegerField(default=1)
+     age = models.IntegerField(default=0)
+     security = models.CharField(max_length=10, default="--")
+     management = models.IntegerField(default=0)
+
+     period = models.CharField(max_length=10, default="--")
+     bus = models.IntegerField(default=0)
+     train = models.IntegerField(default=0)
+     mrt = models.IntegerField(default=0)
+     class Meta:
+        db_table = 'Rdetail'
