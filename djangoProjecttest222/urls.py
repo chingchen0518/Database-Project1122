@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path
 
 import my_app.views
+# from .views import YourModelDeleteView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,8 +27,9 @@ urlpatterns = [
     path('register/receive/', my_app.views.register_received),
     path('login/', my_app.views.login_page, name='login_page'),
     path('login/login_act/', my_app.views.login_act, name='login_act'),
-    path('house_list/',my_app.views.house_list),
+    path('house_list/',my_app.views.house_list, name='house_lists'),
     path('house_rent_cont/<str:hId>',my_app.views.house_rent_cont),
     path('upload_page',my_app.views.upload_page),
+    path('delete/<str:hId>/', my_app.views.HouseDeleteView.as_view()),
 
 ]
