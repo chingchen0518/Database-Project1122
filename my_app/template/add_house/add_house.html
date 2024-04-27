@@ -21,20 +21,20 @@
         <div class="accordion-body">
           <form>
             <div class="mb-3">
-              <label for="price" class="form-label">租屋價格：</label>
-              <input type="text" class="form-control" id="price" name="price">
+                <label for="price" class="form-label">每月租屋價格：</label>
+                <input type="text" class="form-control" id="price" name="price" placeholder="單位:新台幣，例:8,000元">
             </div>
             <div class="mb-3">
               <label for="address" class="form-label">地址：</label>
-              <input type="text" class="form-control" id="address" name="address">
+              <input type="text" class="form-control" id="address" name="address" placeholder="例:高雄市三民區十全一路100號濟世大樓1樓">
             </div>
             <div class="mb-3">
-              <label for="layout" class="form-label">格局：</label>
-              <input type="text" class="form-control" id="layout" name="layout">
+              <label for="layout" class="form-label">格局(房/客廳/衛)：</label>
+              <input type="text" class="form-control" id="layout" name="layout" placeholder="例:3房/2客廳/2衛">
             </div>
             <div class="mb-3">
               <label for="area" class="form-label">坪數：</label>
-              <input type="text" class="form-control" id="area" name="area">
+              <input type="text" class="form-control" id="area" name="area" placeholder="例:40坪">
             </div>
             <div class="mb-3">
               <label for="type" class="form-label">類型：</label>
@@ -47,11 +47,7 @@
             </div>
             <div class="mb-3">
               <label for="floor" class="form-label">樓層：</label>
-              <input type="text" class="form-control" id="floor" name="floor">
-            </div>
-            <div class="mb-3">
-              <label for="facilities" class="form-label">基礎設施：</label>
-              <textarea class="form-control" id="facilities" name="facilities" rows="3"></textarea>
+              <input type="text" class="form-control" id="floor" name="floor" placeholder="例:11樓">
             </div>
           </form>
         </div>
@@ -67,16 +63,20 @@
         <div class="accordion-body">
           <form>
             <div class="mb-3">
+              <label for="facilities" class="form-label">基礎設施：</label>
+              <textarea class="form-control" id="facilities" name="facilities" rows="3" placeholder="例:有電梯/停車場/保全"></textarea>
+            </div>
+            <div class="mb-3">
               <label for="transport" class="form-label">交通：</label>
-              <textarea class="form-control" id="transport" name="transport" rows="3"></textarea>
+              <textarea class="form-control" id="transport" name="transport" rows="3" placeholder="例:周邊有地鐵/火車/公車/自行車"></textarea>
             </div>
             <div class="mb-3">
               <label for="life" class="form-label">生活：</label>
-              <textarea class="form-control" id="life" name="life" rows="3"></textarea>
+              <textarea class="form-control" id="life" name="life" rows="3" placeholder="例:允許寵物/烹飪"></textarea>
             </div>
             <div class="mb-3">
               <label for="lease-term" class="form-label">租期：</label>
-              <input type="text" class="form-control" id="lease-term" name="lease-term">
+              <input type="text" class="form-control" id="lease-term" name="lease-term" placeholder="例:一年">
             </div>
           </form>
         </div>
@@ -93,7 +93,7 @@
           <form>
             <div class="mb-3">
                 <label for="features-description" class="form-label">房屋特色描述：</label>
-                <textarea class="form-control" id="features-description" name="features-description" rows="3"></textarea>
+                <textarea class="form-control" id="features-description" name="features-description" rows="3" placeholder="這間房屋具有優越的交通便利性，並配備了現代化的家電設備。您可以在這裡輕鬆享受生活，並擁有一個舒適的居住環境。"></textarea>
             </div>
           </form>
         </div>
