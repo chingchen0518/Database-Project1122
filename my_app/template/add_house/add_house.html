@@ -12,6 +12,8 @@
   <h1 class="mt-5">新增房屋</h1>
   <div class="accordion" id="accordion">
     <div class="accordion-item">
+
+      {#Part 1:簡介#}
       <h2 class="accordion-header" id="introduction-heading">
         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#introduction" aria-expanded="true" aria-controls="introduction">
           簡介
@@ -19,7 +21,9 @@
       </h2>
       <div id="introduction" class="accordion-collapse collapse show" aria-labelledby="introduction-heading" data-bs-parent="#accordion">
         <div class="accordion-body">
-          <form>
+
+          <form id="form1" method="POST" action="{% url 'add_house' %}">
+              {% csrf_token %}
             <div class="mb-3">
               <label for="region" class="form-label">區域：</label>
               <select name="region" id="region" class="form-select">
@@ -73,7 +77,7 @@
 
             <div class="mb-3">
               <label for="area" class="form-label">坪數(請填數字)：</label>
-              <input type="text" class="form-control" id="area" name="area" placeholder="單位:坪，例:40">
+              <input type="text" class="form-control" id="area" name="size" placeholder="單位:坪，例:40">
             </div>
             <div class="mb-3">
               <label for="type" class="form-label">類型：</label>
@@ -85,9 +89,11 @@
             </div>
             <div class="mb-3">
               <label for="floor" class="form-label">樓層：</label>
-              <input type="text" class="form-control" id="floor" name="floor" placeholder="單位:樓，例:11">
+              <input type="text" class="form-control" id="floor" name="level" placeholder="單位:樓，例:11">
             </div>
+              <input type="submit">
           </form>
+
         </div>
       </div>
     </div>
@@ -99,7 +105,8 @@
       </h2>
       <div id="details" class="accordion-collapse collapse" aria-labelledby="details-heading" data-bs-parent="#accordion">
         <div class="accordion-body">
-          <form>
+            <form id="form2" method="POST" action="{% url 'add_house' %}">
+                {% csrf_token %}
             <div class="mb-3">
               <label class="form-label">設備：</label>
               <label><input type="checkbox" name="tv" value="1"><span>電視機</span></label>
@@ -176,7 +183,7 @@
         <div class="accordion-body">
           <div class="mb-3">
                 <label for="rent_fee">月租費(請填數字)：</label>
-                <input type="text" class="form-control" id="rent_fee" name="rent_fee" placeholder="單位: 新台幣，例:6000">
+                <input type="text" class="form-control" id="rent_fee" name="price" placeholder="單位: 新台幣，例:6000">
           </div>
           <div class="mb-3">
             <label for="management_fee">管理費(請填數字)：</label>
@@ -201,7 +208,8 @@
       </h2>
       <div id="features" class="accordion-collapse collapse" aria-labelledby="features-heading" data-bs-parent="#accordion">
         <div class="accordion-body">
-          <form>
+            <form id="form3" method="POST" action="{% url 'add_house' %}">
+                {% csrf_token %}
             <div class="mb-3">
                 <label for="features-description" class="form-label">房屋特色描述(廣告標語)：</label>
                 <textarea class="form-control" id="features-description" name="features-description" rows="3" placeholder="例:這間房屋具有優越的交通便利性，並配備了現代化的家電設備。您可以在這裡輕鬆享受生活，並擁有一個舒適的居住環境。"></textarea>
@@ -218,7 +226,8 @@
       </h2>
       <div id="images" class="accordion-collapse collapse" aria-labelledby="images-heading" data-bs-parent="#accordion">
         <div class="accordion-body">
-          <form>
+        <form id="form4" method="POST" action="{% url 'add_house' %}">
+            {% csrf_token %}
             <div class="mb-3">
                 <label for="image-upload" class="form-label">上傳圖片：</label>
                 <input type="file" class="form-control" id="image-upload" name="image-upload" accept=".jpg, .jpeg, .png">
@@ -231,7 +240,7 @@
   </div>
   <!-- 上傳按鈕 -->
   <div class="d-flex justify-content-center mt-3">
-    <button type="button" class="btn btn-primary" id="upload-button">上傳</button>
+    <button type="button" class="btn btn-primary" id="upload-button" onclick="submitForms()">上傳</button>
   </div>
 
 </div>
@@ -242,6 +251,7 @@
   document.getElementById("upload-button").addEventListener("click", function() {
     alert("上傳成功！");
   });
+
 </script>
 </body>
 </html>

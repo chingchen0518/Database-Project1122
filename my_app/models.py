@@ -40,7 +40,7 @@ class Equipment(models.Model):
 class Info(models.Model):
      hId = models.OneToOneField(House,primary_key=True,on_delete=models.CASCADE,to_field='hId',auto_created=False)
      price = models.IntegerField(default=0)
-     size = models.IntegerField(default=5)
+     size = models.FloatField(default=5)
      address = models.CharField(max_length=1000,default="--")
      level = models.IntegerField(default=5)
      room = models.IntegerField(default=1)
@@ -66,7 +66,7 @@ class Rdetail(models.Model):
 
      direction = models.CharField(max_length=10, default="--")
      in_level = models.IntegerField(default=1)
-     age = models.IntegerField(default=0)
+     age = models.FloatField(default=0)
      security = models.CharField(max_length=10, default="--")
      management = models.IntegerField(default=0)
 
