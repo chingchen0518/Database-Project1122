@@ -10,8 +10,9 @@
 
 <div class="container">
   <!-- 本頁面標題 -->
-  <h1 class="mt-5">新增房屋</h1>
-  <form id="house-form" method="POST" action="{% url 'add_house' %}>
+  <h1 class="mt-5">新增租房</h1>
+  <form id="house-form" method="POST" action="{% url 'add_house' %}">
+      {% csrf_token %}
     <div class="accordion" id="accordion">
       <div class="accordion-item">
 
@@ -22,7 +23,13 @@
           </button>
         </h2>
         <div id="introduction" class="accordion-collapse collapse show" aria-labelledby="introduction-heading" data-bs-parent="#accordion">
-          <div class="accordion-body">
+            <div class="accordion-body">
+                <!-- 標題 -->
+                <div class="mb-3">
+                    <label for="title" class="form-label">標題：</label>
+                    <input type="text" class="form-control" id="title" name="title" placeholder="房子名稱">
+                </div>
+
             <!-- 區域 -->
             <div class="mb-3">
               <label for="region" class="form-label">區域：</label>
@@ -56,7 +63,7 @@
             <!-- 屋齡 -->
             <div class="mb-3">
               <label for="age" class="form-label">屋齡(請填數字)：</label>
-              <input type="text" class="form-control" id="age" name="age" placeholder="單位:年，例:10">
+              <input type="text" class="form-control" id="age" name="age" placeholder="單位:年，例:10" required>
             </div>
 
             <!-- 地址 -->
@@ -84,7 +91,7 @@
             <!-- 坪數 -->
             <div class="mb-3">
               <label for="area" class="form-label">坪數(請填數字)：</label>
-              <input type="text" class="form-control" id="area" name="area" placeholder="單位:坪，例:40">
+              <input type="text" class="form-control" id="area" name="size" placeholder="單位:坪，例:40">
             </div>
 
             <!-- 類型 -->
@@ -98,10 +105,22 @@
               </select>
             </div>
 
+            <!-- 類型 -->
+            <div class="mb-3">
+              <label for="type" class="form-label">朝向：</label>
+              <select class="form-select" id="direction" name="direction">
+                <!-- 類型選項 -->
+                <option value="北">北</option>
+                <option value="東">東</option>
+                <option value="南">南</option>
+                <option value="西">西</option>
+              </select>
+            </div>
+
             <!-- 樓層 -->
             <div class="mb-3">
               <label for="floor" class="form-label">樓層：</label>
-              <input type="text" class="form-control" id="floor" name="floor" placeholder="單位:樓，例:11">
+              <input type="text" class="form-control" id="floor" name="level" placeholder="單位:樓，例:11">
             </div>
           </div>
         </div>
@@ -144,7 +163,7 @@
             <div class="mb-3">
               <label class="form-label">附近交通：</label>
               <!-- 附近交通(勾選框) -->
-              <label><input type="checkbox" name="subway" value="1"><span>捷運</span></label>
+              <label><input type="checkbox" name="mrt" value="1"><span>捷運</span></label>
               <label><input type="checkbox" name="bus" value="1"><span>公車</span></label>
               <label><input type="checkbox" name="train" value="1"><span>火車</span></label>
             </div>
@@ -217,19 +236,19 @@
             <!-- 月租費 -->
             <div class="mb-3">
               <label for="rent_fee">月租費(請填數字)：</label>
-              <input type="text" class="form-control" id="rent_fee" name="rent_fee" placeholder="單位: 新台幣，例:6000">
+              <input type="text" class="form-control" id="rent_fee" name="price" placeholder="單位: 新台幣，例:6000">
             </div>
 
             <!-- 管理費 -->
             <div class="mb-3">
               <label for="management_fee">管理費(請填數字)：</label>
-              <input type="text" class="form-control" id="management_fee" name="management_fee" placeholder="單位: 新台幣，例:800">
+              <input type="text" class="form-control" id="management_fee" name="management" placeholder="單位: 新台幣，例:800">
             </div>
 
             <!-- 最短租期 -->
             <div class="mb-3">
               <label for="lease_term">最短租期：</label>
-              <select name="lease_term" id="lease_term">
+              <select name="period" id="lease_term">
                 <!-- 租期選項 -->
                 <option value="6">半年</option>
                 <option value="12">一年</option>
@@ -281,7 +300,7 @@
 
     <!-- 上傳表單按鈕 -->
     <div class="d-flex justify-content-center mt-3">
-      <button type="submit" class="btn btn-primary">上傳</button>
+      <input type="submit" class="btn btn-primary" value="上傳">
     </div>
   </form>
 
@@ -290,16 +309,16 @@
 <!-- 引入 Bootstrap JS -->
 <script src="../../static/js/bootstrap_js/bootstrap.min.js"></script>
 <script>
-  document.getElementById("house-form").addEventListener("submit", function(event) {
-    event.preventDefault(); // 防止表單默認提交行為
+  {#document.getElementById("house-form").addEventListener("submit", function(event) {#}
+  {#  event.preventDefault(); // 防止表單默認提交行為#}
 
     // 在這裡添加將數據提交到後端的代碼
     // 可以使用 JavaScript 或任何後端框架來處理表單提交
     // 例如，您可以使用 fetch() 或 XMLHttpRequest 將數據發送到後端
 
     // 這裡只是一個示例警報，您可以將其替換為實際提交的代碼
-    alert("表單已提交！");
-  });
+  {#  alert("表單已提交！");#}
+  {# });#}
 </script>
 </body>
 </html>
