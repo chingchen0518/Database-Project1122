@@ -30,6 +30,6 @@ urlpatterns = [
     path('house_list/',my_app.views.house_list, name='house_lists'),
     path('house_rent_cont/<str:hId>',my_app.views.house_rent_cont),
     path('upload_page',my_app.views.upload_page),
+    path('upload_page/add_house',my_app.views.add_house, name='add_house'),
     path('delete/<str:hId>/', my_app.views.HouseDeleteView.as_view()),
-
 ]

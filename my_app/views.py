@@ -6,7 +6,6 @@ from django.db.models import Min
 from django.urls import reverse_lazy
 from django.views.generic import DeleteView
 
-
 #引入 Table
 from my_app.models import Member, House, Image,Equipment
 #引入 Table結束
@@ -71,6 +70,44 @@ def house_rent_cont(request,hId):
     return render(request, "house_rent_cont.html",{'row': rows[0],'images':image,'equipment':equipment[0]})
 
 def upload_page(request):
-    return render(request, "upload.html")
+    # age = request.POST['age']
+    # print(age)
+
+
+    return render(request, "add_house/add_house.html")
+
+def add_house(request):
+    region = request.POST['region']
+    # address = request.POST['address']
+    # age = request.POST['age']
+    # room = request.POST['room']
+    # bath = request.POST['bath']
+    # living = request.POST['living']
+    # size = request.POST['size']
+    # type = request.POST['type']
+    # level = request.POST['level']
+    # price = request.POST['price']
+
+    #Count next id
+    # latest_id = House.objects.filter(region=region).latest('hId')
+    # prefix = latest_id.hId[:-2]  # 取得 ID 前綴，即 'KH'
+    # number_part = int(latest_id.hId[-2:])  # 取得數字部分，轉換為整數，即 20
+    # next_number = number_part + 1  # 數字部分加 1，即 21
+    # next_id = f"{prefix}{next_number:02}"  # 將 ID 前綴與新的數字部分結合，並確保數字部分有兩位數，即 'KH21'
+
+    # print(price)
+    # with connection.cursor() as cursor:
+    #     cursor.execute('INSERT INTO House VALUES (%s, %s, %s, %s)',(next_id, 0,"tesitng",region))
+
+    # print()
+
+    # print(room)
+    # print(bath)
+    # print(living)
+    # print(size)
+    # print(type)
+    # print(level)
+
+    return render(request, "add_house/add_house.html")
 
 
