@@ -21,20 +21,59 @@
         <div class="accordion-body">
           <form>
             <div class="mb-3">
-                <label for="price" class="form-label">每月租屋價格：</label>
-                <input type="text" class="form-control" id="price" name="price" placeholder="單位:新台幣，例:8,000元">
+              <label for="region" class="form-label">區域：</label>
+              <select name="region" id="region" class="form-select">
+                <option value="1">臺北市</option>
+                <option value="2">新北市</option>
+                <option value="3">桃園市</option>
+                <option value="4">臺中市</option>
+                <option value="5">臺南市</option>
+                <option value="6">高雄市</option>
+                <option value="7">宜蘭縣</option>
+                <option value="8">新竹縣</option>
+                <option value="9">苗栗縣</option>
+                <option value="10">彰化縣</option>
+                <option value="11">南投縣</option>
+                <option value="12">雲林縣</option>
+                <option value="13">嘉義縣</option>
+                <option value="14">屏東縣</option>
+                <option value="15">臺東縣</option>
+                <option value="16">花蓮縣</option>
+                <option value="17">澎湖縣</option>
+                <option value="18">基隆市</option>
+                <option value="19">新竹市</option>
+                <option value="20">嘉義市</option>
+                <option value="21">金門縣</option>
+                <option value="22">連江縣</option>
+              </select>
             </div>
+            <div class="mb-3">
+              <label for="age" class="form-label">屋齡(請填數字)：</label>
+              <input type="text" class="form-control" id="age" name="age" placeholder="單位:年，例:10">
+            </div>
+
             <div class="mb-3">
               <label for="address" class="form-label">地址：</label>
               <input type="text" class="form-control" id="address" name="address" placeholder="例:高雄市三民區十全一路100號濟世大樓1樓">
             </div>
             <div class="mb-3">
-              <label for="layout" class="form-label">格局(房/客廳/衛)：</label>
-              <input type="text" class="form-control" id="layout" name="layout" placeholder="例:3房/2客廳/2衛">
+              <label class="form-label">格局(請填數字)：</label>
+              <div class="row">
+                <div class="col">
+                  <input type="text" class="form-control" id="room" name="room" placeholder="房">
+                </div>
+                <div class="col">
+                  <input type="text" class="form-control" id="living" name="living" placeholder="客廳">
+                </div>
+                <div class="col">
+                  <input type="text" class="form-control" id="bath" name="bath" placeholder="衛">
+                </div>
+              </div>
             </div>
+
             <div class="mb-3">
-              <label for="area" class="form-label">坪數：</label>
-              <input type="text" class="form-control" id="area" name="area" placeholder="例:40坪">
+              <label for="area" class="form-label">坪數(請填數字)：</label>
+              <input type="text" class="form-control" id="area" name="area" placeholder="單位:坪，例:40">
             </div>
             <div class="mb-3">
               <label for="type" class="form-label">類型：</label>
@@ -42,12 +81,11 @@
                 <option value="公寓">公寓</option>
                 <option value="別墅">別墅</option>
                 <option value="透天厝">透天厝</option>
-                <!-- 其他類型選項 -->
               </select>
             </div>
             <div class="mb-3">
               <label for="floor" class="form-label">樓層：</label>
-              <input type="text" class="form-control" id="floor" name="floor" placeholder="例:11樓">
+              <input type="text" class="form-control" id="floor" name="floor" placeholder="單位:樓，例:11">
             </div>
           </form>
         </div>
@@ -63,26 +101,72 @@
         <div class="accordion-body">
           <form>
             <div class="mb-3">
-              <label for="facilities" class="form-label">基礎設施：</label>
-              <textarea class="form-control" id="facilities" name="facilities" rows="3" placeholder="例:有電梯/停車場/保全"></textarea>
+              <label class="form-label">設備：</label>
+              <label><input type="checkbox" name="tv" value="1"><span>電視機</span></label>
+              <label><input type="checkbox" name="washer" value="1"><span>洗衣機</span></label>
+              <label><input type="checkbox" name="wifi" value="1"><span>網絡</span></label>
+              <label><input type="checkbox" name="refrigerator" value="1"><span>冰箱</span></label>
+              <label><input type="checkbox" name="gas" value="1"><span>瓦斯爐</span></label>
+              <label><input type="checkbox" name="aircond" value="1"><span>冷氣</span></label>
+              <label><input type="checkbox" name="heater" value="1"><span>熱水器</span></label>
+              <label><input type="checkbox" name="channel4" value="1"><span>第四台</span></label>
             </div>
             <div class="mb-3">
-              <label for="transport" class="form-label">交通：</label>
-              <textarea class="form-control" id="transport" name="transport" rows="3" placeholder="例:周邊有地鐵/火車/公車/自行車"></textarea>
+              <label class="form-label">家具：</label>
+              <label><input type="checkbox" name="sofa" value="1"><span>沙發</span></label>
+              <label><input type="checkbox" name="bed" value="1"><span>床組</span></label>
+              <label><input type="checkbox" name="cabinet" value="1"><span>櫃子</span></label>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">附近交通：</label>
+              <label><input type="checkbox" name="subway" value="1"><span>捷運</span></label>
+              <label><input type="checkbox" name="bus" value="1"><span>公車</span></label>
+              <label><input type="checkbox" name="train" value="1"><span>火車</span></label>
+            </div>
+
+            <div class="mb-3">
+              <label for="cc_lift">電梯</label>
+              <select name="lift" id="cc_lift">
+                <option value="1">有</option>
+                <option value="0">無</option>
+              </select>
             </div>
             <div class="mb-3">
-              <label for="life" class="form-label">生活：</label>
-              <textarea class="form-control" id="life" name="life" rows="3" placeholder="例:允許寵物/烹飪"></textarea>
+              <label for="cc_cook">開伙</label>
+              <select name="cook" id="cc_cook">
+                <option value="1">可以</option>
+                <option value="0">不可以</option>
+              </select>
             </div>
             <div class="mb-3">
-              <label for="lease-term" class="form-label">租期：</label>
-              <input type="text" class="form-control" id="lease-term" name="lease-term" placeholder="例:一年">
+              <label for="cc_pet">寵物</label>
+              <select name="pet" id="cc_pet">
+                <option value="1">可以</option>
+                <option value="0">不可以</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="cc_security">警衛</label>
+              <select name="security" id="cc_security">
+                <option value="有(日閒)">有(日閒)</option>
+                <option value="有(全天)">有(全天)</option>
+                <option value="無">無</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="cc_parking">停車位</label>
+              <select name="parking" id="cc_parking">
+                <option value="無">無</option>
+                <option value="有">有</option>
+              </select>
             </div>
           </form>
         </div>
       </div>
     </div>
-      <div class="accordion-item">
+
+    <div class="accordion-item">
       <h2 class="accordion-header" id="features-heading">
         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#features" aria-expanded="false" aria-controls="features">
           特色描寫
