@@ -126,41 +126,42 @@
             </div>
 
             <div class="mb-3">
-              <label for="cc_lift">電梯</label>
-              <select name="lift" id="cc_lift">
-                <option value="1">有</option>
-                <option value="0">無</option>
-              </select>
-            </div>
-            <div class="mb-3">
-              <label for="cc_cook">開伙</label>
-              <select name="cook" id="cc_cook">
-                <option value="1">可以</option>
-                <option value="0">不可以</option>
-              </select>
-            </div>
-            <div class="mb-3">
-              <label for="cc_pet">寵物</label>
-              <select name="pet" id="cc_pet">
-                <option value="1">可以</option>
-                <option value="0">不可以</option>
-              </select>
-            </div>
-            <div class="mb-3">
-              <label for="cc_security">警衛</label>
-              <select name="security" id="cc_security">
-                <option value="有(日閒)">有(日閒)</option>
-                <option value="有(全天)">有(全天)</option>
-                <option value="無">無</option>
-              </select>
-            </div>
-            <div class="mb-3">
-              <label for="cc_parking">停車位</label>
-              <select name="parking" id="cc_parking">
-                <option value="無">無</option>
-                <option value="有">有</option>
-              </select>
-            </div>
+  <label for="lift" class="form-label">電梯：</label>
+  <select class="form-select" id="lift" name="lift">
+    <option value="1">有</option>
+    <option value="0">無</option>
+  </select>
+</div>
+<div class="mb-3">
+  <label for="cook" class="form-label">開伙：</label>
+  <select class="form-select" id="cook" name="cook">
+    <option value="1">可以</option>
+    <option value="0">不可以</option>
+  </select>
+</div>
+<div class="mb-3">
+  <label for="pet" class="form-label">寵物：</label>
+  <select class="form-select" id="pet" name="pet">
+    <option value="1">可以</option>
+    <option value="0">不可以</option>
+  </select>
+</div>
+<div class="mb-3">
+  <label for="security" class="form-label">警衛：</label>
+  <select class="form-select" id="security" name="security">
+    <option value="有(日閒)">有(日閒)</option>
+    <option value="有(全天)">有(全天)</option>
+    <option value="無">無</option>
+  </select>
+</div>
+<div class="mb-3">
+  <label for="parking" class="form-label">停車位：</label>
+  <select class="form-select" id="parking" name="parking">
+    <option value="無">無</option>
+    <option value="有">有</option>
+  </select>
+</div>
+
           </form>
         </div>
       </div>
@@ -236,5 +237,11 @@
 </div>
 
 <!-- 引入 Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script></body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script>
+  document.getElementById("upload-button").addEventListener("click", function() {
+    alert("上傳成功！");
+  });
+</script>
+</body>
 </html>
