@@ -10,7 +10,7 @@
 
 <div class="container">
   <h1 class="mt-5">新增房屋</h1>
-  <form id="house-form">
+  <form id="house-form" method="POST" action="{% url 'add_house' %}>
     <div class="accordion" id="accordion">
       <div class="accordion-item">
         <h2 class="accordion-header" id="introduction-heading">
