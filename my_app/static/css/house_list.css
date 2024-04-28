@@ -110,6 +110,30 @@ ul{
     margin-left: 20px;
 }
 
+.product{
+    margin-left: 40px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.product img{
+    float: left;
+    width: 270px;
+    border-radius: 5%;
+}
+
+.detail{
+    position: relative;
+    height: 200px;
+    margin-left: 300px;
+}
+
+.title{
+    margin-top: 10px;
+    margin-bottom: 20px;
+    font-size: 35px;
+}
+
 hr{
     width: 93%;
 }
@@ -119,13 +143,21 @@ a{
     color: black;
 }
 
+.type, .size, .level{
+    display: inline-block;
+    font-size: 20px;
+}
 
+.room, .bath, .living{
+    display: inline-block;
+    font-size: 15px;
+}
 
 .situation, .layout{
     padding: 0px;
 }
 
-.type, .size, .room, .living{
+.type, .size, .room, .bath{
     padding-right: 10px;
     border-right: 2px solid rgb(148, 148, 148);
 }
@@ -158,4 +190,3 @@ a{
 .price span{
     font-size: 35px;
 }
-
