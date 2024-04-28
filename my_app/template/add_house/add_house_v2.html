@@ -5,14 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>新增房屋</title>
   <!-- 引入 Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"></head>
-<body>
+  <link href="../../static/css/bootstrap_css/bootstrap.min.css" rel="stylesheet">
+  <body>
 
 <div class="container">
+  <!-- 本頁面標題 -->
   <h1 class="mt-5">新增房屋</h1>
   <form id="house-form">
     <div class="accordion" id="accordion">
       <div class="accordion-item">
+
+        <!-- 簡介(下拉式列表) -->
         <h2 class="accordion-header" id="introduction-heading">
           <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#introduction" aria-expanded="true" aria-controls="introduction">
             簡介
@@ -20,9 +23,11 @@
         </h2>
         <div id="introduction" class="accordion-collapse collapse show" aria-labelledby="introduction-heading" data-bs-parent="#accordion">
           <div class="accordion-body">
+            <!-- 區域 -->
             <div class="mb-3">
               <label for="region" class="form-label">區域：</label>
               <select name="region" id="region" class="form-select">
+                <!-- 區域選項 -->
                 <option value="1">臺北市</option>
                 <option value="2">新北市</option>
                 <option value="3">桃園市</option>
@@ -47,15 +52,20 @@
                 <option value="22">連江縣</option>
               </select>
             </div>
+
+            <!-- 屋齡 -->
             <div class="mb-3">
               <label for="age" class="form-label">屋齡(請填數字)：</label>
               <input type="text" class="form-control" id="age" name="age" placeholder="單位:年，例:10">
             </div>
 
+            <!-- 地址 -->
             <div class="mb-3">
               <label for="address" class="form-label">地址：</label>
               <input type="text" class="form-control" id="address" name="address" placeholder="例:高雄市三民區十全一路100號濟世大樓1樓">
             </div>
+
+            <!-- 格局 -->
             <div class="mb-3">
               <label class="form-label">格局(請填數字)：</label>
               <div class="row">
@@ -71,18 +81,24 @@
               </div>
             </div>
 
+            <!-- 坪數 -->
             <div class="mb-3">
               <label for="area" class="form-label">坪數(請填數字)：</label>
               <input type="text" class="form-control" id="area" name="area" placeholder="單位:坪，例:40">
             </div>
+
+            <!-- 類型 -->
             <div class="mb-3">
               <label for="type" class="form-label">類型：</label>
               <select class="form-select" id="type" name="type">
+                <!-- 類型選項 -->
                 <option value="公寓">公寓</option>
                 <option value="別墅">別墅</option>
                 <option value="透天厝">透天厝</option>
               </select>
             </div>
+
+            <!-- 樓層 -->
             <div class="mb-3">
               <label for="floor" class="form-label">樓層：</label>
               <input type="text" class="form-control" id="floor" name="floor" placeholder="單位:樓，例:11">
@@ -90,6 +106,8 @@
           </div>
         </div>
       </div>
+
+      <!-- 細節(下拉式列表) -->
       <div class="accordion-item">
         <h2 class="accordion-header" id="details-heading">
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#details" aria-expanded="false" aria-controls="details">
@@ -98,8 +116,11 @@
         </h2>
         <div id="details" class="accordion-collapse collapse" aria-labelledby="details-heading" data-bs-parent="#accordion">
           <div class="accordion-body">
+
+            <!-- 設備 -->
             <div class="mb-3">
               <label class="form-label">設備：</label>
+              <!-- 設備(勾選框) -->
               <label><input type="checkbox" name="tv" value="1"><span>電視機</span></label>
               <label><input type="checkbox" name="washer" value="1"><span>洗衣機</span></label>
               <label><input type="checkbox" name="wifi" value="1"><span>網絡</span></label>
@@ -109,52 +130,71 @@
               <label><input type="checkbox" name="heater" value="1"><span>熱水器</span></label>
               <label><input type="checkbox" name="channel4" value="1"><span>第四台</span></label>
             </div>
+
+            <!-- 家具 -->
             <div class="mb-3">
               <label class="form-label">家具：</label>
+              <!-- 設備(勾選框) -->
               <label><input type="checkbox" name="sofa" value="1"><span>沙發</span></label>
               <label><input type="checkbox" name="bed" value="1"><span>床組</span></label>
               <label><input type="checkbox" name="cabinet" value="1"><span>櫃子</span></label>
             </div>
 
+            <!-- 附近交通 -->
             <div class="mb-3">
               <label class="form-label">附近交通：</label>
+              <!-- 附近交通(勾選框) -->
               <label><input type="checkbox" name="subway" value="1"><span>捷運</span></label>
               <label><input type="checkbox" name="bus" value="1"><span>公車</span></label>
               <label><input type="checkbox" name="train" value="1"><span>火車</span></label>
             </div>
 
+            <!-- 電梯 -->
             <div class="mb-3">
               <label for="lift" class="form-label">電梯：</label>
               <select class="form-select" id="lift" name="lift">
+                <!-- 電梯選項 -->
                 <option value="1">有</option>
                 <option value="0">無</option>
               </select>
             </div>
+
+            <!-- 開伙 -->
             <div class="mb-3">
               <label for="cook" class="form-label">開伙：</label>
               <select class="form-select" id="cook" name="cook">
+                <!-- 開伙選項 -->
                 <option value="1">可以</option>
                 <option value="0">不可以</option>
               </select>
             </div>
+
+            <!-- 寵物 -->
             <div class="mb-3">
               <label for="pet" class="form-label">寵物：</label>
               <select class="form-select" id="pet" name="pet">
+                <!-- 寵物選項 -->
                 <option value="1">可以</option>
                 <option value="0">不可以</option>
               </select>
             </div>
+
+            <!-- 警衛 -->
             <div class="mb-3">
               <label for="security" class="form-label">警衛：</label>
               <select class="form-select" id="security" name="security">
+                <!-- 警衛選項 -->
                 <option value="有(日閒)">有(日閒)</option>
                 <option value="有(全天)">有(全天)</option>
                 <option value="無">無</option>
               </select>
             </div>
+
+            <!-- 停車位 -->
             <div class="mb-3">
               <label for="parking" class="form-label">停車位：</label>
               <select class="form-select" id="parking" name="parking">
+                <!-- 停車位選項 -->
                 <option value="無">無</option>
                 <option value="有">有</option>
               </select>
@@ -163,6 +203,8 @@
           </div>
         </div>
       </div>
+
+      <!-- 租金(下拉式列表) -->
       <div class="accordion-item">
         <h2 class="accordion-header" id="rent-heading">
           <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#rent" aria-expanded="false" aria-controls="rent">
@@ -171,17 +213,24 @@
         </h2>
         <div id="rent" class="accordion-collapse collapse" aria-labelledby="rent-heading" data-bs-parent="#accordion">
           <div class="accordion-body">
+
+            <!-- 月租費 -->
             <div class="mb-3">
               <label for="rent_fee">月租費(請填數字)：</label>
               <input type="text" class="form-control" id="rent_fee" name="rent_fee" placeholder="單位: 新台幣，例:6000">
             </div>
+
+            <!-- 管理費 -->
             <div class="mb-3">
               <label for="management_fee">管理費(請填數字)：</label>
               <input type="text" class="form-control" id="management_fee" name="management_fee" placeholder="單位: 新台幣，例:800">
             </div>
+
+            <!-- 最短租期 -->
             <div class="mb-3">
               <label for="lease_term">最短租期：</label>
               <select name="lease_term" id="lease_term">
+                <!-- 租期選項 -->
                 <option value="6">半年</option>
                 <option value="12">一年</option>
                 <option value="24">兩年</option>
@@ -190,14 +239,18 @@
           </div>
         </div>
       </div>
+
+      <!-- 特色描寫(下拉式列表) -->
       <div class="accordion-item">
         <h2 class="accordion-header" id="features-heading">
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#features" aria-expanded="false" aria-controls="features">
             特色描寫
           </button>
         </h2>
+
         <div id="features" class="accordion-collapse collapse" aria-labelledby="features-heading" data-bs-parent="#accordion">
           <div class="accordion-body">
+            <!-- 廣告標語 -->
             <div class="mb-3">
               <label for="features-description" class="form-label">房屋特色描述(廣告標語)：</label>
               <textarea class="form-control" id="features-description" name="features-description" rows="3" placeholder="例:這間房屋具有優越的交通便利性，並配備了現代化的家電設備。您可以在這裡輕鬆享受生活，並擁有一個舒適的居住環境。"></textarea>
@@ -205,6 +258,8 @@
           </div>
         </div>
       </div>
+
+      <!-- 所有圖片(下拉式列表) -->
       <div class="accordion-item">
         <h2 class="accordion-header" id="images-heading">
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#images" aria-expanded="false" aria-controls="images">
@@ -213,6 +268,7 @@
         </h2>
         <div id="images" class="accordion-collapse collapse" aria-labelledby="images-heading" data-bs-parent="#accordion">
           <div class="accordion-body">
+            <!-- 上傳圖片的按鈕 -->
             <div class="mb-3">
               <label for="image-upload" class="form-label">上傳圖片：</label>
               <input type="file" class="form-control" id="image-upload" name="image-upload" accept=".jpg, .jpeg, .png">
@@ -222,7 +278,8 @@
         </div>
       </div>
     </div>
-    <!-- 上傳按鈕 -->
+
+    <!-- 上傳表單按鈕 -->
     <div class="d-flex justify-content-center mt-3">
       <button type="submit" class="btn btn-primary">上傳</button>
     </div>
@@ -231,7 +288,7 @@
 </div>
 
 <!-- 引入 Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="../../static/js/bootstrap_js/bootstrap.min.js"></script>
 <script>
   document.getElementById("house-form").addEventListener("submit", function(event) {
     event.preventDefault(); // 防止表單默認提交行為
