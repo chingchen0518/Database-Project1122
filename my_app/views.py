@@ -74,31 +74,37 @@ def upload_page(request):
     # print(age)
 
 
-    return render(request, "add_house/add_house.html")
+    return render(request, "add_house/add_house_v2.html")
 
 def add_house(request):
+    # House
     region = request.POST['region']
-    # address = request.POST['address']
-    # age = request.POST['age']
-    # room = request.POST['room']
-    # bath = request.POST['bath']
-    # living = request.POST['living']
-    # size = request.POST['size']
-    # type = request.POST['type']
-    # level = request.POST['level']
-    # price = request.POST['price']
+    title = request.POST['title']
+    # Info
+    fields = ['address', 'room', 'bath', 'living', 'size', 'type', 'level', 'price']
+    Info = {field: request.POST[field] for field in fields}
 
-    #Count next id
-    # latest_id = House.objects.filter(region=region).latest('hId')
-    # prefix = latest_id.hId[:-2]  # 取得 ID 前綴，即 'KH'
-    # number_part = int(latest_id.hId[-2:])  # 取得數字部分，轉換為整數，即 20
-    # next_number = number_part + 1  # 數字部分加 1，即 21
-    # next_id = f"{prefix}{next_number:02}"  # 將 ID 前綴與新的數字部分結合，並確保數字部分有兩位數，即 'KH21'
+    # Rdetails
+    fields = ['parking','pet','cook','direction','level','security','management','period','bus','train','mrt','age']
+    Rdetails = {field: request.POST.get(field, '0') for field in fields}
+    print(Rdetails)
 
-    # print(price)
-    # with connection.cursor() as cursor:
-    #     cursor.execute('INSERT INTO House VALUES (%s, %s, %s, %s)',(next_id, 0,"tesitng",region))
+    # Equipments
+    fields = ['sofa', 'tv', 'washer', 'wifi', 'bed', 'refrigerator', 'heater', 'channel4', 'cabinet', 'aircond', 'gas']
+    Equip = {field: request.POST.get(field, '0') for field in fields}
 
+    # Count next id
+    latest_id = House.objects.filter(region=region).latest('hId')
+    prefix = latest_id.hId[:-2]  # 取得 ID 前綴，即 'KH'
+    number_part = int(latest_id.hId[-2:])  # 取得數字部分，轉換為整數，即 20
+    next_number = number_part + 1  # 數字部分加 1，即 21
+    next_id = f"{prefix}{next_number:02}"  # 將 ID 前綴與新的數字部分結合，並確保數字部分有兩位數，即 'KH21'
+
+    with connection.cursor() as cursor:
+        cursor.execute('INSERT INTO House VALUES (%s, %s, %s, %s)',(next_id, 0,title,region))
+        cursor.execute('INSERT INTO Info  VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s)',(next_id,Info['price'],Info['address'],Info['level'],Info['room'],Info['living'],Info['bath'],Info['type'],Info['size']))
+        cursor.execute('INSERT INTO Equipment  VALUES (%s, %s,%s,%s, %s,%s, %s, %s, %s, %s, %s, %s)',(next_id,Equip['sofa'], Equip['tv'], Equip['washer'], Equip['wifi'], Equip['bed'], Equip['refrigerator'], Equip['heater'], Equip['channel4'], Equip['cabinet'], Equip['aircond'], Equip['gas']))
+        cursor.execute("INSERT INTO Rdetail VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",(next_id,"0",Rdetails['parking'],Rdetails['pet'],Rdetails['cook'],Rdetails['direction'],Rdetails['level'],Rdetails['security'],Rdetails['management'],Rdetails['period'],Rdetails['bus'],Rdetails['train'],Rdetails['mrt'],Rdetails['age']))
     # print()
 
     # print(room)
@@ -108,6 +114,6 @@ def add_house(request):
     # print(type)
     # print(level)
 
-    return render(request, "add_house/add_house.html")
+    return render(request, "add_house/add_house_v2.html")
 
 

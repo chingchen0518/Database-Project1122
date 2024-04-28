@@ -24,6 +24,7 @@
 
           <form id="form1" method="POST" action="{% url 'add_house' %}">
               {% csrf_token %}
+
             <div class="mb-3">
               <label for="region" class="form-label">區域：</label>
               <select name="region" id="region" class="form-select">
@@ -240,7 +241,7 @@
   </div>
   <!-- 上傳按鈕 -->
   <div class="d-flex justify-content-center mt-3">
-    <button type="button" class="btn btn-primary" id="upload-button" onclick="submitForms()">上傳</button>
+    <input type="button" class="btn btn-primary" id="upload-button" onclick="submitForms()">上傳</input>
   </div>
 
 </div>
