@@ -6,12 +6,16 @@
   <title>新增房屋</title>
   <!-- 引入 Bootstrap CSS -->
   <link href="../../static/css/bootstrap_css/bootstrap.min.css" rel="stylesheet">
-  <body>
+</head>
+
+<body>
 
 <div class="container">
   <!-- 本頁面標題 -->
   <h1 class="mt-5">新增房屋</h1>
-  <form id="house-form" method="POST" action="{% url 'add_house' %}>
+  <form id="form1" method="POST" action="{% url 'add_house' %}">
+              {% csrf_token %}
+
     <div class="accordion" id="accordion">
       <div class="accordion-item">
 
