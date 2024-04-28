@@ -165,7 +165,33 @@
         </div>
       </div>
     </div>
-
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="rent-heading">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#rent" aria-expanded="false" aria-controls="rent">
+                租金
+        </button>
+      </h2>
+      <div id="rent" class="accordion-collapse collapse" aria-labelledby="rent-heading" data-bs-parent="#accordion">
+        <div class="accordion-body">
+          <div class="mb-3">
+                <label for="rent_fee">月租費(請填數字)：</label>
+                <input type="text" class="form-control" id="rent_fee" name="rent_fee" placeholder="單位: 新台幣，例:6000">
+          </div>
+          <div class="mb-3">
+            <label for="management_fee">管理費(請填數字)：</label>
+            <input type="text" class="form-control" id="management_fee" name="management_fee" placeholder="單位: 新台幣，例:800">
+          </div>
+          <div class="mb-3">
+            <label for="lease_term">最短租期：</label>
+            <select name="lease_term" id="lease_term">
+              <option value="6">半年</option>
+              <option value="12">一年</option>
+              <option value="24">兩年</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="accordion-item">
       <h2 class="accordion-header" id="features-heading">
         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#features" aria-expanded="false" aria-controls="features">
@@ -176,8 +202,8 @@
         <div class="accordion-body">
           <form>
             <div class="mb-3">
-                <label for="features-description" class="form-label">房屋特色描述：</label>
-                <textarea class="form-control" id="features-description" name="features-description" rows="3" placeholder="這間房屋具有優越的交通便利性，並配備了現代化的家電設備。您可以在這裡輕鬆享受生活，並擁有一個舒適的居住環境。"></textarea>
+                <label for="features-description" class="form-label">房屋特色描述(廣告標語)：</label>
+                <textarea class="form-control" id="features-description" name="features-description" rows="3" placeholder="例:這間房屋具有優越的交通便利性，並配備了現代化的家電設備。您可以在這裡輕鬆享受生活，並擁有一個舒適的居住環境。"></textarea>
             </div>
           </form>
         </div>
@@ -202,6 +228,11 @@
       </div>
     </div>
   </div>
+  <!-- 上傳按鈕 -->
+  <div class="d-flex justify-content-center mt-3">
+    <button type="button" class="btn btn-primary" id="upload-button">上傳</button>
+  </div>
+
 </div>
 
 <!-- 引入 Bootstrap JS -->
