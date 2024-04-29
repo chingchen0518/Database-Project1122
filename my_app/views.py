@@ -13,8 +13,8 @@ from my_app.models import Member, House, Image,Equipment
 class HouseDeleteView(DeleteView):
     model = House
     success_url = reverse_lazy("house_lists")
-    template_name = 'delete.html'
-    pk_url_kwarg = 'hId' #告訴他用url中的哪個東西作爲primarykey
+    template_name = 'delete.html' #之後加一個取消
+    pk_url_kwarg = 'hId' #告訴他用url中的哪個東西作爲primary_key
 
 def index(request):
     variables=request.GET['id']
@@ -73,7 +73,6 @@ def upload_page(request):
     # age = request.POST['age']
     # print(age)
 
-
     return render(request, "add_house/add_house_v2.html")
 
 def add_house(request):
@@ -83,6 +82,7 @@ def add_house(request):
     # Info
     fields = ['address', 'room', 'bath', 'living', 'size', 'type', 'level', 'price']
     Info = {field: request.POST[field] for field in fields}
+    print(Info)
 
     # Rdetails
     fields = ['parking','pet','cook','direction','level','security','management','period','bus','train','mrt','age']
@@ -106,7 +106,7 @@ def add_house(request):
         cursor.execute('INSERT INTO Equipment  VALUES (%s, %s,%s,%s, %s,%s, %s, %s, %s, %s, %s, %s)',(next_id,Equip['sofa'], Equip['tv'], Equip['washer'], Equip['wifi'], Equip['bed'], Equip['refrigerator'], Equip['heater'], Equip['channel4'], Equip['cabinet'], Equip['aircond'], Equip['gas']))
         cursor.execute("INSERT INTO Rdetail VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",(next_id,"0",Rdetails['parking'],Rdetails['pet'],Rdetails['cook'],Rdetails['direction'],Rdetails['level'],Rdetails['security'],Rdetails['management'],Rdetails['period'],Rdetails['bus'],Rdetails['train'],Rdetails['mrt'],Rdetails['age']))
 
-    return render(request, "add_house/add_house_v2.html")
+    return render(request, "homepage.html")
 
 def account_center(request):
     return render(request, "account_center.html")

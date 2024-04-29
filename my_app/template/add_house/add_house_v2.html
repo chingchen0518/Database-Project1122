@@ -319,10 +319,35 @@
     // 在這裡添加將數據提交到後端的代碼
     // 可以使用 JavaScript 或任何後端框架來處理表單提交
     // 例如，您可以使用 fetch() 或 XMLHttpRequest 將數據發送到後端
+   function validateForm() {
+    var form = document.getElementById("house-form");
+    var inputs = form.querySelectorAll("input, select");
+    var isValid = true;
+    var isAlerted = false; // 變數來追蹤是否已經顯示了提示訊息
+    var unfilledFields = ""; // 變數來儲存未填寫欄位
 
-    // 這裡只是一個示例警報，您可以將其替換為實際提交的代碼
-  {#  alert("表單已提交！");#}
-  {# });#}
+    inputs.forEach(function(input) {
+        // 獲取自定義屬性的值
+        var message = input.previousElementSibling.dataset.message;
+
+        if (input.required && !input.value.trim()) {
+            isValid = false;
+            input.classList.add("required-field"); // 將未填寫欄位的背景顏色改成紅色
+            if (!isAlerted) { // 如果還沒有顯示過提示訊息，則顯示
+                isAlerted = true; // 更新狀態，表示已經顯示過提示訊息
+                // 將未填寫欄位的 label 文字加入到 unfilledFields 字串中
+                unfilledFields += `${message}, `;
+            }
+        }
+    });
+
+    if (isValid) {
+        alert("表單已成功提交！");
+    } else {
+        // 提示未填寫欄位
+        alert("請填寫所有欄位，未填欄位為: " + unfilledFields.slice(0, -2));
+    }
+}
 </script>
 </body>
 </html>
