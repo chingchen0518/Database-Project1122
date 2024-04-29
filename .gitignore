@@ -1,3 +1,4 @@
 .ini
 *.ini
-house2.sqlite3
+/my_app/migrations
+/my_app/__pycache__

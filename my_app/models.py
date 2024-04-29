@@ -90,3 +90,12 @@ class Usersssssssss(models.Model):
      name2 = models.CharField(max_length=100, unique=True, default="0")
      class Meta:
         db_table = 'Usersssssssss'
+
+class Useryyyyy(models.Model):
+   mId = models.CharField(max_length=100, primary_key=True, unique=True)
+   password = models.CharField(max_length=100, default="0")
+   name222 = models.CharField(max_length=100, unique=True, default="0")
+   name2 = models.CharField(max_length=100, unique=True, default="0")
+
+   class Meta:
+        db_table = 'Useryyyyy'
