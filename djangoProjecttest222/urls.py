@@ -32,4 +32,5 @@ urlpatterns = [
     path('upload_page',my_app.views.upload_page),
     path('upload_page/add_house',my_app.views.add_house, name='add_house'),
     path('delete/<str:hId>/', my_app.views.HouseDeleteView.as_view()),
+    path('account_center/',my_app.views.account_center),
 ]
