@@ -38,7 +38,7 @@ class Equipment(models.Model):
         db_table = 'Equipment'
 
 class Info(models.Model):
-     hId = models.OneToOneField(House,primary_key=True,on_delete=models.CASCADE,to_field='hId',auto_created=False)
+     hId = models.OneToOneField(House,to_field='hId',primary_key=True,on_delete=models.CASCADE,auto_created=False)
      price = models.IntegerField(default=0)
      size = models.FloatField(default=5)
      address = models.CharField(max_length=1000,default="--")
