@@ -2,3 +2,4 @@
 *.ini
 /my_app/migrations
 /my_app/__pycache__
+*.pyc
