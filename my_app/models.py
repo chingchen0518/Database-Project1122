@@ -21,14 +21,14 @@ class House(models.Model):
      class Meta:
         db_table = 'House'
 class Equipment(models.Model):
-     hId = models.OneToOneField(House,primary_key=True,on_delete=models.PROTECT,to_field='hId',auto_created=False)
+     hId = models.OneToOneField(House,primary_key=True,on_delete=models.CASCADE,to_field='hId',auto_created=False)
      sofa = models.IntegerField(default=0)
      tv = models.IntegerField(default=0)
-     wash_machine = models.IntegerField(default=0)
+     washer = models.IntegerField(default=0)
      wifi = models.IntegerField(default=0)
      bed = models.IntegerField(default=0)
      refrigerator = models.IntegerField(default=0)
-     hotwater = models.IntegerField(default=0)
+     heater = models.IntegerField(default=0)
      channel4 = models.IntegerField(default=0)
      cabinet = models.IntegerField(default=0)
      aircond = models.IntegerField(default=0)
@@ -38,9 +38,9 @@ class Equipment(models.Model):
         db_table = 'Equipment'
 
 class Info(models.Model):
-     hId = models.OneToOneField(House,primary_key=True,on_delete=models.PROTECT,to_field='hId',auto_created=False)
+     hId = models.OneToOneField(House,to_field='hId',primary_key=True,on_delete=models.CASCADE,auto_created=False)
      price = models.IntegerField(default=0)
-     size = models.IntegerField(default=5)
+     size = models.FloatField(default=5)
      address = models.CharField(max_length=1000,default="--")
      level = models.IntegerField(default=5)
      room = models.IntegerField(default=1)
@@ -65,8 +65,8 @@ class Rdetail(models.Model):
      cook = models.IntegerField(default=0)
 
      direction = models.CharField(max_length=10, default="--")
-     in_level = models.IntegerField(default=1)
-     age = models.IntegerField(default=0)
+     level = models.IntegerField(default=1)
+     age = models.FloatField(default=0)
      security = models.CharField(max_length=10, default="--")
      management = models.IntegerField(default=0)
 
@@ -76,3 +76,9 @@ class Rdetail(models.Model):
      mrt = models.IntegerField(default=0)
      class Meta:
         db_table = 'Rdetail'
+
+class Userssss(models.Model):
+     mId = models.CharField(max_length=100, primary_key=True,unique=True)
+     password= models.CharField(max_length=100, default="0")
+     class Meta:
+        db_table = 'Userssss'
