@@ -69,6 +69,7 @@ def house_rent_cont(request,hId):
 
     return render(request, "house_rent_cont.html",{'row': rows[0],'images':image,'equipment':equipment[0]})
 
+<<<<<<< Updated upstream
 def upload_page(request):
     # age = request.POST['age']
     # print(age)
@@ -117,3 +118,7 @@ def add_house(request):
     return render(request, "add_house/add_house_v2.html")
 
 
+=======
+def account_center(request):
+    return render(request, "account_center.html")
+>>>>>>> Stashed changes

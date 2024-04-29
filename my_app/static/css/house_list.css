@@ -2,7 +2,7 @@ body{
     margin: 0px;
 }
 
-#navbar{
+#yc_navbar{
     position:fixed;
     width:100%;
     height:80px;
@@ -12,29 +12,29 @@ body{
     display:flex;
 }
 
-#gate{
+#yc_gate{
     width:100%;
     height:80px;
 }
 
-#nav_logo{
+#yc_nav_logo{
     width:5%;
 }
 
-#nav_logo img{
+#yc_nav_logo img{
     height:60px;
     width:100%;
 }
 
-#search_bar{
+#yc_search_bar{
     width: 30%;
     margin-left: 10%;
 }
-#search_bar input{
+#yc_search_bar input{
     width: 100%;
 }
 
-#nav_content a{
+#yc_nav_content a{
     margin-right:20px;
     font-size:20px;
     color:white;
@@ -42,32 +42,55 @@ body{
     font-family:Montserrat;
 }
 
-#nav_content a:hover{
+#yc_nav_content a:hover{
     text-decoration:underline;
     color:#04566E;
 }
 
-#nav_menu{
+#yc_nav_menu{
     width:95%;
 }
 
-#nav_content{
+#yc_nav_content{
     float: right;
     height: 80px;
     align-content: center;
 }
 
-#content{
+#yc_listed{
+    width: 45%;
+}
+
+#yc_listed ul{
+    width: 100%;
+    height: 30px;
+    align-content: center;
+    margin: 0px;
+    font-size: 14px;
+}
+
+#yc_listed ul li{
+    width: 10%;
+    float: left;
+}
+
+#yc_listed ul p{
+    width: 10%;
+    float: left;
+    margin: 0px;
+}
+
+#yc_content{
     margin-top: 30px;
     width: 100%;
 }
 
-#left_content{
+#yc_left_content{
     display: inline-block;
     width: 80%;
 }
 
-#select, .search_results{
+#yc_select, .yc_search_results{
     width: 100%;
 }
 
@@ -75,11 +98,11 @@ ul{
     list-style: none;
 }
 
-.search_results{
+.yc_search_results{
     height: 80px;
 }
 
-.choice{
+.yc_choice{
     font-weight: bold;
     float: left;
     width: 130px;
@@ -89,14 +112,14 @@ ul{
     font-size: 16px;
 }
 
-#amount{
+#yc_amount{
     display: inline-block;
     font-weight: bold;
     margin-left: 40px;
     font-size: 25px;
 }
 
-#switch_way{
+#yc_switch_way{
     float: right;
     align-content: center;
     height: 80px;
@@ -104,7 +127,7 @@ ul{
     margin-right: 50px;
 }
 
-#switch_way li{
+#yc_switch_way li{
     display: inline-block;
     font-size: 16px;
     margin-left: 20px;
@@ -148,6 +171,7 @@ a{
     font-size: 20px;
 }
 
+<<<<<<< Updated upstream
 .room, .bath, .living{
     display: inline-block;
     font-size: 15px;
@@ -190,3 +214,5 @@ a{
 .price span{
     font-size: 35px;
 }
+=======
+>>>>>>> Stashed changes
