@@ -6,6 +6,13 @@
   <title>新增房屋</title>
   <!-- 引入 Bootstrap CSS -->
   <link href="../../static/css/bootstrap_css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    .required-field {
+      background-color: #ffcccc; /* 紅色背景 */
+    }
+  </style>
+
 </head>
 
 <body>
@@ -30,15 +37,16 @@
             <div class="accordion-body">
                 <!-- 標題 -->
                 <div class="mb-3">
-                    <label for="title" class="form-label">標題：</label>
-                    <input type="text" class="form-control" id="title" name="title" placeholder="房子名稱">
+                    <label for="title" class="form-label" data-message="標題">標題：</label>
+                    <input type="text" class="form-control" id="title" name="title" placeholder="房子名稱" required>
                 </div>
 
             <!-- 區域 -->
             <div class="mb-3">
-              <label for="region" class="form-label">區域：</label>
-              <select name="region" id="region" class="form-select">
+              <label for="region" class="form-label" data-message="區域">區域：</label>
+              <select name="region" id="region" class="form-select" required>
                 <!-- 區域選項 -->
+                <option value="" selected>請選擇</option>
                 <option value="1">臺北市</option>
                 <option value="2">新北市</option>
                 <option value="3">桃園市</option>
@@ -66,42 +74,42 @@
 
             <!-- 屋齡 -->
             <div class="mb-3">
-              <label for="age" class="form-label">屋齡(請填數字)：</label>
+              <label for="age" class="form-label" data-message="屋齡">屋齡(請填數字)：</label>
               <input type="text" class="form-control" id="age" name="age" placeholder="單位:年，例:10" required>
             </div>
 
             <!-- 地址 -->
             <div class="mb-3">
-              <label for="address" class="form-label">地址：</label>
-              <input type="text" class="form-control" id="address" name="address" placeholder="例:高雄市三民區十全一路100號濟世大樓1樓">
+              <label for="address" class="form-label" data-message="地址">地址：</label>
+              <input type="text" class="form-control" id="address" name="address" placeholder="例:高雄市三民區十全一路100號濟世大樓1樓" required>
             </div>
 
             <!-- 格局 -->
             <div class="mb-3">
-              <label class="form-label">格局(請填數字)：</label>
+              <label class="form-label" data-message="格局">格局(請填數字)：</label>
               <div class="row">
                 <div class="col">
-                  <input type="text" class="form-control" id="room" name="room" placeholder="房">
+                  <input type="text" class="form-control" id="room" name="room" placeholder="房" required>
                 </div>
                 <div class="col">
-                  <input type="text" class="form-control" id="living" name="living" placeholder="客廳">
+                  <input type="text" class="form-control" id="living" name="living" placeholder="客廳" required>
                 </div>
                 <div class="col">
-                  <input type="text" class="form-control" id="bath" name="bath" placeholder="衛">
+                  <input type="text" class="form-control" id="bath" name="bath" placeholder="衛" required>
                 </div>
               </div>
             </div>
 
             <!-- 坪數 -->
             <div class="mb-3">
-              <label for="area" class="form-label">坪數(請填數字)：</label>
-              <input type="text" class="form-control" id="area" name="size" placeholder="單位:坪，例:40">
+              <label for="area" class="form-label" data-message="坪數">坪數(請填數字)：</label>
+              <input type="text" class="form-control" id="area" name="size" placeholder="單位:坪，例:40" required>
             </div>
 
             <!-- 類型 -->
             <div class="mb-3">
-              <label for="type" class="form-label">類型：</label>
-              <select class="form-select" id="type" name="type">
+              <label for="type" class="form-label" data-message="類型">類型：</label>
+              <select class="form-select" id="type" name="type" required>
                 <!-- 類型選項 -->
                 <option value="公寓">公寓</option>
                 <option value="別墅">別墅</option>
@@ -111,8 +119,8 @@
 
             <!-- 類型 -->
             <div class="mb-3">
-              <label for="type" class="form-label">朝向：</label>
-              <select class="form-select" id="direction" name="direction">
+              <label for="type" class="form-label" data-message="朝向">朝向：</label>
+              <select class="form-select" id="direction" name="direction" required>
                 <!-- 類型選項 -->
                 <option value="北">北</option>
                 <option value="東">東</option>
@@ -123,8 +131,8 @@
 
             <!-- 樓層 -->
             <div class="mb-3">
-              <label for="floor" class="form-label">樓層：</label>
-              <input type="text" class="form-control" id="floor" name="level" placeholder="單位:樓，例:11">
+              <label for="floor" class="form-label" data-message="樓層">樓層：</label>
+              <input type="text" class="form-control" id="floor" name="level" placeholder="單位:樓，例:11" required>
             </div>
           </div>
         </div>
@@ -142,7 +150,7 @@
 
             <!-- 設備 -->
             <div class="mb-3">
-              <label class="form-label">設備：</label>
+              <label class="form-label" data-message="設備">設備(可複選)：</label>
               <!-- 設備(勾選框) -->
               <label><input type="checkbox" name="tv" value="1"><span>電視機</span></label>
               <label><input type="checkbox" name="washer" value="1"><span>洗衣機</span></label>
@@ -156,7 +164,7 @@
 
             <!-- 家具 -->
             <div class="mb-3">
-              <label class="form-label">家具：</label>
+              <label class="form-label" data-message="家具">家具(可複選)：</label>
               <!-- 設備(勾選框) -->
               <label><input type="checkbox" name="sofa" value="1"><span>沙發</span></label>
               <label><input type="checkbox" name="bed" value="1"><span>床組</span></label>
@@ -165,7 +173,7 @@
 
             <!-- 附近交通 -->
             <div class="mb-3">
-              <label class="form-label">附近交通：</label>
+              <label class="form-label" data-message="交通">附近交通(可複選)：</label>
               <!-- 附近交通(勾選框) -->
               <label><input type="checkbox" name="mrt" value="1"><span>捷運</span></label>
               <label><input type="checkbox" name="bus" value="1"><span>公車</span></label>
@@ -174,8 +182,8 @@
 
             <!-- 電梯 -->
             <div class="mb-3">
-              <label for="lift" class="form-label">電梯：</label>
-              <select class="form-select" id="lift" name="lift">
+              <label for="lift" class="form-label" data-message="電梯">電梯：</label>
+              <select class="form-select" id="lift" name="lift" required>
                 <!-- 電梯選項 -->
                 <option value="1">有</option>
                 <option value="0">無</option>
@@ -184,8 +192,8 @@
 
             <!-- 開伙 -->
             <div class="mb-3">
-              <label for="cook" class="form-label">開伙：</label>
-              <select class="form-select" id="cook" name="cook">
+              <label for="cook" class="form-label" data-message="開伙">開伙：</label>
+              <select class="form-select" id="cook" name="cook" required>
                 <!-- 開伙選項 -->
                 <option value="1">可以</option>
                 <option value="0">不可以</option>
@@ -194,8 +202,8 @@
 
             <!-- 寵物 -->
             <div class="mb-3">
-              <label for="pet" class="form-label">寵物：</label>
-              <select class="form-select" id="pet" name="pet">
+              <label for="pet" class="form-label" data-message="寵物">寵物：</label>
+              <select class="form-select" id="pet" name="pet" required>
                 <!-- 寵物選項 -->
                 <option value="1">可以</option>
                 <option value="0">不可以</option>
@@ -204,8 +212,8 @@
 
             <!-- 警衛 -->
             <div class="mb-3">
-              <label for="security" class="form-label">警衛：</label>
-              <select class="form-select" id="security" name="security">
+              <label for="security" class="form-label" data-message="警衛">警衛：</label>
+              <select class="form-select" id="security" name="security" required>
                 <!-- 警衛選項 -->
                 <option value="有(日閒)">有(日閒)</option>
                 <option value="有(全天)">有(全天)</option>
@@ -215,8 +223,8 @@
 
             <!-- 停車位 -->
             <div class="mb-3">
-              <label for="parking" class="form-label">停車位：</label>
-              <select class="form-select" id="parking" name="parking">
+              <label for="parking" class="form-label" data-message="停車位">停車位：</label>
+              <select class="form-select" id="parking" name="parking" required>
                 <!-- 停車位選項 -->
                 <option value="無">無</option>
                 <option value="有">有</option>
@@ -239,20 +247,20 @@
 
             <!-- 月租費 -->
             <div class="mb-3">
-              <label for="rent_fee">月租費(請填數字)：</label>
-              <input type="text" class="form-control" id="rent_fee" name="price" placeholder="單位: 新台幣，例:6000">
+              <label for="rent_fee" data-message="月租費">月租費(請填數字)：</label>
+              <input type="text" class="form-control" id="rent_fee" name="price" placeholder="單位: 新台幣，例:6000" required>
             </div>
 
             <!-- 管理費 -->
             <div class="mb-3">
-              <label for="management_fee">管理費(請填數字)：</label>
-              <input type="text" class="form-control" id="management_fee" name="management" placeholder="單位: 新台幣，例:800">
+              <label for="management_fee" data-message="管理費">管理費(請填數字)：</label>
+              <input type="text" class="form-control" id="management_fee" name="management" placeholder="單位: 新台幣，例:800" required>
             </div>
 
             <!-- 最短租期 -->
             <div class="mb-3">
-              <label for="lease_term">最短租期：</label>
-              <select name="period" id="lease_term">
+              <label for="lease_term" data-message="最短租期">最短租期：</label>
+              <select name="period" id="lease_term" required>
                 <!-- 租期選項 -->
                 <option value="6">半年</option>
                 <option value="12">一年</option>
@@ -275,8 +283,8 @@
           <div class="accordion-body">
             <!-- 廣告標語 -->
             <div class="mb-3">
-              <label for="features-description" class="form-label">房屋特色描述(廣告標語)：</label>
-              <textarea class="form-control" id="features-description" name="features-description" rows="3" placeholder="例:這間房屋具有優越的交通便利性，並配備了現代化的家電設備。您可以在這裡輕鬆享受生活，並擁有一個舒適的居住環境。"></textarea>
+              <label for="features-description" class="form-label" data-message="廣告標語">房屋特色描述(廣告標語)：</label>
+              <textarea class="form-control" id="features-description" name="features-description" rows="3" placeholder="例:這間房屋具有優越的交通便利性，並配備了現代化的家電設備。您可以在這裡輕鬆享受生活，並擁有一個舒適的居住環境。" required></textarea>
             </div>
           </div>
         </div>
@@ -293,8 +301,8 @@
           <div class="accordion-body">
             <!-- 上傳圖片的按鈕 -->
             <div class="mb-3">
-              <label for="image-upload" class="form-label">上傳圖片：</label>
-              <input type="file" class="form-control" id="image-upload" name="image-upload" accept=".jpg, .jpeg, .png">
+              <label for="image-upload" class="form-label" data-message="所有圖片">上傳圖片：</label>
+              <input type="file" class="form-control" id="image-upload" name="image-upload" accept=".jpg, .jpeg, .png" required>
               <div id="image-upload-help" class="form-text">支援的圖片格式：.jpg、.jpeg、.png</div>
             </div>
           </div>
@@ -304,7 +312,7 @@
 
     <!-- 上傳表單按鈕 -->
     <div class="d-flex justify-content-center mt-3">
-      <input type="submit" class="btn btn-primary" value="上傳">
+      <input type="submit" class="btn btn-primary" value="上傳" onclick="validateForm()">
     </div>
   </form>
 
@@ -313,16 +321,36 @@
 <!-- 引入 Bootstrap JS -->
 <script src="../../static/js/bootstrap_js/bootstrap.min.js"></script>
 <script>
-  {#document.getElementById("house-form").addEventListener("submit", function(event) {#}
-  {#  event.preventDefault(); // 防止表單默認提交行為#}
+   function validateForm() {
+    var form = document.getElementById("house-form");
+    var inputs = form.querySelectorAll("input, select");
+    var isValid = true;
+    var isAlerted = false; // 變數來追蹤是否已經顯示了提示訊息
+    var unfilledFields = ""; // 變數來儲存未填寫欄位
 
-    // 在這裡添加將數據提交到後端的代碼
-    // 可以使用 JavaScript 或任何後端框架來處理表單提交
-    // 例如，您可以使用 fetch() 或 XMLHttpRequest 將數據發送到後端
+    inputs.forEach(function(input) {
+        // 獲取自定義屬性的值
+        var message = input.previousElementSibling.dataset.message;
 
-    // 這裡只是一個示例警報，您可以將其替換為實際提交的代碼
-  {#  alert("表單已提交！");#}
-  {# });#}
+        if (input.required && !input.value.trim()) {
+            isValid = false;
+            input.classList.add("required-field"); // 將未填寫欄位的背景顏色改成紅色
+            if (!isAlerted) { // 如果還沒有顯示過提示訊息，則顯示
+                isAlerted = true; // 更新狀態，表示已經顯示過提示訊息
+                // 將未填寫欄位的 label 文字加入到 unfilledFields 字串中
+                unfilledFields += `${message}, `;
+            }
+        }
+    });
+
+    if (isValid) {
+        alert("表單已成功提交！");
+    } else {
+        // 提示未填寫欄位
+        alert("請填寫所有欄位，未填欄位為: " + unfilledFields.slice(0, -2));
+    }
+}
+
 </script>
 </body>
 </html>
