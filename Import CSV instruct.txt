@@ -1,0 +1,5 @@
+.import "House.csv" House
+.import "Info.csv" Info
+.import "Equipment.csv" Equipment
+.import "image.csv" Image
+.import "Rdetail.csv" Rdetail
