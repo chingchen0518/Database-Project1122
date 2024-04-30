@@ -1,22 +1,30 @@
 from django.db import models
 
 # Create your models here.
+class User(models.Model):
+     username = models.CharField(max_length=100, primary_key=True,unique=True,default="-")
+     password= models.CharField(max_length=100, default="--")
+     class Meta:
+        db_table = 'User'
+
 class Member(models.Model):
-     mId = models.CharField(max_length=50, primary_key=True, unique=True)
-     username = models.CharField(max_length=50,unique=True)
-     gender= models.CharField(max_length=50)
-     email = models.CharField(max_length=50)
-     pId = models.CharField(max_length=50,unique=True)
+     mId = models.IntegerField(primary_key=True, unique=True)
+     gender= models.CharField(max_length=50,default="-")
+     email = models.CharField(max_length=50,default="-")
+     phone = models.CharField(max_length=50,default="-")
+     realname = models.CharField(max_length=50, default="-")
+     pId = models.CharField(max_length=50,unique=True,null=True)
+     username = models.OneToOneField(User,to_field='username',on_delete=models.CASCADE,unique=True,auto_created=False,default="-")
 
      class Meta:
         db_table = 'Member'
 
 class House(models.Model):
      hId = models.CharField(max_length=100, primary_key=True, unique=True, default="TW")
-
      status = models.IntegerField(default=0)
      title = models.CharField(max_length=1000)
      region = models.IntegerField(default=00)
+     mId = models.ForeignKey(Member,on_delete=models.CASCADE,to_field='mId',auto_created=False,default="888",unique=False)
 
      class Meta:
         db_table = 'House'
@@ -47,6 +55,7 @@ class Info(models.Model):
      living = models.IntegerField(default=1)
      bath = models.IntegerField(default=1)
      type = models.CharField(max_length=10,default="--")
+     renewdate=models.DateField(null=True,blank=True)
      class Meta:
         db_table = 'Info'
 
@@ -83,10 +92,4 @@ class Userssss(models.Model):
      class Meta:
         db_table = 'Userssss'
 
-class Userccc(models.Model):
-     mId = models.CharField(max_length=100, primary_key=True,unique=True)
-     password= models.CharField(max_length=100, default="0")
-     name= models.CharField(max_length=100,unique=True, default="0")
-     name2 = models.CharField(max_length=100, unique=True, default="0")
-     class Meta:
-        db_table = 'Userccc'
+
