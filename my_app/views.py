@@ -111,3 +111,7 @@ def add_house(request):
 def account_center(request):
     return render(request, "account_center.html")
 
+def edit_load_page(request):
+
+
+    return render(request, "add_house/add_house_v2.html")
