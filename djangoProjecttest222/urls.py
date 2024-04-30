@@ -46,4 +46,7 @@ urlpatterns = [
     #沒用的東西
     path('testing/',my_app.views.testing,name="testing"),
 
+    #搜尋測試
+    path('house_list/search_test/', my_app.views.search_test, name='search_test'),
+
 ]
