@@ -3,3 +3,8 @@
 /my_app/migrations
 /my_app/__pycache__
 *.pyc
+<<<<<<< Updated upstream
+=======
+house2.sqlite3
+*.sqlite3
+>>>>>>> Stashed changes
