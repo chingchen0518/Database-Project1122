@@ -2,13 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Homepage</title>
 </head>
 <body>
+    {% if user %}
+        <span>Welcome <strong>{{ user }}</strong></span><span>--------</span>
+        <a href="{% url 'logout' %}">Logout</a>
+    {% endif %}
+
     <a href="/login"><p>Login</p></a>
     <a href="/register"><p>Register</p></a>
     <a href="/house_list"><p>House List</p></a>
     <a href="/upload_page"><p>Upload page</p></a>
+    <a href="{% url 'testing' %}"><p>testing</p></a>
+    <a href="{% url 'account_center' %}"><p>account center</p></a>
+
+
+
     <p></p>
 </body>
 </html>
