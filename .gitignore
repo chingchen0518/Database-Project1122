@@ -3,6 +3,4 @@
 /my_app/migrations
 /my_app/__pycache__
 *.pyc
-house2.sqlite3
-*.sqlite3
 
