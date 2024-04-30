@@ -23,14 +23,27 @@ import my_app.views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', my_app.views.homepage, name='homepage'),
-    path('register/', my_app.views.register),
-    path('register/receive/', my_app.views.register_received),
+
+    # 註冊登錄退出
+    path('register/', my_app.views.register,name="register"),
+    path('register/receive/', my_app.views.register_received,name='register_act'),
     path('login/', my_app.views.login_page, name='login_page'),
     path('login/login_act/', my_app.views.login_act, name='login_act'),
+    path('logout/', my_app.views.logout, name='logout'),
+
+    #房屋顯示
     path('house_list/',my_app.views.house_list, name='house_lists'),
     path('house_rent_cont/<str:hId>',my_app.views.house_rent_cont),
+
+    #新增刪除
     path('upload_page',my_app.views.upload_page),
     path('upload_page/add_house',my_app.views.add_house, name='add_house'),
     path('delete/<str:hId>/', my_app.views.HouseDeleteView.as_view()),
-    path('account_center/',my_app.views.account_center),
+
+    #用戶中心
+    path('account_center/',my_app.views.account_center,name="account_center"),
+
+    #沒用的東西
+    path('testing/',my_app.views.testing,name="testing"),
+
 ]

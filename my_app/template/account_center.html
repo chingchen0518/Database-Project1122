@@ -40,7 +40,7 @@
         <div>
             <div id="yc_name">
                 <img src="{% static '\img\person-circle.png' %}" alt="user">
-                <h2>陳羿潔</h2>
+                <h2>{{ row.realname }}</h2>
                 <button>編輯</button>
             </div>
             <hr>
@@ -48,8 +48,8 @@
                 <ul>
                     <li>聯絡方式:
                         <ul>
-                            <li>tel:{# 此處加此帳戶的電話 #}</li>
-                            <li>mail:{# 此處加此帳戶的mail #}</li>
+                            <li>tel: {{ row.phone }}</li>
+                            <li>mail: {{ row.email }}</li>
                         </ul>
                     </li>
                     <li>收藏數:</li>
