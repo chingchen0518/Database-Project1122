@@ -175,3 +175,10 @@ def testing(request):
         print("数据库中不存在该数据记录")
 
     return render(request, "homepage.html")
+
+def search_test(request):
+    keyword = request.POST['keyword']
+
+    rows = House.objects.raw('SELECT * FROM House,Info WHERE Info.address LIKE %s AND House.hId=Info.hId_id', ['%'+keyword+'%'])
+
+    return render(request, "house_list.html", {'rows': rows})
