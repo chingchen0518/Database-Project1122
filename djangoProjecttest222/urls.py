@@ -49,4 +49,8 @@ urlpatterns = [
     #搜尋測試
     path('house_list/search_test/', my_app.views.search_test, name='search_test'),
 
+    #編輯
+    path('edit_page/<str:hId>/',my_app.views.edit_page_show),
+    path('edit_page/edit_house/<str:hId>/',my_app.views.edit_page_update, name='edit_house'),
+
 ]
