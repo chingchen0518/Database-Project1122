@@ -12,9 +12,13 @@
         <div id="yc_nav_logo">
             <a href=""><img src="{%static '\img\equipment\net.png' %}"></a>
         </div>
-        <div id="yc_search_bar">
-            <input type="text" placeholder="Search bar">
-        </div>
+        <form method="post" action="search_test/">
+            {% csrf_token %}
+            <div id="yc_search_bar">
+                <input type="text" name="keyword" placeholder="Search bar">
+            </div>
+        </form>
+
         <div id="yc_nav_menu">
             <div id="yc_nav_content">
                 <a href="">租屋</a>
