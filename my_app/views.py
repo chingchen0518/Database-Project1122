@@ -179,6 +179,6 @@ def testing(request):
 def search_test(request):
     keyword = request.POST['keyword']
 
-    rows = House.objects.raw('SELECT * FROM House,Info WHERE House.title LIKE %s OR Info.address LIKE %s AND House.hId=Info.hId_id', ['%'+keyword+'%'], ['%'+keyword+'%'])
+    rows = House.objects.raw('SELECT * FROM House,Info WHERE Info.address LIKE %s AND House.hId=Info.hId_id', ['%'+keyword+'%'])
 
     return render(request, "house_list.html", {'rows': rows})
