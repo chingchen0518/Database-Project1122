@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>編輯房屋</title>
+  <!-- 引入 Bootstrap CSS -->
+  <link href="../../static/css/bootstrap_css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="container">
+  <!-- 本頁面標題 -->
+
+  <h1 class="mt-5">編輯房屋資訊</h1>
+  <form id="house-form" method="POST" action="{% url 'edit_house' hId=house.hId %}">
+      {% csrf_token %}
+
+    <div class="accordion" id="accordion">
+      <div class="accordion-item">
+
+        <!-- 簡介(下拉式列表) -->
+        <h2 class="accordion-header" id="introduction-heading">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#introduction" aria-expanded="true" aria-controls="introduction">
+            簡介
+          </button>
+        </h2>
+        <div id="introduction" class="accordion-collapse collapse show" aria-labelledby="introduction-heading" data-bs-parent="#accordion">
+            <div class="accordion-body">
+                <!-- 標題 -->
+                <div class="mb-3">
+                    <label for="title" class="form-label">標題：</label>
+                    <input type="text" class="form-control" id="title" name="title" placeholder="房子名稱" value="{{ house.title }}">
+                </div>
+
+            <!-- 區域 -->
+            <div class="mb-3">
+              <label for="region" class="form-label">區域：</label>
+              <select name="region" id="region" class="form-select" value="{{ house.region }}">
+                <!-- 區域選項 -->
+                <option value="1" {% if house.region == "1" %}selected{% endif %}>臺北市</option>
+                <option value="2" {% if house.region == "2" %}selected{% endif %}>新北市</option>
+                <option value="3" {% if house.region == "3" %}selected{% endif %}>桃園市</option>
+                <option value="4" {% if house.region == "4" %}selected{% endif %}>臺中市</option>
+                <option value="5" {% if house.region == "5" %}selected{% endif %}>臺南市</option>
+                <option value="6" {% if house.region == "6" %}selected{% endif %}>高雄市</option>
+                <option value="7" {% if house.region == "7" %}selected{% endif %}>宜蘭縣</option>
+                <option value="8" {% if house.region == "8" %}selected{% endif %}>新竹縣</option>
+                <option value="9" {% if house.region == "9" %}selected{% endif %}>苗栗縣</option>
+                <option value="10" {% if house.region == "10" %}selected{% endif %}>彰化縣</option>
+                <option value="11" {% if house.region == "11" %}selected{% endif %}>南投縣</option>
+                <option value="12" {% if house.region == "12" %}selected{% endif %}>雲林縣</option>
+                <option value="13" {% if house.region == "13" %}selected{% endif %}>嘉義縣</option>
+                <option value="14" {% if house.region == "14" %}selected{% endif %}>屏東縣</option>
+                <option value="15" {% if house.region == "15" %}selected{% endif %}>臺東縣</option>
+                <option value="16" {% if house.region == "16" %}selected{% endif %}>花蓮縣</option>
+                <option value="17" {% if house.region == "17" %}selected{% endif %}>澎湖縣</option>
+                <option value="18" {% if house.region == "18" %}selected{% endif %}>基隆市</option>
+                <option value="19" {% if house.region == "19" %}selected{% endif %}>新竹市</option>
+                <option value="20" {% if house.region == "20" %}selected{% endif %}>嘉義市</option>
+                <option value="21" {% if house.region == "21" %}selected{% endif %}>金門縣</option>
+                <option value="22" {% if house.region == "22" %}selected{% endif %}>連江縣</option>
+              </select>
+            </div>
+
+            <!-- 屋齡 -->
+            <div class="mb-3">
+              <label for="age" class="form-label">屋齡(請填數字)：</label>
+              <input type="text" class="form-control" id="age" name="age" placeholder="單位:年，例:10" required value="{{ house.age }}">
+            </div>
+
+            <!-- 地址 -->
+            <div class="mb-3">
+              <label for="address" class="form-label">地址：</label>
+              <input type="text" class="form-control" id="address" name="address" placeholder="例:高雄市三民區十全一路100號濟世大樓1樓" value="{{ house.address }}">
+            </div>
+
+            <!-- 格局 -->
+            <div class="mb-3">
+              <label class="form-label">格局(房/廳/衛)：</label>
+              <div class="row">
+                <div class="col">
+                  <input type="text" class="form-control" id="room" name="room" placeholder="房" value="{{ house.room }}">
+                </div>
+                <div class="col">
+                  <input type="text" class="form-control" id="living" name="living" placeholder="客廳" value="{{ house.living }}">
+                </div>
+                <div class="col">
+                  <input type="text" class="form-control" id="bath" name="bath" placeholder="衛" value="{{ house.bath }}">
+                </div>
+              </div>
+            </div>
+
+            <!-- 坪數 -->
+            <div class="mb-3">
+              <label for="area" class="form-label">坪數(請填數字)：</label>
+              <input type="text" class="form-control" id="area" name="size" placeholder="單位:坪，例:40" value="{{ house.size }}">
+            </div>
+
+            <!-- 類型 -->
+            <div class="mb-3">
+              <label for="type" class="form-label">類型：</label>
+              <select class="form-select" id="type" name="type">
+                <!-- 類型選項 -->
+                <option value="公寓">公寓</option>
+                <option value="別墅">別墅</option>
+                <option value="透天厝">透天厝</option>
+              </select>
+            </div>
+
+            <!-- 類型 -->
+            <div class="mb-3">
+              <label for="type" class="form-label">朝向：</label>
+              <select class="form-select" id="direction" name="direction">
+                <!-- 類型選項 -->
+                <option value="北">北</option>
+                <option value="東">東</option>
+                <option value="南">南</option>
+                <option value="西">西</option>
+              </select>
+            </div>
+
+            <!-- 樓層 -->
+            <div class="mb-3">
+              <label for="floor" class="form-label">樓層：</label>
+              <input type="text" class="form-control" id="floor" name="level" placeholder="單位:樓，例:11" value="{{ house.level }}">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 細節(下拉式列表) -->
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="details-heading">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#details" aria-expanded="false" aria-controls="details">
+            細節
+          </button>
+        </h2>
+        <div id="details" class="accordion-collapse collapse" aria-labelledby="details-heading" data-bs-parent="#accordion">
+          <div class="accordion-body">
+
+            <!-- 設備 -->
+            <div class="mb-3">
+              <label class="form-label">設備：</label>
+              <!-- 設備(勾選框) -->
+              <label><input type="checkbox" name="tv" value="1" {% if house.tv %} checked {% endif %}><span>電視機</span></label>
+              <label><input type="checkbox" name="washer" value="1" {% if house.washer %} checked {% endif %}><span>洗衣機</span></label>
+              <label><input type="checkbox" name="wifi" value="1" {% if house.wifi %} checked {% endif %}><span>網絡</span></label>
+              <label><input type="checkbox" name="refrigerator" value="1" {% if house.refrigerator %} checked {% endif %}><span>冰箱</span></label>
+              <label><input type="checkbox" name="gas" value="1" {% if house.gas %} checked {% endif %}><span>瓦斯爐</span></label>
+              <label><input type="checkbox" name="aircond" value="1" {% if house.aircond %} checked {% endif %}><span>冷氣</span></label>
+              <label><input type="checkbox" name="heater" value="1" {% if house.heater %} checked {% endif %}><span>熱水器</span></label>
+              <label><input type="checkbox" name="channel4" value="1" {% if house.channel4 %} checked {% endif %}><span>第四台</span></label>
+            </div>
+
+            <!-- 家具 -->
+            <div class="mb-3">
+              <label class="form-label">家具：</label>
+              <!-- 設備(勾選框) -->
+              <label><input type="checkbox" name="sofa" value="1" {% if house.sofa %} checked {% endif %}><span>沙發</span></label>
+              <label><input type="checkbox" name="bed" value="1" {% if house.bed %} checked {% endif %}><span>床組</span></label>
+              <label><input type="checkbox" name="cabinet" value="1" {% if house.cabinet %} checked {% endif %}><span>櫃子</span></label>
+            </div>
+
+            <!-- 附近交通 -->
+            <div class="mb-3">
+              <label class="form-label">附近交通：</label>
+              <!-- 附近交通(勾選框) -->
+              <label><input type="checkbox" name="mrt" value="1" {% if house.mrt %} checked {% endif %}><span>捷運</span></label>
+              <label><input type="checkbox" name="bus" value="1" {% if house.bus %} checked {% endif %}><span>公車</span></label>
+              <label><input type="checkbox" name="train" value="1" {% if house.train %} checked {% endif %}><span>火車</span></label>
+            </div>
+
+            <!-- 電梯 -->
+            <div class="mb-3">
+              <label for="lift" class="form-label">電梯：</label>
+              <select class="form-select" id="lift" name="lift">
+                <!-- 電梯選項 -->
+                <option value="1">有</option>
+                <option value="0">無</option>
+              </select>
+            </div>
+
+            <!-- 開伙 -->
+            <div class="mb-3">
+              <label for="cook" class="form-label">開伙：</label>
+              <select class="form-select" id="cook" name="cook">
+                <!-- 開伙選項 -->
+                <option value="1" {% if house.cook == 1 %} selected {% endif %}>可以</option>
+                <option value="0" {% if house.cook == 0 %} selected {% endif %}>不可以</option>
+              </select>
+            </div>
+
+            <!-- 寵物 -->
+            <div class="mb-3">
+              <label for="pet" class="form-label">寵物：</label>
+              <select class="form-select" id="pet" name="pet">
+                <!-- 寵物選項 -->
+                <option value="1">可以</option>
+                <option value="0">不可以</option>
+              </select>
+            </div>
+
+            <!-- 警衛 -->
+            <div class="mb-3">
+              <label for="security" class="form-label">警衛：</label>
+              <select class="form-select" id="security" name="security">
+                <!-- 警衛選項 -->
+                <option value="有(日閒)">有(日閒)</option>
+                <option value="有(全天)">有(全天)</option>
+                <option value="無">無</option>
+              </select>
+            </div>
+
+            <!-- 停車位 -->
+            <div class="mb-3">
+              <label for="parking" class="form-label">停車位：</label>
+              <select class="form-select" id="parking" name="parking">
+                <!-- 停車位選項 -->
+                <option value="無">無</option>
+                <option value="有">有</option>
+              </select>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- 租金(下拉式列表) -->
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="rent-heading">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#rent" aria-expanded="false" aria-controls="rent">
+            租金
+          </button>
+        </h2>
+        <div id="rent" class="accordion-collapse collapse" aria-labelledby="rent-heading" data-bs-parent="#accordion">
+          <div class="accordion-body">
+
+            <!-- 月租費 -->
+            <div class="mb-3">
+              <label for="rent_fee">月租費(請填數字)：</label>
+              <input type="text" class="form-control" id="rent_fee" name="price" placeholder="單位: 新台幣，例:6000" value="{{ house.price }}">
+            </div>
+
+            <!-- 管理費 -->
+            <div class="mb-3">
+              <label for="management_fee">管理費(請填數字)：</label>
+              <input type="text" class="form-control" id="management_fee" name="management" placeholder="單位: 新台幣，例:800" value="{{ house.management }}">
+            </div>
+
+            <!-- 最短租期 -->
+            <div class="mb-3">
+              <label for="lease_term">最短租期：</label>
+              <select name="period" id="lease_term">
+                <!-- 租期選項 -->
+                <option value="6" {% if house.period == "6" %} selected {% endif %}>半年</option>
+                <option value="12" {% if house.period == "12" %} selected {% endif %}>一年</option>
+                <option value="24" {% if house.period == "24" %} selected {% endif %}>兩年</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 所有圖片(下拉式列表) -->
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="images-heading">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#images" aria-expanded="false" aria-controls="images">
+            所有圖片
+          </button>
+        </h2>
+        <div id="images" class="accordion-collapse collapse" aria-labelledby="images-heading" data-bs-parent="#accordion">
+          <div class="accordion-body">
+            <!-- 上傳圖片的按鈕 -->
+            <div class="mb-3">
+              <label for="image-upload" class="form-label">上傳圖片：</label>
+              <input type="file" class="form-control" id="image-upload" name="image-upload" accept=".jpg, .jpeg, .png">
+              <div id="image-upload-help" class="form-text">支援的圖片格式：.jpg、.jpeg、.png</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 上傳表單按鈕 -->
+    <div class="d-flex justify-content-center mt-3">
+      <input type="submit" class="btn btn-primary" value="上傳">
+    </div>
+  </form>
+
+</div>
+
+<!-- 引入 Bootstrap JS -->
+<script src="../../static/js/bootstrap_js/bootstrap.min.js"></script>
+<script>
+  {#document.getElementById("house-form").addEventListener("submit", function(event) {#}
+  {#  event.preventDefault(); // 防止表單默認提交行為#}
+
+    // 在這裡添加將數據提交到後端的代碼
+    // 可以使用 JavaScript 或任何後端框架來處理表單提交
+    // 例如，您可以使用 fetch() 或 XMLHttpRequest 將數據發送到後端
+   function validateForm() {
+    var form = document.getElementById("house-form");
+    var inputs = form.querySelectorAll("input, select");
+    var isValid = true;
+    var isAlerted = false; // 變數來追蹤是否已經顯示了提示訊息
+    var unfilledFields = ""; // 變數來儲存未填寫欄位
+
+    inputs.forEach(function(input) {
+        // 獲取自定義屬性的值
+        var message = input.previousElementSibling.dataset.message;
+
+        if (input.required && !input.value.trim()) {
+            isValid = false;
+            input.classList.add("required-field"); // 將未填寫欄位的背景顏色改成紅色
+            if (!isAlerted) { // 如果還沒有顯示過提示訊息，則顯示
+                isAlerted = true; // 更新狀態，表示已經顯示過提示訊息
+                // 將未填寫欄位的 label 文字加入到 unfilledFields 字串中
+                unfilledFields += `${message}, `;
+            }
+        }
+    });
+
+    if (isValid) {
+        alert("表單已成功提交！");
+    } else {
+        // 提示未填寫欄位
+        alert("請填寫所有欄位，未填欄位為: " + unfilledFields.slice(0, -2));
+    }
+}
+</script>
+</body>
+</html>
