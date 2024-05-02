@@ -145,31 +145,31 @@
               <label class="form-label">設備：</label>
               <!-- 設備(勾選框) -->
               <label><input type="checkbox" name="tv" value="1" {% if house.tv %} checked {% endif %}><span>電視機</span></label>
-              <label><input type="checkbox" name="washer" value="1"><span>洗衣機</span></label>
-              <label><input type="checkbox" name="wifi" value="1"><span>網絡</span></label>
-              <label><input type="checkbox" name="refrigerator" value="1"><span>冰箱</span></label>
+              <label><input type="checkbox" name="washer" value="1" {% if house.washer %} checked {% endif %}><span>洗衣機</span></label>
+              <label><input type="checkbox" name="wifi" value="1" {% if house.wifi %} checked {% endif %}><span>網絡</span></label>
+              <label><input type="checkbox" name="refrigerator" value="1" {% if house.refrigerator %} checked {% endif %}><span>冰箱</span></label>
               <label><input type="checkbox" name="gas" value="1" {% if house.gas %} checked {% endif %}><span>瓦斯爐</span></label>
-              <label><input type="checkbox" name="aircond" value="1"><span>冷氣</span></label>
-              <label><input type="checkbox" name="heater" value="1"><span>熱水器</span></label>
-              <label><input type="checkbox" name="channel4" value="1"><span>第四台</span></label>
+              <label><input type="checkbox" name="aircond" value="1" {% if house.aircond %} checked {% endif %}><span>冷氣</span></label>
+              <label><input type="checkbox" name="heater" value="1" {% if house.heater %} checked {% endif %}><span>熱水器</span></label>
+              <label><input type="checkbox" name="channel4" value="1" {% if house.channel4 %} checked {% endif %}><span>第四台</span></label>
             </div>
 
             <!-- 家具 -->
             <div class="mb-3">
               <label class="form-label">家具：</label>
               <!-- 設備(勾選框) -->
-              <label><input type="checkbox" name="sofa" value="1"><span>沙發</span></label>
-              <label><input type="checkbox" name="bed" value="1"><span>床組</span></label>
-              <label><input type="checkbox" name="cabinet" value="1"><span>櫃子</span></label>
+              <label><input type="checkbox" name="sofa" value="1" {% if house.sofa %} checked {% endif %}><span>沙發</span></label>
+              <label><input type="checkbox" name="bed" value="1" {% if house.bed %} checked {% endif %}><span>床組</span></label>
+              <label><input type="checkbox" name="cabinet" value="1" {% if house.cabinet %} checked {% endif %}><span>櫃子</span></label>
             </div>
 
             <!-- 附近交通 -->
             <div class="mb-3">
               <label class="form-label">附近交通：</label>
               <!-- 附近交通(勾選框) -->
-              <label><input type="checkbox" name="mrt" value="1"><span>捷運</span></label>
-              <label><input type="checkbox" name="bus" value="1"><span>公車</span></label>
-              <label><input type="checkbox" name="train" value="1"><span>火車</span></label>
+              <label><input type="checkbox" name="mrt" value="1" {% if house.mrt %} checked {% endif %}><span>捷運</span></label>
+              <label><input type="checkbox" name="bus" value="1" {% if house.bus %} checked {% endif %}><span>公車</span></label>
+              <label><input type="checkbox" name="train" value="1" {% if house.train %} checked {% endif %}><span>火車</span></label>
             </div>
 
             <!-- 電梯 -->
