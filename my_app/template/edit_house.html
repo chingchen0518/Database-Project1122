@@ -7,6 +7,21 @@
   <title>編輯房屋</title>
   <!-- 引入 Bootstrap CSS -->
   <link href="../../static/css/bootstrap_css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* 设置图像容器的样式 */
+    .image-container {
+        background-color: #f0f0f0; /* 设置背景颜色 */
+        padding: 10px; /* 设置内边距 */
+    }
+
+    /* 设置图像的样式 */
+    .image-container img {
+        border: 2px solid #ccc;
+        border-radius: 8px;
+        display: block; /* 图像作为块级元素显示 */
+        margin: auto; /* 水平居中 */
+    }
+</style>
 </head>
 
 <body>
@@ -276,29 +291,30 @@
       </div>
 
       <!-- 所有圖片(下拉式列表) -->
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="images-heading">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#images" aria-expanded="false" aria-controls="images">
-            所有圖片
-          </button>
-        </h2>
-        <div id="images" class="accordion-collapse collapse" aria-labelledby="images-heading" data-bs-parent="#accordion">
-          <div class="accordion-body">
-            <!-- 上傳圖片的按鈕 -->
-            <div class="mb-3">
-              <label for="image-upload" class="form-label">上傳圖片：</label>
-              <input type="file" class="form-control" id="image-upload" name="image-upload" accept=".jpg, .jpeg, .png">
-              <div id="image-upload-help" class="form-text">支援的圖片格式：.jpg、.jpeg、.png</div>
-            </div>
-            <ul>
-                {% for img_path in correspond_img_path %}
-                <li> <img src="{% static 'img/house/' %}{{ img_path }}" alt=""> </li>
-                {% endfor %}
-            </ul>
-          </div>
-        </div>
-      </div>
+{#      <div class="accordion-item">#}
+{#        <h2 class="accordion-header" id="images-heading">#}
+{#          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#images" aria-expanded="false" aria-controls="images">#}
+{#            所有圖片#}
+{#          </button>#}
+{#        </h2>#}
+{#        <div id="images" class="accordion-collapse collapse" aria-labelledby="images-heading" data-bs-parent="#accordion">#}
+{#          <div class="accordion-body">#}
+{#            <!-- 上傳圖片的按鈕 -->#}
+{#            <div class="mb-3">#}
+{#              <label for="image-upload" class="form-label">上傳圖片：</label>#}
+{#              <input type="file" class="form-control" id="image-upload" name="image-upload" accept=".jpg, .jpeg, .png">#}
+{#              <div id="image-upload-help" class="form-text">支援的圖片格式：.jpg、.jpeg、.png</div>#}
+{#            </div>#}
+{#          </div>#}
+{#        </div>#}
+{#        <div class="image-container">#}
+{#            {% for i in img_path %}#}
+{#                <img src="{% static 'img/house/' %}{{ i.path }}" alt="" width="420" height="320" style="margin-bottom: 10px;">#}
+{#            {% endfor %}#}
+{#        </div>#}
+{#      </div>#}
     </div>
+
 
     <!-- 上傳表單按鈕 -->
     <div class="d-flex justify-content-center mt-3">

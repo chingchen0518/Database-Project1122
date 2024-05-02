@@ -16,7 +16,6 @@
 
   <h1 class="mt-5">新增租房</h1>
   <form id="house-form" enctype="multipart/form-data" method="POST" action="{% url 'add_house' %}">
-  <form method="post" enctype="multipart/form-data" action="{% url 'add_house' %}">
       {% csrf_token %}
 
     <div class="accordion" id="accordion">
@@ -290,7 +289,12 @@
       <input type="submit" class="btn btn-primary" value="上傳">
     </div>
   </form>
-
+{% if image_path %}
+<div class="mt-3">
+  <!-- 使用 {{ image_path }} 变量来显示图片 -->
+  <img src="{{ image_path }}" class="img-thumbnail" alt="Uploaded Image">
+</div>
+{% endif %}
 </div>
 
 <!-- 引入 Bootstrap JS -->
