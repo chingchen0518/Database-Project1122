@@ -94,9 +94,24 @@ def logout(request):
     del request.session['user']
     return redirect("homepage")
 def house_list(request):
-    rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId LIKE %s AND House.hId=Info.hId_id',['KH%'])
+        # 如果有search東西
+        if 'keyword' in request.POST:
+            keyword = request.POST['keyword']
 
-    return render(request, "house_list.html",{'rows': rows})
+            rows = House.objects.raw('SELECT * FROM House,Info WHERE Info.address LIKE %s AND House.hId=Info.hId_id',
+                                     ['%' + keyword + '%'])
+            if rows:
+                print("123456789")
+            else:
+                print("avassaf")
+            return render(request, "house_list.html", {'rows': rows, 'numbers': len(rows)})
+
+        # 如果沒有search
+        else:
+            rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId LIKE %s AND House.hId=Info.hId_id',
+                                     ['KH%'])
+            return render(request, "house_list.html", {'rows': rows, 'numbers': len(rows)})
+
 
 def house_rent_cont(request,hId):
     rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId=%s AND House.hId=Info.hId_id', [hId])
