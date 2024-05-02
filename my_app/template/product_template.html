@@ -3,8 +3,9 @@
 <link href= "{%static '/css/product_template.css' %}" type="text/css" rel="stylesheet"/>
 
 {% for row in rows %}
-    <div class="product">
-        <a href="/house_rent_cont/{{ row.hId }}"><img src="{%static '/img/house/'|add:row.hId|add:'-2.jpg' %}" alt="house">  {# 房屋照片 #}
+    <div id="thing" class="product">
+
+        <a id="template" href="{% url 'house_show' hId=row.hId %}"><img src="{%static '/img/house/'|add:row.hId|add:'-2.jpg' %}" alt="house">  {# 房屋照片 #}
             <div class="detail">
                 <h4 class="title">{{ row.title }}</h4>
                 <ul class="situation">

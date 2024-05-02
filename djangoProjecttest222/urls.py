@@ -22,7 +22,8 @@ import my_app.views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', my_app.views.homepage, name='homepage'),
+    # path('', my_app.views.homepage, name='homepage'),
+    path('', my_app.views.house_list, name='homepage'),
 
     # 註冊登錄退出
     path('register/', my_app.views.register,name="register"),

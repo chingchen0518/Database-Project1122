@@ -8,75 +8,62 @@
     <title>house_list</title>
 </head>
 <body>
-    <div id="yc_navbar">
-        <div id="yc_nav_logo">
-            <a href=""><img src="{%static '\img\equipment\net.png' %}"></a>
-        </div>
-        <form method="post" action="">
-            {% csrf_token %}
-            <div id="yc_search_bar">
-                <input type="text" name="keyword" placeholder="Search bar">
-            </div>
-        </form>
-
-        <div id="yc_nav_menu">
-            <div id="yc_nav_content">
-                <a href="">租屋</a>
-                <a href="">售屋</a>
-                <a href="">登入</a>
-            </div>
-        </div>
+    <div>
+        {% include 'test_template/navbar_list.html' %}
     </div>
-
-    <div id="yc_gate"></div>
-
-    <div id="yc_city_list">
-        <p class="yc_chosen_city">高雄市</p>
-        <a><i class="bi bi-caret-down-fill"></i></a>
-        <form>
-            <div id="yc_listed">
-                <ul>
-                    <p>北部</p>
-                    <li><a>台北市</a></li>
-                    <li><a>新北市</a></li>
-                    <li><a>基隆市</a></li>
-                    <li><a>桃園市</a></li>
-                    <li><a>新竹市</a></li>
-                    <li><a>新竹縣</a></li>
-                    <li><a>宜蘭縣</a></li>
-                </ul>
-                <ul>
-                    <p>中部</p>
-                    <li><a>苗栗縣</a></li>
-                    <li><a>台中市</a></li>
-                    <li><a>彰化縣</a></li>
-                    <li><a>南投縣</a></li>
-                    <li><a>雲林縣</a></li>
-                </ul>
-                <ul>
-                    <p>南部</p>
-                    <li><a>嘉義市</a></li>
-                    <li><a>嘉義縣</a></li>
-                    <li><a>台南市</a></li>
-                    <li><a>高雄市</a></li>
-                    <li><a>屏東縣</a></li>
-                    <li><a>澎湖縣</a></li>
-                </ul>
-                <ul>
-                    <p>東部</p>
-                    <li><a>花蓮縣</a></li>
-                    <li><a>台東縣</a></li>
-                </ul>
-                <ul>
-                    <p>離島</p>
-                    <li><a>金門縣</a></li>
-                    <li><a>連江縣</a></li>
-                </ul>
-            </div>
-        </form>
-    </div>
+{##}
+{#    <div id="yc_city_list">#}
+{#        <p class="yc_chosen_city">高雄市</p>#}
+{#        <a><i class="bi bi-caret-down-fill"></i></a>#}
+{#        <form>#}
+{#            <div id="yc_listed">#}
+{#                <ul>#}
+{#                    <p>北部</p>#}
+{#                    <li><a>台北市</a></li>#}
+{#                    <li><a>新北市</a></li>#}
+{#                    <li><a>基隆市</a></li>#}
+{#                    <li><a>桃園市</a></li>#}
+{#                    <li><a>新竹市</a></li>#}
+{#                    <li><a>新竹縣</a></li>#}
+{#                    <li><a>宜蘭縣</a></li>#}
+{#                </ul>#}
+{#                <ul>#}
+{#                    <p>中部</p>#}
+{#                    <li><a>苗栗縣</a></li>#}
+{#                    <li><a>台中市</a></li>#}
+{#                    <li><a>彰化縣</a></li>#}
+{#                    <li><a>南投縣</a></li>#}
+{#                    <li><a>雲林縣</a></li>#}
+{#                </ul>#}
+{#                <ul>#}
+{#                    <p>南部</p>#}
+{#                    <li><a>嘉義市</a></li>#}
+{#                    <li><a>嘉義縣</a></li>#}
+{#                    <li><a>台南市</a></li>#}
+{#                    <li><a>高雄市</a></li>#}
+{#                    <li><a>屏東縣</a></li>#}
+{#                    <li><a>澎湖縣</a></li>#}
+{#                </ul>#}
+{#                <ul>#}
+{#                    <p>東部</p>#}
+{#                    <li><a>花蓮縣</a></li>#}
+{#                    <li><a>台東縣</a></li>#}
+{#                </ul>#}
+{#                <ul>#}
+{#                    <p>離島</p>#}
+{#                    <li><a>金門縣</a></li>#}
+{#                    <li><a>連江縣</a></li>#}
+{#                </ul>#}
+{#            </div>#}
+{#        </form>#}
+{#    </div>#}
 
     <div id="yc_content">
+        <div id="yc_right_content">
+            <div class="yc_new">
+                <a class="btn btn-primary" href="http://127.0.0.1:8000/upload_page">新增房屋</a>
+            </div>
+        </div>
         <div id="yc_left_content">
             <div class="yc_search_results">
                 <p id="yc_amount">已為您找到<span> {{ numbers }} </span>間房屋</p>    {# 搜尋到符合條件的房屋數量 #}
@@ -96,5 +83,27 @@
             </div>
         </div>
     </div>
+<!-- Javascript Files
+  ================================================== -->
+  <!-- initialize jQuery Library -->
+  <script src="{% static '/plugins/jQuery/jquery.min.js' %}"></script>
+{#  <!-- Bootstrap jQuery -->#}
+  <script src="{% static '/plugins/bootstrap/bootstrap.min.js' %}" defer></script>
+{#  <!-- Slick Carousel -->#}
+  <script src="{% static '/plugins/slick/slick.min.js' %}"></script>
+  <script src="{% static 'plugins/slick/slick-animation.min.js'%}"></script>
+  <!-- Color box -->
+  <script src="{% static '/plugins/colorbox/jquery.colorbox.js' %}"></script>
+  <!-- shuffle -->
+  <script src="{% static '/plugins/shuffle/shuffle.min.js' %}" defer></script>
+
+
+{#  <!-- Google Map API Key-->#}
+{#  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCcABaamniA6OL5YvYSpB3pFMNrXwXnLwU" defer></script>#}
+{#  <!-- Google Map Plugin-->#}
+{#  <script src="plugins/google-map/map.js" defer></script>#}
+
+  <!-- Template custom -->
+  <script src="{% static '/js/template_js.js' %}"></script>
 </body>
 </html>

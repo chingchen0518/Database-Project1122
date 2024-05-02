@@ -69,3 +69,8 @@
 .price span{
     font-size: 35px;
 }
+
+#thing>#template:hover{
+    text-decoration: none;
+    color: black;
+}
