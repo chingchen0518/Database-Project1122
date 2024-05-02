@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 {% load static %}
 <html lang="zh-Hant">
 <head>
@@ -6,6 +7,21 @@
   <title>編輯房屋</title>
   <!-- 引入 Bootstrap CSS -->
   <link href="../../static/css/bootstrap_css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* 设置图像容器的样式 */
+    .image-container {
+        background-color: #f0f0f0; /* 设置背景颜色 */
+        padding: 10px; /* 设置内边距 */
+    }
+
+    /* 设置图像的样式 */
+    .image-container img {
+        border: 2px solid #ccc;
+        border-radius: 8px;
+        display: block; /* 图像作为块级元素显示 */
+        margin: auto; /* 水平居中 */
+    }
+</style>
 </head>
 
 <body>
@@ -170,4 +186,182 @@
               <!-- 設備(勾選框) -->
               <label><input type="checkbox" name="sofa" value="1" {% if house.sofa %} checked {% endif %}><span>沙發</span></label>
               <label><input type="checkbox" name="bed" value="1" {% if house.bed %} checked {% endif %}><span>床組</span></label>
-              <label>
+              <label><input type="checkbox" name="cabinet" value="1" {% if house.cabinet %} checked {% endif %}><span>櫃子</span></label>
+            </div>
+
+            <!-- 附近交通 -->
+            <div class="mb-3">
+              <label class="form-label">附近交通：</label>
+              <!-- 附近交通(勾選框) -->
+              <label><input type="checkbox" name="mrt" value="1" {% if house.mrt %} checked {% endif %}><span>捷運</span></label>
+              <label><input type="checkbox" name="bus" value="1" {% if house.bus %} checked {% endif %}><span>公車</span></label>
+              <label><input type="checkbox" name="train" value="1" {% if house.train %} checked {% endif %}><span>火車</span></label>
+            </div>
+
+            <!-- 電梯 -->
+{#            <div class="mb-3">#}
+{#              <label for="lift" class="form-label">電梯：</label>#}
+{#              <select class="form-select" id="lift" name="lift">#}
+{#                <!-- 電梯選項 -->#}
+{#                <option value="1">有</option>#}
+{#                <option value="0">無</option>#}
+{#              </select>#}
+{#            </div>#}
+
+            <!-- 開伙 -->
+            <div class="mb-3">
+              <label for="cook" class="form-label">開伙：</label>
+              <select class="form-select" id="cook" name="cook">
+                <!-- 開伙選項 -->
+                <option value="1" {% if house.cook == 1 %} selected {% endif %}>可以</option>
+                <option value="0" {% if house.cook == 0 %} selected {% endif %}>不可以</option>
+              </select>
+            </div>
+
+            <!-- 寵物 -->
+            <div class="mb-3">
+              <label for="pet" class="form-label">寵物：</label>
+              <select class="form-select" id="pet" name="pet">
+                <!-- 寵物選項 -->
+                <option value="1" {% if house.pet == 1 %}selected{% endif %}>可以</option>
+                <option value="0" {% if house.pet == 0 %}selected{% endif %}>不可以</option>
+              </select>
+            </div>
+
+            <!-- 警衛 -->
+            <div class="mb-3">
+              <label for="security" class="form-label">警衛：</label>
+              <select class="form-select" id="security" name="security">
+                <!-- 警衛選項 -->
+                <option value="有(日閒)" {% if house.security == "有(日閒)" %}selected{% endif %}>有(日閒)</option>
+                <option value="有(全天)" {% if house.security == "有(全天)" %}selected{% endif %}>有(全天)</option>
+                <option value="無" {% if house.security == "無" %}selected{% endif %}>無</option>
+              </select>
+            </div>
+
+            <!-- 停車位 -->
+            <div class="mb-3">
+              <label for="parking" class="form-label">停車位：</label>
+              <select class="form-select" id="parking" name="parking">
+                <!-- 停車位選項 -->
+                <option value="無" {% if house.parking == "無" %}selected{% endif %}>無</option>
+                <option value="1個/坡道*平面" {% if house.parking == "1個/坡道*平面" %}selected{% endif %}>1個/坡道*平面</option>
+                <option value="1個/坡道*機械" {% if house.parking == "1個/坡道*機械" %}selected{% endif %}>1個/坡道*機械</option>
+              </select>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- 租金(下拉式列表) -->
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="rent-heading">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#rent" aria-expanded="false" aria-controls="rent">
+            租金
+          </button>
+        </h2>
+        <div id="rent" class="accordion-collapse collapse" aria-labelledby="rent-heading" data-bs-parent="#accordion">
+          <div class="accordion-body">
+
+            <!-- 月租費 -->
+            <div class="mb-3">
+              <label for="rent_fee">月租費(請填數字)：</label>
+              <input type="text" class="form-control" id="rent_fee" name="price" placeholder="單位: 新台幣，例:6000" value="{{ house.price }}">
+            </div>
+
+            <!-- 管理費 -->
+            <div class="mb-3">
+              <label for="management_fee">管理費(請填數字)：</label>
+              <input type="text" class="form-control" id="management_fee" name="management" placeholder="單位: 新台幣，例:800" value="{{ house.management }}">
+            </div>
+
+            <!-- 最短租期 -->
+            <div class="mb-3">
+              <label for="lease_term" class="form-label">最短租期：</label>
+              <select class="form-select" name="period" id="lease_term">
+                <!-- 租期選項 -->
+                <option value="6" {% if house.period == "半年" %} selected {% endif %}>半年</option>
+                <option value="12" {% if house.period == "一年" %} selected {% endif %}>一年</option>
+                <option value="24" {% if house.period == "兩年" %} selected {% endif %}>兩年</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 所有圖片(下拉式列表) -->
+{#      <div class="accordion-item">#}
+{#        <h2 class="accordion-header" id="images-heading">#}
+{#          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#images" aria-expanded="false" aria-controls="images">#}
+{#            所有圖片#}
+{#          </button>#}
+{#        </h2>#}
+{#        <div id="images" class="accordion-collapse collapse" aria-labelledby="images-heading" data-bs-parent="#accordion">#}
+{#          <div class="accordion-body">#}
+{#            <!-- 上傳圖片的按鈕 -->#}
+{#            <div class="mb-3">#}
+{#              <label for="image-upload" class="form-label">上傳圖片：</label>#}
+{#              <input type="file" class="form-control" id="image-upload" name="image-upload" accept=".jpg, .jpeg, .png">#}
+{#              <div id="image-upload-help" class="form-text">支援的圖片格式：.jpg、.jpeg、.png</div>#}
+{#            </div>#}
+{#          </div>#}
+{#        </div>#}
+{#        <div class="image-container">#}
+{#            {% for i in img_path %}#}
+{#                <img src="{% static 'img/house/' %}{{ i.path }}" alt="" width="420" height="320" style="margin-bottom: 10px;">#}
+{#            {% endfor %}#}
+{#        </div>#}
+{#      </div>#}
+    </div>
+
+
+    <!-- 上傳表單按鈕 -->
+    <div class="d-flex justify-content-center mt-3">
+      <input type="submit" class="btn btn-primary" value="上傳">
+    </div>
+  </form>
+
+</div>
+
+<!-- 引入 Bootstrap JS -->
+<script src="../../static/js/bootstrap_js/bootstrap.min.js"></script>
+<script>
+  {#document.getElementById("house-form").addEventListener("submit", function(event) {#}
+  {#  event.preventDefault(); // 防止表單默認提交行為#}
+
+    // 在這裡添加將數據提交到後端的代碼
+    // 可以使用 JavaScript 或任何後端框架來處理表單提交
+    // 例如，您可以使用 fetch() 或 XMLHttpRequest 將數據發送到後端
+   function validateForm() {
+    var form = document.getElementById("house-form");
+    var inputs = form.querySelectorAll("input, select");
+    var isValid = true;
+    var isAlerted = false; // 變數來追蹤是否已經顯示了提示訊息
+    var unfilledFields = ""; // 變數來儲存未填寫欄位
+
+    inputs.forEach(function(input) {
+        // 獲取自定義屬性的值
+        var message = input.previousElementSibling.dataset.message;
+
+        if (input.required && !input.value.trim()) {
+            isValid = false;
+            input.classList.add("required-field"); // 將未填寫欄位的背景顏色改成紅色
+            if (!isAlerted) { // 如果還沒有顯示過提示訊息，則顯示
+                isAlerted = true; // 更新狀態，表示已經顯示過提示訊息
+                // 將未填寫欄位的 label 文字加入到 unfilledFields 字串中
+                unfilledFields += `${message}, `;
+            }
+        }
+    });
+
+    if (isValid) {
+        alert("表單已成功提交！");
+    } else {
+        // 提示未填寫欄位
+        alert("請填寫所有欄位，未填欄位為: " + unfilledFields.slice(0, -2));
+    }
+}
+</script>
+</body>
+</html>
