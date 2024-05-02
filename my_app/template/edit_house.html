@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
@@ -39,28 +40,29 @@
               <label for="region" class="form-label">區域：</label>
               <select name="region" id="region" class="form-select" value="{{ house.region }}">
                 <!-- 區域選項 -->
-                <option value="1" {% if house.region == "1" %}selected{% endif %}>臺北市</option>
-                <option value="2" {% if house.region == "2" %}selected{% endif %}>新北市</option>
-                <option value="3" {% if house.region == "3" %}selected{% endif %}>桃園市</option>
-                <option value="4" {% if house.region == "4" %}selected{% endif %}>臺中市</option>
-                <option value="5" {% if house.region == "5" %}selected{% endif %}>臺南市</option>
-                <option value="6" {% if house.region == "6" %}selected{% endif %}>高雄市</option>
-                <option value="7" {% if house.region == "7" %}selected{% endif %}>宜蘭縣</option>
-                <option value="8" {% if house.region == "8" %}selected{% endif %}>新竹縣</option>
-                <option value="9" {% if house.region == "9" %}selected{% endif %}>苗栗縣</option>
-                <option value="10" {% if house.region == "10" %}selected{% endif %}>彰化縣</option>
-                <option value="11" {% if house.region == "11" %}selected{% endif %}>南投縣</option>
-                <option value="12" {% if house.region == "12" %}selected{% endif %}>雲林縣</option>
-                <option value="13" {% if house.region == "13" %}selected{% endif %}>嘉義縣</option>
-                <option value="14" {% if house.region == "14" %}selected{% endif %}>屏東縣</option>
-                <option value="15" {% if house.region == "15" %}selected{% endif %}>臺東縣</option>
-                <option value="16" {% if house.region == "16" %}selected{% endif %}>花蓮縣</option>
-                <option value="17" {% if house.region == "17" %}selected{% endif %}>澎湖縣</option>
-                <option value="18" {% if house.region == "18" %}selected{% endif %}>基隆市</option>
-                <option value="19" {% if house.region == "19" %}selected{% endif %}>新竹市</option>
-                <option value="20" {% if house.region == "20" %}selected{% endif %}>嘉義市</option>
-                <option value="21" {% if house.region == "21" %}selected{% endif %}>金門縣</option>
-                <option value="22" {% if house.region == "22" %}selected{% endif %}>連江縣</option>
+                <option value="--" {% if house.region == "--" %}selected{% endif %}>--</option>
+                <option value="1" {% if house.region == 1 %}selected{% endif %}>臺北市</option>
+                <option value="2" {% if house.region == 2 %}selected{% endif %}>新北市</option>
+                <option value="3" {% if house.region == 3 %}selected{% endif %}>桃園市</option>
+                <option value="4" {% if house.region == 4 %}selected{% endif %}>臺中市</option>
+                <option value="5" {% if house.region == 5 %}selected{% endif %}>臺南市</option>
+                <option value="6" {% if house.region == 6 %}selected{% endif %}>高雄市</option>
+                <option value="7" {% if house.region == 7 %}selected{% endif %}>宜蘭縣</option>
+                <option value="8" {% if house.region == 8 %}selected{% endif %}>新竹縣</option>
+                <option value="9" {% if house.region == 9 %}selected{% endif %}>苗栗縣</option>
+                <option value="10" {% if house.region == 10 %}selected{% endif %}>彰化縣</option>
+                <option value="11" {% if house.region == 11 %}selected{% endif %}>南投縣</option>
+                <option value="12" {% if house.region == 12 %}selected{% endif %}>雲林縣</option>
+                <option value="13" {% if house.region == 13 %}selected{% endif %}>嘉義縣</option>
+                <option value="14" {% if house.region == 14 %}selected{% endif %}>屏東縣</option>
+                <option value="15" {% if house.region == 15 %}selected{% endif %}>臺東縣</option>
+                <option value="16" {% if house.region == 16 %}selected{% endif %}>花蓮縣</option>
+                <option value="17" {% if house.region == 17 %}selected{% endif %}>澎湖縣</option>
+                <option value="18" {% if house.region == 18 %}selected{% endif %}>基隆市</option>
+                <option value="19" {% if house.region == 19 %}selected{% endif %}>新竹市</option>
+                <option value="20" {% if house.region == 20 %}selected{% endif %}>嘉義市</option>
+                <option value="21" {% if house.region == 21 %}selected{% endif %}>金門縣</option>
+                <option value="22" {% if house.region == 22 %}selected{% endif %}>連江縣</option>
               </select>
             </div>
 
@@ -103,9 +105,13 @@
               <label for="type" class="form-label">類型：</label>
               <select class="form-select" id="type" name="type">
                 <!-- 類型選項 -->
-                <option value="公寓">公寓</option>
-                <option value="別墅">別墅</option>
-                <option value="透天厝">透天厝</option>
+                <option value="--" {% if house.type == "--" %}selected{% endif %}>--</option>
+                <option value="大樓(11層含以上有電梯)" {% if house.type == "大樓(11層含以上有電梯)" %}selected{% endif %}>大樓(11層含以上有電梯)</option>
+                <option value="透天厝" {% if house.type == "透天厝" %}selected{% endif %}>透天厝</option>
+                <option value="多層樓組合" {% if house.type == "多層樓組合" %}selected{% endif %}>多層樓組合</option>
+                <option value="華廈(10層含以下有電梯)" {% if house.type == "華廈(10層含以下有電梯)" %}selected{% endif %}>華廈(10層含以下有電梯)</option>
+                <option value="其他" {% if house.type == "其他" %}selected{% endif %}>其他</option>
+                <option value="公寓(5樓含以下無電梯)" {% if house.type == "公寓(5樓含以下無電梯)" %}selected{% endif %}>公寓(5樓含以下無電梯)</option>
               </select>
             </div>
 
@@ -114,10 +120,15 @@
               <label for="type" class="form-label">朝向：</label>
               <select class="form-select" id="direction" name="direction">
                 <!-- 類型選項 -->
-                <option value="北">北</option>
-                <option value="東">東</option>
-                <option value="南">南</option>
-                <option value="西">西</option>
+                <option value="--" {% if house.direction == "--" %}selected{% endif %}>--</option>
+                <option value="北" {% if house.direction == "北" %}selected{% endif %}>北</option>
+                <option value="東" {% if house.direction == "東" %}selected{% endif %}>東</option>
+                <option value="南" {% if house.direction == "南" %}selected{% endif %}>南</option>
+                <option value="西" {% if house.direction == "西" %}selected{% endif %}>西</option>
+                <option value="東北" {% if house.direction == "東北" %}selected{% endif %}>東北</option>
+                <option value="東南" {% if house.direction == "東南" %}selected{% endif %}>東南</option>
+                <option value="西南" {% if house.direction == "西南" %}selected{% endif %}>西南</option>
+                <option value="西北" {% if house.direction == "西北" %}selected{% endif %}>西北</option>
               </select>
             </div>
 
@@ -173,14 +184,14 @@
             </div>
 
             <!-- 電梯 -->
-            <div class="mb-3">
-              <label for="lift" class="form-label">電梯：</label>
-              <select class="form-select" id="lift" name="lift">
-                <!-- 電梯選項 -->
-                <option value="1">有</option>
-                <option value="0">無</option>
-              </select>
-            </div>
+{#            <div class="mb-3">#}
+{#              <label for="lift" class="form-label">電梯：</label>#}
+{#              <select class="form-select" id="lift" name="lift">#}
+{#                <!-- 電梯選項 -->#}
+{#                <option value="1">有</option>#}
+{#                <option value="0">無</option>#}
+{#              </select>#}
+{#            </div>#}
 
             <!-- 開伙 -->
             <div class="mb-3">
@@ -197,8 +208,8 @@
               <label for="pet" class="form-label">寵物：</label>
               <select class="form-select" id="pet" name="pet">
                 <!-- 寵物選項 -->
-                <option value="1">可以</option>
-                <option value="0">不可以</option>
+                <option value="1" {% if house.pet == 1 %}selected{% endif %}>可以</option>
+                <option value="0" {% if house.pet == 0 %}selected{% endif %}>不可以</option>
               </select>
             </div>
 
@@ -207,9 +218,9 @@
               <label for="security" class="form-label">警衛：</label>
               <select class="form-select" id="security" name="security">
                 <!-- 警衛選項 -->
-                <option value="有(日閒)">有(日閒)</option>
-                <option value="有(全天)">有(全天)</option>
-                <option value="無">無</option>
+                <option value="有(日閒)" {% if house.security == "有(日閒)" %}selected{% endif %}>有(日閒)</option>
+                <option value="有(全天)" {% if house.security == "有(全天)" %}selected{% endif %}>有(全天)</option>
+                <option value="無" {% if house.security == "無" %}selected{% endif %}>無</option>
               </select>
             </div>
 
@@ -218,8 +229,9 @@
               <label for="parking" class="form-label">停車位：</label>
               <select class="form-select" id="parking" name="parking">
                 <!-- 停車位選項 -->
-                <option value="無">無</option>
-                <option value="有">有</option>
+                <option value="無" {% if house.parking == "無" %}selected{% endif %}>無</option>
+                <option value="1個/坡道*平面" {% if house.parking == "1個/坡道*平面" %}selected{% endif %}>1個/坡道*平面</option>
+                <option value="1個/坡道*機械" {% if house.parking == "1個/坡道*機械" %}selected{% endif %}>1個/坡道*機械</option>
               </select>
             </div>
 
@@ -251,12 +263,12 @@
 
             <!-- 最短租期 -->
             <div class="mb-3">
-              <label for="lease_term">最短租期：</label>
-              <select name="period" id="lease_term">
+              <label for="lease_term" class="form-label">最短租期：</label>
+              <select class="form-select" name="period" id="lease_term">
                 <!-- 租期選項 -->
-                <option value="6" {% if house.period == "6" %} selected {% endif %}>半年</option>
-                <option value="12" {% if house.period == "12" %} selected {% endif %}>一年</option>
-                <option value="24" {% if house.period == "24" %} selected {% endif %}>兩年</option>
+                <option value="6" {% if house.period == "半年" %} selected {% endif %}>半年</option>
+                <option value="12" {% if house.period == "一年" %} selected {% endif %}>一年</option>
+                <option value="24" {% if house.period == "兩年" %} selected {% endif %}>兩年</option>
               </select>
             </div>
           </div>
@@ -278,6 +290,11 @@
               <input type="file" class="form-control" id="image-upload" name="image-upload" accept=".jpg, .jpeg, .png">
               <div id="image-upload-help" class="form-text">支援的圖片格式：.jpg、.jpeg、.png</div>
             </div>
+            <ul>
+                {%for img_path in correspond_img_path%}
+                <li> <img src="{% static 'img/house/' %}{{ img_path }}" alt=""> </li>
+                {%endfor%}
+            </ul>
           </div>
         </div>
       </div>
