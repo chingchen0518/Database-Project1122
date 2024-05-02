@@ -10,11 +10,13 @@
 
 <body>
 
+
 <div class="container">
   <!-- 本頁面標題 -->
 
   <h1 class="mt-5">新增租房</h1>
-  <form id="house-form" method="POST" action="{% url 'add_house' %}">
+  <form id="house-form" enctype="multipart/form-data" method="POST" action="{% url 'add_house' %}">
+  <form method="post" enctype="multipart/form-data" action="{% url 'add_house' %}">
       {% csrf_token %}
 
     <div class="accordion" id="accordion">
@@ -263,25 +265,6 @@
         </div>
       </div>
 
-      <!-- 特色描寫(下拉式列表) -->
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="features-heading">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#features" aria-expanded="false" aria-controls="features">
-            特色描寫
-          </button>
-        </h2>
-
-        <div id="features" class="accordion-collapse collapse" aria-labelledby="features-heading" data-bs-parent="#accordion">
-          <div class="accordion-body">
-            <!-- 廣告標語 -->
-            <div class="mb-3">
-              <label for="features-description" class="form-label">房屋特色描述(廣告標語)：</label>
-              <textarea class="form-control" id="features-description" name="features-description" rows="3" placeholder="例:這間房屋具有優越的交通便利性，並配備了現代化的家電設備。您可以在這裡輕鬆享受生活，並擁有一個舒適的居住環境。"></textarea>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <!-- 所有圖片(下拉式列表) -->
       <div class="accordion-item">
         <h2 class="accordion-header" id="images-heading">
@@ -294,7 +277,7 @@
             <!-- 上傳圖片的按鈕 -->
             <div class="mb-3">
               <label for="image-upload" class="form-label">上傳圖片：</label>
-              <input type="file" class="form-control" id="image-upload" name="image-upload" accept=".jpg, .jpeg, .png">
+              <input type="file" class="form-control" id="image-upload" name="image_file" accept=".jpg, .jpeg, .png">
               <div id="image-upload-help" class="form-text">支援的圖片格式：.jpg、.jpeg、.png</div>
             </div>
           </div>

@@ -291,9 +291,9 @@
               <div id="image-upload-help" class="form-text">支援的圖片格式：.jpg、.jpeg、.png</div>
             </div>
             <ul>
-                {%for img_path in correspond_img_path%}
+                {% for img_path in correspond_img_path %}
                 <li> <img src="{% static 'img/house/' %}{{ img_path }}" alt=""> </li>
-                {%endfor%}
+                {% endfor %}
             </ul>
           </div>
         </div>
