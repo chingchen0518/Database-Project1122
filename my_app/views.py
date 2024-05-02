@@ -66,6 +66,7 @@ def register_received(request):
         cursor.execute('INSERT INTO Member VALUES (%s, %s, %s, %s, %s, %s, %s)',(mId,Users['gender'],Users['email'],Users['phone'],None,Users['realname'],Users['username']))
 
     request.session['user'] = Users['username']
+    request.session['mId'] = mId
     return redirect('homepage')
 
 def login_page(request):
@@ -155,7 +156,7 @@ def add_house(request):
     Equip = {field: request.POST.get(field, '0') for field in fields}
 
     #member_id
-    member = Member.objects.raw('SELECT mId FROM Member WHERE Member.username_id=%s', [request.session['user']])
+    member = request.session['mId']
     # Count next id
     if(House.objects.filter(region=region)):
         latest_id = House.objects.filter(region=region).latest('hId')
@@ -169,7 +170,7 @@ def add_house(request):
         next_id = f"{prefix}1"
 
     with connection.cursor() as cursor:
-        cursor.execute('INSERT INTO House VALUES (%s, %s, %s, %s, %s)',(next_id, 0,title,region,member[0].mId))
+        cursor.execute('INSERT INTO House VALUES (%s, %s, %s, %s, %s)',(next_id, 0,title,region,member))
         cursor.execute('INSERT INTO Info  VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s)',(next_id,Info['price'],Info['address'],Info['level'],Info['room'],Info['living'],Info['bath'],Info['type'],Info['size'],current_date))
         cursor.execute('INSERT INTO Equipment  VALUES (%s, %s,%s,%s, %s,%s, %s, %s, %s, %s, %s, %s)',(next_id,Equip['sofa'], Equip['tv'], Equip['washer'], Equip['wifi'], Equip['bed'], Equip['refrigerator'], Equip['heater'], Equip['channel4'], Equip['cabinet'], Equip['aircond'], Equip['gas']))
         cursor.execute("INSERT INTO Rdetail VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",(next_id,"0",Rdetails['parking'],Rdetails['pet'],Rdetails['cook'],Rdetails['direction'],Rdetails['level'],Rdetails['security'],Rdetails['management'],Rdetails['period'],Rdetails['bus'],Rdetails['train'],Rdetails['mrt'],Rdetails['age']))
@@ -247,8 +248,9 @@ def edit_page_update(request,hId):
         cursor.execute("UPDATE Rdetail SET parking = %s, pet = %s, cook = %s, direction = %s, level = %s, security = %s, management = %s, period = %s, bus = %s, train = %s, mrt = %s, age = %s WHERE hId_id = %s",
                        (Rdetails['parking'],Rdetails['pet'],Rdetails['cook'],Rdetails['direction'],Rdetails['level'],Rdetails['security'],Rdetails['management'],Rdetails['period'],
                         Rdetails['bus'],Rdetails['train'],Rdetails['mrt'],Rdetails['age'],hId))
+    house = f'/houses/{hId}'
 
-    return render(request, "homepage.html")
+    return redirect(house)
 
 def houses(request,hId):
     rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId=%s AND House.hId=Info.hId_id', [hId])
