@@ -96,6 +96,11 @@ def logout(request):
     del request.session['mId']
     return redirect("homepage")
 def house_list(request):
+        if 'user' in request.session:
+            login=1
+        else:
+            login=0
+
         # 如果有search東西
         if 'keyword' in request.POST:
             keyword = request.POST['keyword']
@@ -106,13 +111,14 @@ def house_list(request):
                 print("123456789")
             else:
                 print("avassaf")
-            return render(request, "house_list.html", {'rows': rows, 'numbers': len(rows)})
+
+            return render(request, "house_list.html", {'rows': rows, 'numbers': len(rows),'login':login})
 
         # 如果沒有search
         else:
             rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId LIKE %s AND House.hId=Info.hId_id',
                                      ['KH%'])
-            return render(request, "house_list.html", {'rows': rows, 'numbers': len(rows)})
+            return render(request, "house_list.html", {'rows': rows, 'numbers': len(rows),'login':login})
 
 
 def house_rent_cont(request,hId):
@@ -168,7 +174,7 @@ def add_house(request):
         cursor.execute('INSERT INTO Equipment  VALUES (%s, %s,%s,%s, %s,%s, %s, %s, %s, %s, %s, %s)',(next_id,Equip['sofa'], Equip['tv'], Equip['washer'], Equip['wifi'], Equip['bed'], Equip['refrigerator'], Equip['heater'], Equip['channel4'], Equip['cabinet'], Equip['aircond'], Equip['gas']))
         cursor.execute("INSERT INTO Rdetail VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",(next_id,"0",Rdetails['parking'],Rdetails['pet'],Rdetails['cook'],Rdetails['direction'],Rdetails['level'],Rdetails['security'],Rdetails['management'],Rdetails['period'],Rdetails['bus'],Rdetails['train'],Rdetails['mrt'],Rdetails['age']))
 
-    return render(request, "homepage.html")
+    return redirect('homepage')
 
 def account_center(request):
     if 'user' in request.session:
@@ -203,7 +209,6 @@ def search_test(request):
     return render(request, "house_list.html", {'rows': rows})
 
 def edit_page_show(request,hId):
-
     if 'user' in request.session:
         # 查询数据库，获取对应 hId 的标题数据
         house = House.objects.raw("SELECT * FROM House,Info,Equipment,Rdetail WHERE House.hId=%s AND House.hId=Info.hId_id AND House.hId=Equipment.hId_id AND House.hId=Rdetail.hId_id", [hId])
@@ -244,7 +249,7 @@ def edit_page_update(request,hId):
 
     return render(request, "homepage.html")
 
-def showhomes(request,hId):
+def houses(request,hId):
     rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId=%s AND House.hId=Info.hId_id', [hId])
     image = Image.objects.raw('SELECT path FROM Image WHERE Image.hId_id=%s', [hId])
     equipment = Equipment.objects.raw('SELECT * FROM Equipment WHERE Equipment.hId_id=%s', [hId])
@@ -252,23 +257,25 @@ def showhomes(request,hId):
     print(seller[0].mId)
     if 'mId' in request.session:
         login_people=request.session['mId']
+        login=1
         print(login_people)
     else:
+        login=0
         login_people="0000"
-    return render(request, "test_template/service-single.html",{"rows":rows[0],"image":image,"equipment":equipment[0],"seller":seller[0],"login_people":login_people})
+    return render(request, "test_template/service-single.html",{"rows":rows[0],"image":image,"equipment":equipment[0],"seller":seller[0],"login_people":login_people,"login":login})
 
-from django.shortcuts import render
-from .forms import ImageUploadForm
-def imgup(request):
-    if request.method == 'POST':
-        form = ImageUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            images = request.FILES.getlist('images')
-            for image in images:
-                # 处理每个上传的图片
-                handle_uploaded_image(image, '/path/to/destination/folder/')
-            return HttpResponse('上传成功！')
-    else:
-        form = ImageUploadForm()
-    return render(request, 'testimage.html', {'form': form})
-
+# from django.shortcuts import render
+# from .forms import ImageUploadForm
+# def imgup(request):
+#     if request.method == 'POST':
+#         form = ImageUploadForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             images = request.FILES.getlist('images')
+#             for image in images:
+#                 # 处理每个上传的图片
+#                 handle_uploaded_image(image, '/path/to/destination/folder/')
+#             return HttpResponse('上传成功！')
+#     else:
+#         form = ImageUploadForm()
+#     return render(request, 'testimage.html', {'form': form})
+#
