@@ -35,6 +35,17 @@ body{
     width: 80%;
 }
 
+#yc_right_content{
+    display: inline-block;
+    float: right;
+    width: 20%;
+}
+
+#yc_right_content .yc_new{
+    float: right;
+    margin-right: 30px;
+}
+
 #yc_select, .yc_search_results{
     width: 100%;
 }
