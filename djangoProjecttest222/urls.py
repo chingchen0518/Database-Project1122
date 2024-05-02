@@ -45,7 +45,7 @@ urlpatterns = [
     path('account_center/',my_app.views.account_center,name="account_center"),
 
     #沒用的東西
-    path('testing/',my_app.views.imgup,name="testing"),
+    path('testing/',my_app.views.testing,name="testing"),
 
     #搜尋測試
     path('house_list/search_test/', my_app.views.search_test, name='search_test'),
@@ -55,5 +55,5 @@ urlpatterns = [
     path('edit_page/edit_house/<str:hId>/',my_app.views.edit_page_update, name='edit_house'),
 
     #Templates
-    path('houses/<str:hId>',my_app.views.showhomes,name='house_show'),
+    path('houses/<str:hId>',my_app.views.houses,name='house_show'),
 ]

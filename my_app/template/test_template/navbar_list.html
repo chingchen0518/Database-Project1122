@@ -14,7 +14,7 @@
                         <img id="yc_home" src="{% static '/img/house.png' %}" alt="home">
                         <ul class="nav navbar-nav mr-auto">
                           <li class="nav-item dropdown">
-                              <a href="#" class="nav-link dropdown-toggle">租屋</a>
+                              <a href="{% url 'homepage' %}" class="nav-link dropdown-toggle">租屋</a>
                           </li>
 
                           <li class="nav-item dropdown">
@@ -25,11 +25,23 @@
                               <a href="#" class="nav-link dropdown-toggle">篩選地區</a>
                           </li>
 
+
+                          {% if login == 1 %}
+                            {# Logout #}
                           <li class="nav-item dropdown">
                               <div class="call-to-action-btn">
-                                <a class="btn btn-primary" href="http://127.0.0.1:8000/login/">登入</a>
+                                <a class="btn btn-primary" href="{% url 'logout' %}">登出</a>
                               </div>
                           </li>
+                          {% else %}
+                            {# Login Button #}
+                          <li class="nav-item dropdown">
+                              <div class="call-to-action-btn">
+                                <a class="btn btn-primary" href="{% url 'login_page' %}">登入</a>
+                              </div>
+                          </li>
+                          {% endif %}
+
                         </ul>
                     </div>
                   </nav>
