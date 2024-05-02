@@ -7,7 +7,7 @@
   <!-- Basic Page Needs
 ================================================== -->
   <meta charset="utf-8">
-  <title>Constra - Construction Html5 Template</title>
+  <title> {{ rows.title}} </title>
 
   <!-- Mobile Specific Metas
 ================================================== -->
@@ -82,11 +82,11 @@
             <!-- Edit-->
             {% if login_people == seller.mId %}
               <div id="edit_button" class="call-to-action-btn">
-                <a id="edit_button_a"class="btn btn-primary" href="">編輯我的房子</a>
+                <a id="edit_button_a"class="btn btn-primary" href="{% url 'edit_page' hId=rows.hId %}">編輯我的房子</a>
               </div>
 
              <div id="delete_button" class="call-to-action-btn">
-                <a href="{% url 'delete_house' hId=rows.hId %}" id="delete_button_a"class="btn btn-primary" href="">刪除</a>
+                <a href="{% url 'delete_house' hId=rows.hId %}" id="delete_button_a"class="btn btn-primary">刪除</a>
               </div>
             {% endif %}
             </div><!-- Quote item end -->
