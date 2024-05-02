@@ -119,10 +119,10 @@ a:visited {
   text-decoration: none;
 }
 
-a {
-  color: inherit;
-  transition: 0.2s ease;
-}
+/*a {*/
+/*  color: inherit;*/
+/*  transition: 0.2s ease;*/
+/*}*/
 
 a:hover {
   text-decoration: none;
@@ -957,6 +957,17 @@ ul.navbar-nav > li > a {
   line-height: 40px;
   padding: 30px 0;
   transition: 350ms;
+}
+
+ul.navbar-nav > li > div > a{
+  font-family: "Montserrat", sans-serif;
+  color: #fff !important;
+  text-rendering: optimizeLegibility;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+  letter-spacing: -0.2px;
+  font-size: 18px;
+  margin: 15px 0;
 }
 
 .navbar-light ul.navbar-nav > li > a {
@@ -3352,3 +3363,8 @@ label {
   font-weight: 700;
 }
 /*# sourceMappingURL=style.css.map */
+
+#yc_home{
+  width: 50px;
+  margin-right: 30px;
+}
