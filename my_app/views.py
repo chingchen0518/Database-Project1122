@@ -179,6 +179,48 @@ def testing(request):
 def search_test(request):
     keyword = request.POST['keyword']
 
-    rows = House.objects.raw('SELECT * FROM House,Info WHERE Info.address LIKE %s AND House.hId=Info.hId_id', ['%'+keyword+'%'])
+    rows = House.objects.raw('SELECT * FROM House,Info WHERE House.title LIKE %s OR Info.address LIKE %s AND House.hId=Info.hId_id', ['%'+keyword+'%'], ['%'+keyword+'%'])
 
     return render(request, "house_list.html", {'rows': rows})
+
+def edit_page_show(request,hId):
+
+    if 'user' in request.session:
+        # 查询数据库，获取对应 hId 的标题数据
+        house = House.objects.raw("SELECT * FROM House,Info,Equipment,Rdetail WHERE House.hId=%s AND House.hId=Info.hId_id AND House.hId=Equipment.hId_id AND House.hId=Rdetail.hId_id", [hId])
+
+        return render(request, "edit_house.html", {'house': house[0]})
+
+    else:
+        return redirect('/login/')
+
+def edit_page_update(request,hId):
+    current_date = datetime.date.today()
+    # House
+    region = request.POST['region']
+    title = request.POST['title']
+    # Info
+    fields = ['address', 'room', 'bath', 'living', 'size', 'type', 'level', 'price']
+    Info = {field: request.POST[field] for field in fields}
+    print(Info)
+
+    #Rdetails
+    fields = ['parking','pet','cook','direction','level','security','management','period','bus','train','mrt','age']
+    Rdetails = {field: request.POST.get(field, '0') for field in fields}
+    print(Rdetails)
+
+    #Equipments
+    fields = ['sofa', 'tv', 'washer', 'wifi', 'bed', 'refrigerator', 'heater', 'channel4', 'cabinet', 'aircond', 'gas']
+    Equip = {field: request.POST.get(field, '0') for field in fields}
+
+    with connection.cursor() as cursor:
+        cursor.execute('UPDATE House SET  title = %s, region = %s WHERE hId = %s',(title,region,hId))
+        cursor.execute('UPDATE Info  SET price = %s, address = %s, level = %s, room = %s, living = %s, bath = %s, type = %s, size = %s, renewdate = %s WHERE hId = %s',
+                       (Info['price'],Info['address'],Info['level'],Info['room'],Info['living'],Info['bath'],Info['type'],Info['size'],current_date,hId))
+        cursor.execute('UPDATE Equipment  SET sofa = %s, tv = %s, washer = %s, wifi = %s, bed = %s, refrigerator = %s, heater = %s, channel4 = %s, cabinet = %s, aircond = %s, gas = %s WHERE hId = %s',
+                       (Equip['sofa'], Equip['tv'], Equip['washer'], Equip['wifi'], Equip['bed'], Equip['refrigerator'], Equip['heater'], Equip['channel4'], Equip['cabinet'], Equip['aircond'], Equip['gas'],hId))
+        cursor.execute("UPDATE Rdetail SET parking = %s, pet = %s, cook = %s, direction = %s, level = %s, security = %s, management = %s, period = %s, bus = %s, train = %s, mrt = %s, age = %s WHERE hId = %s",
+                       (Rdetails['parking'],Rdetails['pet'],Rdetails['cook'],Rdetails['direction'],Rdetails['level'],Rdetails['security'],Rdetails['management'],Rdetails['period'],
+                        Rdetails['bus'],Rdetails['train'],Rdetails['mrt'],Rdetails['age'],hId))
+
+    return render(request, "homepage.html")
