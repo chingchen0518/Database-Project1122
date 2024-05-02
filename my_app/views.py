@@ -7,6 +7,7 @@ from django.urls import reverse_lazy
 from django.views.generic import DeleteView
 from django.core.exceptions import ObjectDoesNotExist
 import datetime
+import os
 
 
 #引入 Table
@@ -131,6 +132,8 @@ def add_house(request):
     fields = ['sofa', 'tv', 'washer', 'wifi', 'bed', 'refrigerator', 'heater', 'channel4', 'cabinet', 'aircond', 'gas']
     Equip = {field: request.POST.get(field, '0') for field in fields}
 
+    #member_id
+    member = Member.objects.raw('SELECT mId FROM Member WHERE Member.username_id=%s', [request.session['user']])
     # Count next id
     if(House.objects.filter(region=region)):
         latest_id = House.objects.filter(region=region).latest('hId')
@@ -143,8 +146,21 @@ def add_house(request):
         prefix=regions[region-1]
         next_id = f"{prefix}1"
 
+    # 获取上传的图片文件
+    image_file = request.FILES.get('image_file')
+    # 检查是否有上传图片
+    if image_file:
+        # 生成图片文件路径
+        image_path = f'static/img/house/{next_id}_{image_file.name}'
+        # 保存图片文件到指定路径
+        with open(image_path, 'wb') as f:
+            for chunk in image_file.chunks():
+                f.write(chunk)
+    else:
+        image_path = None
+
     with connection.cursor() as cursor:
-        cursor.execute('INSERT INTO House VALUES (%s, %s, %s, %s, %s)',(next_id, 0,title,region,"888"))
+        cursor.execute('INSERT INTO House VALUES (%s, %s, %s, %s, %s)',(next_id, 0,title,region,member[0].mId))
         cursor.execute('INSERT INTO Info  VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s)',(next_id,Info['price'],Info['address'],Info['level'],Info['room'],Info['living'],Info['bath'],Info['type'],Info['size'],current_date))
         cursor.execute('INSERT INTO Equipment  VALUES (%s, %s,%s,%s, %s,%s, %s, %s, %s, %s, %s, %s)',(next_id,Equip['sofa'], Equip['tv'], Equip['washer'], Equip['wifi'], Equip['bed'], Equip['refrigerator'], Equip['heater'], Equip['channel4'], Equip['cabinet'], Equip['aircond'], Equip['gas']))
         cursor.execute("INSERT INTO Rdetail VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",(next_id,"0",Rdetails['parking'],Rdetails['pet'],Rdetails['cook'],Rdetails['direction'],Rdetails['level'],Rdetails['security'],Rdetails['management'],Rdetails['period'],Rdetails['bus'],Rdetails['train'],Rdetails['mrt'],Rdetails['age']))
