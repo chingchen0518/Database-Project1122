@@ -84,7 +84,8 @@ def login_act(request):
     if user:
         if user[0].password==pwd:
             request.session['user'] = username
-            print(request.session['user'])
+            member = Member.objects.raw('SELECT mId FROM Member,User WHERE Member.username_id=User.username AND Member.username_id=%s',[username])
+            request.session['mId'] = member[0].mId
             return redirect("homepage")
         else:
             return HttpResponse("Wrong username or password")
@@ -92,6 +93,7 @@ def login_act(request):
 
 def logout(request):
     del request.session['user']
+    del request.session['mId']
     return redirect("homepage")
 def house_list(request):
         # 如果有search東西
@@ -146,6 +148,8 @@ def add_house(request):
     fields = ['sofa', 'tv', 'washer', 'wifi', 'bed', 'refrigerator', 'heater', 'channel4', 'cabinet', 'aircond', 'gas']
     Equip = {field: request.POST.get(field, '0') for field in fields}
 
+    #member_id
+    member = Member.objects.raw('SELECT mId FROM Member WHERE Member.username_id=%s', [request.session['user']])
     # Count next id
     if(House.objects.filter(region=region)):
         latest_id = House.objects.filter(region=region).latest('hId')
@@ -159,7 +163,7 @@ def add_house(request):
         next_id = f"{prefix}1"
 
     with connection.cursor() as cursor:
-        cursor.execute('INSERT INTO House VALUES (%s, %s, %s, %s, %s)',(next_id, 0,title,region,"888"))
+        cursor.execute('INSERT INTO House VALUES (%s, %s, %s, %s, %s)',(next_id, 0,title,region,member[0].mId))
         cursor.execute('INSERT INTO Info  VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s)',(next_id,Info['price'],Info['address'],Info['level'],Info['room'],Info['living'],Info['bath'],Info['type'],Info['size'],current_date))
         cursor.execute('INSERT INTO Equipment  VALUES (%s, %s,%s,%s, %s,%s, %s, %s, %s, %s, %s, %s)',(next_id,Equip['sofa'], Equip['tv'], Equip['washer'], Equip['wifi'], Equip['bed'], Equip['refrigerator'], Equip['heater'], Equip['channel4'], Equip['cabinet'], Equip['aircond'], Equip['gas']))
         cursor.execute("INSERT INTO Rdetail VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",(next_id,"0",Rdetails['parking'],Rdetails['pet'],Rdetails['cook'],Rdetails['direction'],Rdetails['level'],Rdetails['security'],Rdetails['management'],Rdetails['period'],Rdetails['bus'],Rdetails['train'],Rdetails['mrt'],Rdetails['age']))
@@ -239,3 +243,32 @@ def edit_page_update(request,hId):
                         Rdetails['bus'],Rdetails['train'],Rdetails['mrt'],Rdetails['age'],hId))
 
     return render(request, "homepage.html")
+
+def showhomes(request,hId):
+    rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId=%s AND House.hId=Info.hId_id', [hId])
+    image = Image.objects.raw('SELECT path FROM Image WHERE Image.hId_id=%s', [hId])
+    equipment = Equipment.objects.raw('SELECT * FROM Equipment WHERE Equipment.hId_id=%s', [hId])
+    seller = Member.objects.raw('SELECT * FROM Member JOIN House ON House.mId_id=Member.mId WHERE House.hId=%s', [hId])
+    print(seller[0].mId)
+    if 'mId' in request.session:
+        login_people=request.session['mId']
+        print(login_people)
+    else:
+        login_people="0000"
+    return render(request, "test_template/service-single.html",{"rows":rows[0],"image":image,"equipment":equipment[0],"seller":seller[0],"login_people":login_people})
+
+from django.shortcuts import render
+from .forms import ImageUploadForm
+def imgup(request):
+    if request.method == 'POST':
+        form = ImageUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            images = request.FILES.getlist('images')
+            for image in images:
+                # 处理每个上传的图片
+                handle_uploaded_image(image, '/path/to/destination/folder/')
+            return HttpResponse('上传成功！')
+    else:
+        form = ImageUploadForm()
+    return render(request, 'testimage.html', {'form': form})
+
