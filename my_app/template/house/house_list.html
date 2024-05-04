@@ -9,7 +9,7 @@
 </head>
 <body>
     <div>
-        {% include 'test_template/navbar_list.html' %}
+        {% include 'elements/navbar.html' %}
     </div>
 {##}
 {#    <div id="yc_city_list">#}
@@ -75,7 +75,7 @@
                 </ul>
             </div>
             <div id="yc_content_R">
-                {% include 'product_template.html' %}
+                {% include 'elements/product_template.html' %}
                 {% if rows %}
                 {% else %}
                     <p id="nothing_found">沒有相關結果</p>
