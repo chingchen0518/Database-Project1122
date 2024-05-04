@@ -70,7 +70,7 @@ def register_received(request):
     return redirect('homepage')
 
 def login_page(request):
-    if 'user' in request.session:
+    if 'user' in request.session and 'mId' in request.session:
         return redirect('homepage')
 
     else:
@@ -97,29 +97,32 @@ def logout(request):
     del request.session['mId']
     return redirect("homepage")
 def house_list(request):
-        if 'user' in request.session:
-            login=1
+    # print(request.session['user'])
+    # print(request.session['mId'])
+    login=0
+    if 'user' in request.session and 'mId' in request.session :
+        login=1
+    else:
+        login=0
+
+    # 如果有search東西
+    if 'keyword' in request.POST:
+        keyword = request.POST['keyword']
+
+        rows = House.objects.raw('SELECT * FROM House,Info WHERE Info.address LIKE %s AND House.hId=Info.hId_id',
+                                 ['%' + keyword + '%'])
+        if rows:
+            print("123456789")
         else:
-            login=0
+            print("avassaf")
 
-        # 如果有search東西
-        if 'keyword' in request.POST:
-            keyword = request.POST['keyword']
-
-            rows = House.objects.raw('SELECT * FROM House,Info WHERE Info.address LIKE %s AND House.hId=Info.hId_id',
-                                     ['%' + keyword + '%'])
-            if rows:
-                print("123456789")
-            else:
-                print("avassaf")
-
-            return render(request, "house_list.html", {'rows': rows, 'numbers': len(rows),'login':login})
+        return render(request, "house_list.html", {'rows': rows, 'numbers': len(rows),'login':login})
 
         # 如果沒有search
-        else:
-            rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId LIKE %s AND House.hId=Info.hId_id',
-                                     ['KH%'])
-            return render(request, "house_list.html", {'rows': rows, 'numbers': len(rows),'login':login})
+    else:
+        rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId LIKE %s AND House.hId=Info.hId_id',
+                                 ['KH%'])
+        return render(request, "house_list.html", {'rows': rows, 'numbers': len(rows),'login':login})
 
 
 def house_rent_cont(request,hId):
@@ -130,13 +133,15 @@ def house_rent_cont(request,hId):
     return render(request, "house_rent_cont.html",{'row': rows[0],'images':image,'equipment':equipment[0]})
 
 def upload_page(request):
-    if 'user' in request.session:
+
+    if 'user' in request.session and 'mId' in request.session:
         return render(request, "add_house/add_house_v2.html")
 
     else:
         return redirect('/login/')
 
 def add_house(request):
+    # del request.session['user']
     current_date = datetime.date.today()
     # House
     region = request.POST['region']
@@ -258,13 +263,14 @@ def houses(request,hId):
     equipment = Equipment.objects.raw('SELECT * FROM Equipment WHERE Equipment.hId_id=%s', [hId])
     seller = Member.objects.raw('SELECT * FROM Member JOIN House ON House.mId_id=Member.mId WHERE House.hId=%s', [hId])
     print(seller[0].mId)
-    if 'mId' in request.session:
+    if 'mId' in request.session and 'user' in request.session:
         login_people=request.session['mId']
         login=1
         print(login_people)
     else:
         login=0
         login_people="0000"
+    # print(login)
     return render(request, "test_template/service-single.html",{"rows":rows[0],"image":image,"equipment":equipment[0],"seller":seller[0],"login_people":login_people,"login":login})
 
 # from django.shortcuts import render
