@@ -55,5 +55,5 @@ urlpatterns = [
     path('edit_page/edit_house/<str:hId>/',my_app.views.edit_page_update, name='edit_house'),
 
     #Templates
-    path('houses/<str:hId>',my_app.views.houses,name='house_show'),
+    path('house_rent/<str:hId>',my_app.views.house_rent,name='house_rent'),
 ]

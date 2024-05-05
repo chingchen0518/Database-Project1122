@@ -10,7 +10,7 @@ import datetime
 
 
 #引入 Table
-from my_app.models import Member, House, Image,Equipment,User,Member
+from my_app.models import Member, House, Image,Equipment,User,Member,Browse
 #endregion 引入 Table結束
 
 # region Part 1：首頁
@@ -123,7 +123,7 @@ def house_rent_cont(request,hId):
 
     return render(request, "house_rent_cont.html",{'row': rows[0],'images':image,'equipment':equipment[0]})
 
-def houses(request,hId):
+def house_rent(request,hId):
     rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId=%s AND House.hId=Info.hId_id', [hId])
     image = Image.objects.raw('SELECT path FROM Image WHERE Image.hId_id=%s', [hId])
     equipment = Equipment.objects.raw('SELECT * FROM Equipment WHERE Equipment.hId_id=%s', [hId])
@@ -131,12 +131,20 @@ def houses(request,hId):
     if 'mId' in request.session and 'user' in request.session:
         login_people=request.session['mId']
         login=1
-        print(login_people)
+
+        # 查看這個用戶有沒有瀏覽過這一筆了,如果瀏覽過就刪除再插入，否則直接插入
+        history = Browse.objects.filter(hId_id=hId, mId_id=request.session['mId'])
+        if history.exists():
+            history.delete()
+
+        with connection.cursor() as cursor:
+            cursor.execute('INSERT INTO Browse(hId_id,mId_id) VALUES (%s, %s)', (hId,request.session['mId']))
+
     else:
         login=0
         login_people="0000"
     # print(login)
-    return render(request, "house/rent_house.html",{"rows":rows[0],"image":image,"equipment":equipment[0],"seller":seller[0],"login_people":login_people,"login":login})
+    return render(request, "house/house_rent.html", {"rows":rows[0], "image":image, "equipment":equipment[0], "seller":seller[0], "login_people":login_people, "login":login})
 
 def search_test(request):
     keyword = request.POST['keyword']
