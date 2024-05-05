@@ -24,6 +24,7 @@ class House(models.Model):
      status = models.IntegerField(default=0)
      title = models.CharField(max_length=1000)
      region = models.IntegerField(default=00)
+     available = models.IntegerField(default=1)
      mId = models.ForeignKey(Member,on_delete=models.CASCADE,to_field='mId',auto_created=False,default="888",unique=False)
 
      class Meta:
@@ -41,6 +42,7 @@ class Equipment(models.Model):
      cabinet = models.IntegerField(default=0)
      aircond = models.IntegerField(default=0)
      gas = models.IntegerField(default=0)
+     lift = models.IntegerField(default=0)
 
      class Meta:
         db_table = 'Equipment'
@@ -48,7 +50,7 @@ class Equipment(models.Model):
 class Info(models.Model):
      hId = models.OneToOneField(House,to_field='hId',primary_key=True,on_delete=models.CASCADE,auto_created=False)
      price = models.IntegerField(default=0)
-     size = models.FloatField(default=5)
+     size = models.FloatField(default=0)
      address = models.CharField(max_length=1000,default="--")
      level = models.IntegerField(default=5)
      room = models.IntegerField(default=1)
@@ -83,8 +85,26 @@ class Rdetail(models.Model):
      bus = models.IntegerField(default=0)
      train = models.IntegerField(default=0)
      mrt = models.IntegerField(default=0)
+
      class Meta:
         db_table = 'Rdetail'
+
+class Sdetail(models.Model):
+     hId = models.OneToOneField(House,primary_key=True,on_delete=models.CASCADE,unique=True,to_field='hId',auto_created=False)
+     status = models.IntegerField(default=0)
+     parking = models.CharField(max_length=20, default="無")
+
+     direction = models.CharField(max_length=10, default="--")
+     level = models.IntegerField(default=1)
+     age = models.FloatField(default=0)
+     security = models.CharField(max_length=10, default="--")
+     management = models.IntegerField(default=0)
+     bus = models.IntegerField(default=0)
+     train = models.IntegerField(default=0)
+     mrt = models.IntegerField(default=0)
+
+     class Meta:
+        db_table = 'Sdetail'
 
 class Userssss(models.Model):
      mId = models.CharField(max_length=100, primary_key=True,unique=True)
@@ -92,4 +112,55 @@ class Userssss(models.Model):
      class Meta:
         db_table = 'Userssss'
 
+class Browse(models.Model):
+     browse_seq = models.AutoField(primary_key=True)
+     mId = models.ForeignKey(Member,on_delete=models.CASCADE,to_field='mId',auto_created=False,unique=False)
+     hId = models.ForeignKey(House, to_field='hId', auto_created=False, on_delete=models.CASCADE,unique=False)
 
+     class Meta:
+        db_table = 'Browse'
+
+class Favourite(models.Model):
+     favourite_seq = models.AutoField(primary_key=True)
+     mId = models.ForeignKey(Member,on_delete=models.CASCADE,to_field='mId',auto_created=False,unique=False)
+     hId = models.ForeignKey(House, to_field='hId', auto_created=False, on_delete=models.CASCADE,unique=False)
+
+     class Meta:
+        db_table = 'Favourite'
+
+class Transaction(models.Model):
+     tId = models.AutoField(primary_key=True)
+     mId = models.ForeignKey(Member,on_delete=models.CASCADE,to_field='mId',auto_created=False,unique=False)
+     hId = models.ForeignKey(House, to_field='hId', auto_created=False, on_delete=models.CASCADE,unique=False)
+     status = models.IntegerField(default=0)
+     price = models.IntegerField(default=0)
+
+     class Meta:
+        db_table = 'Transaction'
+
+class Review(models.Model):
+     review_seq = models.AutoField(primary_key=True)
+     text = models.CharField(max_length=1000, default="-")
+
+     mId = models.ForeignKey(Member,on_delete=models.CASCADE,to_field='mId',auto_created=False,unique=False)
+     hId = models.ForeignKey(House, to_field='hId', auto_created=False, on_delete=models.CASCADE,unique=False)
+     environment = models.IntegerField(default=0)
+     attitude = models.IntegerField(default=0)
+     facilities = models.IntegerField(default=0)
+
+     class Meta:
+        db_table = 'Review'
+
+class Customer(models.Model):
+     mId = models.OneToOneField(Member,to_field='mId',on_delete=models.CASCADE,unique=True,auto_created=False,default="-")
+     c_rate = models.FloatField(default=0)
+
+     class Meta:
+        db_table = 'Customer'
+
+class Owner(models.Model):
+     mId = models.OneToOneField(Member,to_field='mId',on_delete=models.CASCADE,unique=True,auto_created=False,default="-")
+     o_rate = models.FloatField(default=0)
+
+     class Meta:
+        db_table = 'Owner'
