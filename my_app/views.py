@@ -15,8 +15,8 @@ from my_app.models import Member, House, Image,Equipment,User,Member
 
 class HouseDeleteView(DeleteView):
     model = House
-    success_url = reverse_lazy("house_lists")
-    template_name = 'delete.html' #之後加一個取消
+    success_url = reverse_lazy("house/house_lists")
+    template_name = 'add_renew_delete/delete.html' #之後加一個取消
     pk_url_kwarg = 'hId' #告訴他用url中的哪個東西作爲primary_key
 
 def index(request):
@@ -34,8 +34,8 @@ def getdata(request):
 
 def homepage(request):
     if 'user' in request.session:
-        return render(request, "homepage.html",{'user':request.session['user']})
-    return render(request,"homepage.html",{'user':0})
+        return render(request, "homepage_login_account/homepage.html",{'user':request.session['user']})
+    return render(request,"homepage_login_account/homepage.html",{'user':0})
 
 def aboutme(request):
     return render(request,"aboutme.html")
@@ -48,7 +48,7 @@ def register(request):
         return redirect('homepage')
 
     else:
-        return render(request,"register2.html")
+        return render(request,"homepage_login_account/register.html")
 
 def register_received(request):
     fields=['username','realname','phone','password','email','gender']
@@ -70,11 +70,11 @@ def register_received(request):
     return redirect('homepage')
 
 def login_page(request):
-    if 'user' in request.session:
+    if 'user' in request.session and 'mId' in request.session:
         return redirect('homepage')
 
     else:
-        return render(request,"login.html")
+        return render(request,"homepage_login_account/login.html")
 
 
 def login_act(request):
@@ -97,29 +97,32 @@ def logout(request):
     del request.session['mId']
     return redirect("homepage")
 def house_list(request):
-        if 'user' in request.session:
-            login=1
+    # print(request.session['user'])
+    # print(request.session['mId'])
+    login=0
+    if 'user' in request.session and 'mId' in request.session :
+        login=1
+    else:
+        login=0
+
+    # 如果有search東西
+    if 'keyword' in request.POST:
+        keyword = request.POST['keyword']
+
+        rows = House.objects.raw('SELECT * FROM House,Info WHERE Info.address LIKE %s AND House.hId=Info.hId_id',
+                                 ['%' + keyword + '%'])
+        if rows:
+            print("123456789")
         else:
-            login=0
+            print("avassaf")
 
-        # 如果有search東西
-        if 'keyword' in request.POST:
-            keyword = request.POST['keyword']
-
-            rows = House.objects.raw('SELECT * FROM House,Info WHERE Info.address LIKE %s AND House.hId=Info.hId_id',
-                                     ['%' + keyword + '%'])
-            if rows:
-                print("123456789")
-            else:
-                print("avassaf")
-
-            return render(request, "house_list.html", {'rows': rows, 'numbers': len(rows),'login':login})
+        return render(request, "house/house_list.html", {'rows': rows, 'numbers': len(rows),'login':login})
 
         # 如果沒有search
-        else:
-            rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId LIKE %s AND House.hId=Info.hId_id',
-                                     ['KH%'])
-            return render(request, "house_list.html", {'rows': rows, 'numbers': len(rows),'login':login})
+    else:
+        rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId LIKE %s AND House.hId=Info.hId_id',
+                                 ['KH%'])
+        return render(request, "house/house_list.html", {'rows': rows, 'numbers': len(rows),'login':login})
 
 
 def house_rent_cont(request,hId):
@@ -130,13 +133,15 @@ def house_rent_cont(request,hId):
     return render(request, "house_rent_cont.html",{'row': rows[0],'images':image,'equipment':equipment[0]})
 
 def upload_page(request):
-    if 'user' in request.session:
-        return render(request, "add_house/add_house_v2.html")
+
+    if 'user' in request.session and 'mId' in request.session:
+        return render(request, "add_renew_delete/add_house_v2.html")
 
     else:
         return redirect('/login/')
 
 def add_house(request):
+    # del request.session['user']
     current_date = datetime.date.today()
     # House
     region = request.POST['region']
@@ -183,9 +188,9 @@ def account_center(request):
         print(rows)
         print(rows[0])
 
-        return render(request, "account_center.html",{'row': rows[0]})
+        return render(request, "homepage_login_account/account_center.html",{'row': rows[0]})
     else:#若沒有登錄
-        return redirect('login_page')#去homepage這個函數
+        return redirect('login_page')#去login_page這個函數
 
 
 def testing(request):
@@ -200,7 +205,7 @@ def testing(request):
     else:
         print("数据库中不存在该数据记录")
 
-    return render(request, "homepage.html")
+    return render(request, "homepage_login_account/homepage.html")
 
 def search_test(request):
     keyword = request.POST['keyword']
@@ -215,7 +220,7 @@ def edit_page_show(request,hId):
         # 查询数据库，获取对应 hId 的标题数据
         house = House.objects.raw("SELECT * FROM House,Info,Equipment,Rdetail WHERE House.hId=%s AND House.hId=Info.hId_id AND House.hId=Equipment.hId_id AND House.hId=Rdetail.hId_id", [hId])
         img_path = Image.objects.raw("SELECT * FROM Image WHERE Image.hId_id=%s",[hId])
-        return render(request, "edit_house.html", {'house': house[0], 'img_path': img_path})
+        return render(request, "add_renew_delete/edit_house.html", {'house': house[0], 'img_path': img_path})
 
     else:
         return redirect('/login/')
@@ -258,14 +263,15 @@ def houses(request,hId):
     equipment = Equipment.objects.raw('SELECT * FROM Equipment WHERE Equipment.hId_id=%s', [hId])
     seller = Member.objects.raw('SELECT * FROM Member JOIN House ON House.mId_id=Member.mId WHERE House.hId=%s', [hId])
     print(seller[0].mId)
-    if 'mId' in request.session:
+    if 'mId' in request.session and 'user' in request.session:
         login_people=request.session['mId']
         login=1
         print(login_people)
     else:
         login=0
         login_people="0000"
-    return render(request, "test_template/service-single.html",{"rows":rows[0],"image":image,"equipment":equipment[0],"seller":seller[0],"login_people":login_people,"login":login})
+    # print(login)
+    return render(request, "house/rent_house.html",{"rows":rows[0],"image":image,"equipment":equipment[0],"seller":seller[0],"login_people":login_people,"login":login})
 
 # from django.shortcuts import render
 # from .forms import ImageUploadForm

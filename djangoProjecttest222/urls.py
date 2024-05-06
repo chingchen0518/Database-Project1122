@@ -37,7 +37,7 @@ urlpatterns = [
     path('house_rent_cont/<str:hId>',my_app.views.house_rent_cont),
 
     #新增刪除
-    path('upload_page',my_app.views.upload_page),
+    path('upload_page',my_app.views.upload_page,name='upload_page'),
     path('upload_page/add_house',my_app.views.add_house, name='add_house'),
     path('delete/<str:hId>/', my_app.views.HouseDeleteView.as_view(),name='delete_house'),
 
