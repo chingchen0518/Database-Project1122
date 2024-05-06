@@ -10,39 +10,18 @@ import datetime
 
 
 #引入 Table
-from my_app.models import Member, House, Image,Equipment,User,Member
-#引入 Table結束
+from my_app.models import Member, House, Image,Equipment,User,Member,Browse
+#endregion 引入 Table結束
 
-class HouseDeleteView(DeleteView):
-    model = House
-    success_url = reverse_lazy("house/house_lists")
-    template_name = 'add_renew_delete/delete.html' #之後加一個取消
-    pk_url_kwarg = 'hId' #告訴他用url中的哪個東西作爲primary_key
-
-def index(request):
-    variables=request.GET['id']
-    context = {'name': 'John'}
-    return HttpResponse(context['name']+" is id="+variables)
-
-def getdata(request):
-    list={20030518,20040124}
-    list2={"name":"Chi1111111111111111111ng Chen","Age":"21","school":'NSYSU'}
-    variables=json.dumps(list2)
-    # return JsonResponse(list,safe=False)
-    return HttpResponse(variables)
-    # return HttpResponse("I am "+list2["name"]+" from "+list2["school"]+", and I am "+list2["Age"]+" years old.")
-
+# region Part 1：首頁
 def homepage(request):
     if 'user' in request.session:
         return render(request, "homepage_login_account/homepage.html",{'user':request.session['user']})
     return render(request,"homepage_login_account/homepage.html",{'user':0})
 
-def aboutme(request):
-    return render(request,"aboutme.html")
+#endregion
 
-def map(request):
-    return render(request,"map.html")
-
+#region Part 2：用戶、注冊、登錄
 def register(request):
     if 'user' in request.session:
         return redirect('homepage')
@@ -76,7 +55,6 @@ def login_page(request):
     else:
         return render(request,"homepage_login_account/login.html")
 
-
 def login_act(request):
     username = request.POST['username']
     pwd = request.POST['password']
@@ -96,9 +74,23 @@ def logout(request):
     del request.session['user']
     del request.session['mId']
     return redirect("homepage")
+
+def account_center(request):
+    if 'user' in request.session:
+        rows = Member.objects.raw('SELECT * FROM Member WHERE Member.username_id=%s', [request.session['user']])
+        print(rows)
+        print(rows[0])
+
+        return render(request, "homepage_login_account/account_center.html",{'row': rows[0]})
+    else:#若沒有登錄
+        return redirect('login_page')#去login_page這個函數
+
+
+
+#endregion
+
+#region Part 3：房屋顯示相關（包括search）
 def house_list(request):
-    # print(request.session['user'])
-    # print(request.session['mId'])
     login=0
     if 'user' in request.session and 'mId' in request.session :
         login=1
@@ -124,13 +116,53 @@ def house_list(request):
                                  ['KH%'])
         return render(request, "house/house_list.html", {'rows': rows, 'numbers': len(rows),'login':login})
 
-
 def house_rent_cont(request,hId):
     rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId=%s AND House.hId=Info.hId_id', [hId])
     image = Image.objects.raw('SELECT path FROM Image WHERE Image.hId_id=%s', [hId])
     equipment = Equipment.objects.raw('SELECT * FROM Equipment WHERE Equipment.hId_id=%s', [hId])
 
     return render(request, "house_rent_cont.html",{'row': rows[0],'images':image,'equipment':equipment[0]})
+
+def house_rent(request,hId):
+    rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId=%s AND House.hId=Info.hId_id', [hId])
+    image = Image.objects.raw('SELECT path FROM Image WHERE Image.hId_id=%s', [hId])
+    equipment = Equipment.objects.raw('SELECT * FROM Equipment WHERE Equipment.hId_id=%s', [hId])
+    seller = Member.objects.raw('SELECT * FROM Member JOIN House ON House.mId_id=Member.mId WHERE House.hId=%s', [hId])
+    if 'mId' in request.session and 'user' in request.session:
+        login_people=request.session['mId']
+        login=1
+
+        # 查看這個用戶有沒有瀏覽過這一筆了,如果瀏覽過就刪除再插入，否則直接插入
+        history = Browse.objects.filter(hId_id=hId, mId_id=request.session['mId'])
+        if history.exists():
+            history.delete()
+
+        with connection.cursor() as cursor:
+            cursor.execute('INSERT INTO Browse(hId_id,mId_id) VALUES (%s, %s)', (hId,request.session['mId']))
+
+    else:
+        login=0
+        login_people="0000"
+    # print(login)
+    return render(request, "house/house_rent.html", {"rows":rows[0], "image":image, "equipment":equipment[0], "seller":seller[0], "login_people":login_people, "login":login})
+
+def search_test(request):
+    keyword = request.POST['keyword']
+
+    rows = House.objects.raw('SELECT * FROM House,Info WHERE House.title LIKE %s OR Info.address LIKE %s AND House.hId=Info.hId_id', ['%'+keyword+'%'], ['%'+keyword+'%'])
+
+    return render(request, "house_list.html", {'rows': rows})
+
+
+
+#endregion
+
+#region Part 4：新增、刪除、修改
+class HouseDeleteView(DeleteView):
+    model = House
+    success_url = reverse_lazy("house/house_lists")
+    template_name = 'add_renew_delete/delete.html' #之後加一個取消
+    pk_url_kwarg = 'hId' #告訴他用url中的哪個東西作爲primary_key
 
 def upload_page(request):
 
@@ -182,38 +214,6 @@ def add_house(request):
 
     return redirect('homepage')
 
-def account_center(request):
-    if 'user' in request.session:
-        rows = Member.objects.raw('SELECT * FROM Member WHERE Member.username_id=%s', [request.session['user']])
-        print(rows)
-        print(rows[0])
-
-        return render(request, "homepage_login_account/account_center.html",{'row': rows[0]})
-    else:#若沒有登錄
-        return redirect('login_page')#去login_page這個函數
-
-
-def testing(request):
-    # 获取当前日期
-
-    mId=Member.objects.latest('mId')
-    # mId=Member.objects.order_by('-mId').last()
-    print(mId.mId)
-    # print("当前日期:", current_date)
-    if House.objects.filter(hId="HC41").exists():
-        print("数据库中存在该数据记录")
-    else:
-        print("数据库中不存在该数据记录")
-
-    return render(request, "homepage_login_account/homepage.html")
-
-def search_test(request):
-    keyword = request.POST['keyword']
-
-    rows = House.objects.raw('SELECT * FROM House,Info WHERE House.title LIKE %s OR Info.address LIKE %s AND House.hId=Info.hId_id', ['%'+keyword+'%'], ['%'+keyword+'%'])
-
-    return render(request, "house_list.html", {'rows': rows})
-
 def edit_page_show(request,hId):
 
     if 'user' in request.session:
@@ -257,23 +257,28 @@ def edit_page_update(request,hId):
 
     return redirect(house)
 
-def houses(request,hId):
-    rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId=%s AND House.hId=Info.hId_id', [hId])
-    image = Image.objects.raw('SELECT path FROM Image WHERE Image.hId_id=%s', [hId])
-    equipment = Equipment.objects.raw('SELECT * FROM Equipment WHERE Equipment.hId_id=%s', [hId])
-    seller = Member.objects.raw('SELECT * FROM Member JOIN House ON House.mId_id=Member.mId WHERE House.hId=%s', [hId])
-    print(seller[0].mId)
-    if 'mId' in request.session and 'user' in request.session:
-        login_people=request.session['mId']
-        login=1
-        print(login_people)
-    else:
-        login=0
-        login_people="0000"
-    # print(login)
-    return render(request, "house/rent_house.html",{"rows":rows[0],"image":image,"equipment":equipment[0],"seller":seller[0],"login_people":login_people,"login":login})
 
+#endregion
+
+def testing(request):
+    # 获取当前日期
+
+    mId=Member.objects.latest('mId')
+    # mId=Member.objects.order_by('-mId').last()
+    print(mId.mId)
+    # print("当前日期:", current_date)
+    if House.objects.filter(hId="HC41").exists():
+        print("数据库中存在该数据记录")
+    else:
+        print("数据库中不存在该数据记录")
+
+    return render(request, "homepage_login_account/homepage.html")
+
+# def map(request):
+#     return render(request,"map.html")
 # from django.shortcuts import render
+
+
 # from .forms import ImageUploadForm
 # def imgup(request):
 #     if request.method == 'POST':

@@ -37,7 +37,7 @@
   <!-- Template styles-->
   <link rel="stylesheet" href="{%static 'css/template_css/style.css'%}">
   <!-- Ching Chen CSS-->
-  <link rel="stylesheet" href="{%static 'css/template_css/house_show.css'%}">
+  <link rel="stylesheet" href="{%static 'css/template_css/house_rent.css' %}">
 
 </head>
 <body>
@@ -79,7 +79,7 @@
                 <a class="btn btn-primary" href="#">{{ seller.phone }}</a>
               </div>
 
-            <!-- Edit-->
+            <!-- Edit and Delete-->
             {% if login_people == seller.mId %}
               <div id="edit_button" class="call-to-action-btn">
                 <a id="edit_button_a"class="btn btn-primary" href="{% url 'edit_page' hId=rows.hId %}">編輯我的房子</a>
@@ -87,6 +87,11 @@
 
              <div id="delete_button" class="call-to-action-btn">
                 <a href="{% url 'delete_house' hId=rows.hId %}" id="delete_button_a"class="btn btn-primary">刪除</a>
+              </div>
+            {% else %}
+            <!-- 收藏-->
+              <div id="favourite" class="call-to-action-btn">
+                <a id="favourite_a"class="btn btn-primary" href="">加入收藏</a>
               </div>
             {% endif %}
             </div><!-- Quote item end -->
