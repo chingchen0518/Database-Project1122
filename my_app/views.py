@@ -10,7 +10,7 @@ import datetime
 
 
 #引入 Table
-from my_app.models import Member, House, Image,Equipment,User,Member,Browse
+from my_app.models import Member, House, Image,Equipment,User,Member,Browse,Review
 #endregion 引入 Table結束
 
 # region Part 1：首頁
@@ -124,10 +124,15 @@ def house_rent_cont(request,hId):
     return render(request, "house_rent_cont.html",{'row': rows[0],'images':image,'equipment':equipment[0]})
 
 def house_rent(request,hId):
+    # House Data
     rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId=%s AND House.hId=Info.hId_id', [hId])
     image = Image.objects.raw('SELECT path FROM Image WHERE Image.hId_id=%s', [hId])
     equipment = Equipment.objects.raw('SELECT * FROM Equipment WHERE Equipment.hId_id=%s', [hId])
     seller = Member.objects.raw('SELECT * FROM Member JOIN House ON House.mId_id=Member.mId WHERE House.hId=%s', [hId])
+    #
+    # Review Data
+    review = Review.objects.raw('SELECT review_seq,text,attitude,environment,facilities,realname FROM Review,Member WHERE Review.hId_id=%s AND Review.mId_id = Member.mId',[hId])
+
     if 'mId' in request.session and 'user' in request.session:
         login_people=request.session['mId']
         login=1
@@ -144,7 +149,7 @@ def house_rent(request,hId):
         login=0
         login_people="0000"
     # print(login)
-    return render(request, "house/house_rent.html", {"rows":rows[0], "image":image, "equipment":equipment[0], "seller":seller[0], "login_people":login_people, "login":login})
+    return render(request, "house/house_rent.html", {"rows":rows[0], "image":image, "equipment":equipment[0], "seller":seller[0], "login_people":login_people, "login":login,"review":review})
 
 def search_test(request):
     keyword = request.POST['keyword']
@@ -273,6 +278,13 @@ def testing(request):
         print("数据库中不存在该数据记录")
 
     return render(request, "homepage_login_account/homepage.html")
+
+def comment_test(request):
+    # return render(request, "elements/comment.html")
+    return render(request, "elements/news-single.html")
+
+
+
 
 # def map(request):
 #     return render(request,"map.html")
