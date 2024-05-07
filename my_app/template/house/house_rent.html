@@ -37,7 +37,7 @@
   <!-- Template styles-->
   <link rel="stylesheet" href="{%static 'css/template_css/style.css'%}">
   <!-- Ching Chen CSS-->
-  <link rel="stylesheet" href="{%static 'css/template_css/house_show.css'%}">
+  <link rel="stylesheet" href="{%static 'css/template_css/house_rent.css' %}">
 
 </head>
 <body>
@@ -79,7 +79,7 @@
                 <a class="btn btn-primary" href="#">{{ seller.phone }}</a>
               </div>
 
-            <!-- Edit-->
+            <!-- Edit and Delete-->
             {% if login_people == seller.mId %}
               <div id="edit_button" class="call-to-action-btn">
                 <a id="edit_button_a"class="btn btn-primary" href="{% url 'edit_page' hId=rows.hId %}">編輯我的房子</a>
@@ -87,6 +87,11 @@
 
              <div id="delete_button" class="call-to-action-btn">
                 <a href="{% url 'delete_house' hId=rows.hId %}" id="delete_button_a"class="btn btn-primary">刪除</a>
+              </div>
+            {% else %}
+            <!-- 收藏-->
+              <div id="favourite" class="call-to-action-btn">
+                <a id="favourite_a"class="btn btn-primary" href="">加入收藏</a>
               </div>
             {% endif %}
             </div><!-- Quote item end -->
@@ -142,6 +147,60 @@
                 <img src="{% static '/img/equipment/net.png'%}" class="equ_img {% if equipment.wifi == 0  %}equ_img_no{% endif %}" alt="wifi">
             </div>
           </div>
+
+          <div id="comments" class="comments-area">
+          <h3 class="comments-heading">7 條評論</h3>
+
+          <ul class="comments-list">
+            <li>
+            <!-- One Comments Start -->
+            {% for i in review %}
+              <div class="comment d-flex">
+                <img loading="lazy" class="comment-avatar" alt="author" src="{% static '/img/liudehua.png' %}">
+                <div class="comment-body">
+                  <div class="meta-data">
+                    <span class="comment-author mr-3">{{ i.realname }}</span>
+{#                    <span class="comment-date float-right">1999年2月30日</span>#}
+                  </div>
+                  <div class="comment-content">
+                    <p>{{ i.text }}</p>
+                  </div>
+                  <div class="text-left">
+{#                    <a class="comment-reply font-weight-bold" href="#">Reply</a>#}
+                  </div>
+                </div>
+              </div>
+            <!-- One Comments end -->
+            {% endfor %}
+
+
+
+
+
+
+{#              <ul class="comments-reply">#}
+{#                <li>#}
+{#                  <div class="comment d-flex">#}
+{#                    <img loading="lazy" class="comment-avatar" alt="author" src="{% static '/img/liudehua.png' %}">#}
+{#                    <div class="comment-body">#}
+{#                      <div class="meta-data">#}
+{#                        <span class="comment-author mr-3">劉德華</span>#}
+{#                        <span class="comment-date float-right">1999年2月30日</span>#}
+{#                      </div>#}
+{#                      <div class="comment-content">#}
+{#                        <p> 我有賣減肥藥</p>#}
+{#                      </div>#}
+{#                      <div class="text-left">#}
+{#                        <a class="comment-reply font-weight-bold" href="#">Reply</a>#}
+{#                      </div>#}
+{#                    </div>#}
+{#                  </div><!-- Comments end -->#}
+{#                </li>#}
+{#              </ul><!-- comments-reply end -->#}
+            </li><!-- Comments-list li end -->
+          </ul><!-- Comments-list ul end -->
+        </div><!-- Post comment end -->
+
 {#          <div class="row">#}
 {#            <div class="col-md-6">#}
 {#              <h3 class="column-title-small">What Makes Us Different</h3>#}

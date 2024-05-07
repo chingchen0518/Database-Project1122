@@ -35,6 +35,7 @@ urlpatterns = [
     #房屋顯示
     path('house_list/',my_app.views.house_list, name='house_lists'),
     path('house_rent_cont/<str:hId>',my_app.views.house_rent_cont),
+    path('house_rent/<str:hId>', my_app.views.house_rent, name='house_rent'),
 
     #新增刪除
     path('upload_page',my_app.views.upload_page,name='upload_page'),
@@ -55,5 +56,7 @@ urlpatterns = [
     path('edit_page/edit_house/<str:hId>/',my_app.views.edit_page_update, name='edit_house'),
 
     #Templates
-    path('houses/<str:hId>',my_app.views.houses,name='house_show'),
+
+    #其他功能
+    path('comment_test', my_app.views.comment_test)
 ]
