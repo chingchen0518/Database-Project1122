@@ -28,8 +28,8 @@
 
 }
 #page-slider img{
-    max-width: 100%
-    max-height: 100%
+    max-width: 100%;
+    max-height: 100%;
 }
 /*side_bar*/
 .call-to-action-btn{
@@ -71,6 +71,28 @@
 /*Seller*/
 .quote-author{
     font-size:30px;
+}
+
+/*rate*/
+#en_rate, #att_rate, #fa_rate{
+    flex: 100%;
+    max-width: 100%;
+}
+
+#rate{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    margin-top: 215px;
+}
+
+#rate h3{
+    margin-top: 20px;
+    font-size: 1.75rem;
+}
+
+#rate p{
+    float: left;
 }
 
 /*.col-xl-8 col-lg-8{*/
