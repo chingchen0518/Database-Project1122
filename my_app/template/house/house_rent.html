@@ -94,6 +94,78 @@
                 <a id="favourite_a"class="btn btn-primary" href="">加入收藏</a>
               </div>
             {% endif %}
+            <!--評價-->
+            <div class="comments-form border-box" id="rate">
+                <h3 class="title-normal">新增評論</h3>
+
+                <form role="form">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="message"><textarea class="form-control required-field" id="message" placeholder="您的評論..." rows="10" required></textarea></label>
+                            </div>
+                        </div><!-- Col 12 end -->
+
+                        <div class="col-md-4" id="en_rate">
+                            <div class="form-group">
+                              <p>環境評分</p>
+                              <div>
+                                  <input type="radio" id="en1" name="environment" value="1">
+                                  <label for="en1">1</label>
+                                  <input type="radio" id="en2" name="environment" value="2">
+                                  <label for="en2">2</label>
+                                  <input type="radio" id="en3" name="environment" value="3">
+                                  <label for="en3">3</label>
+                                  <input type="radio" id="en4" name="environment" value="4">
+                                  <label for="en4">4</label>
+                                  <input type="radio" id="en5" name="environment" value="5">
+                                  <label for="en5">5</label>
+                              </div>
+                            </div>
+                        </div><!-- Col 4 end -->
+
+                        <div class="col-md-4" id="att_rate">
+                            <div class="form-group">
+                                <p>態度評分</p>
+                                <div>
+                                    <input type="radio" id="att1" name="attitude" value="1">
+                                    <label for="att1">1</label>
+                                    <input type="radio" id="att2" name="attitude" value="2">
+                                    <label for="att2">2</label>
+                                    <input type="radio" id="att3" name="attitude" value="3">
+                                    <label for="att3">3</label>
+                                    <input type="radio" id="att4" name="attitude" value="4">
+                                    <label for="att4">4</label>
+                                    <input type="radio" id="att5" name="attitude" value="5">
+                                    <label for="att5">5</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4" id="fa_rate">
+                            <div class="form-group">
+                                <p>設備評分</p>
+                                <div>
+                                    <input type="radio" id="fa1" name="facilities" value="1">
+                                    <label for="fa1">1</label>
+                                    <input type="radio" id="fa2" name="facilities" value="2">
+                                    <label for="fa2">2</label>
+                                    <input type="radio" id="fa3" name="facilities" value="3">
+                                    <label for="fa3">3</label>
+                                    <input type="radio" id="fa4" name="facilities" value="4">
+                                    <label for="fa4">4</label>
+                                    <input type="radio" id="fa5" name="facilities" value="5">
+                                    <label for="fa5">5</label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div><!-- Form row end -->
+                    <div class="clearfix">
+                        <button class="btn btn-primary" type="submit" aria-label="post-comment">送出評論</button>
+                    </div>
+                </form><!-- Form end -->
+            </div><!-- Comments form end -->
             </div><!-- Quote item end -->
 
           </div><!-- Widget end -->
