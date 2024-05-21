@@ -3077,7 +3077,7 @@ label {
 }
 
 .comments-list .comment-content {
-  margin: 15px 0;
+  margin: 5px 0;
 }
 
 .comments-list .comment-reply {
@@ -3116,8 +3116,8 @@ label {
 }
 
 .comments-list img.comment-avatar {
-  width: 84px;
-  height: 84px;
+  width: 90px;
+  height: 90px;
   margin-right: 30px;
 }
 @media (max-width: 575px) {

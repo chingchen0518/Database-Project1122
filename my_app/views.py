@@ -305,3 +305,23 @@ def comment_test(request):
 #         form = ImageUploadForm()
 #     return render(request, 'testimage.html', {'form': form})
 #
+
+# def add_comment(request):
+#     message = request.POST['message']
+#     environment = request.POST['environment']
+#     attitude = request.POST['attitude']
+#     facilities = request.POST['facilities']
+
+    # member_id
+    # member = request.session['mId']
+
+    # house_id
+    # house = request.POST['hId_id']
+
+    # latest_id = Review.objects.filter(hId_id=hId_id).latest('review_seq')
+    # number = int(latest_id)  # 取得數字部分，轉換為整數，即 20
+    # next_id = number + 1  # 數字部分加 1，即 21
+
+    # with connection.cursor() as cursor:
+    #     cursor.execute('INSERT INTO Review VALUES (%s, %s, %s, %s, %s, %s, %s)', (next_id, message, environment, attitude, facilities, house, member))
+    # return redirect('house_rent/'+house)
