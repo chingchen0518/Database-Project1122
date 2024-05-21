@@ -5,7 +5,7 @@
 {% for row in rows %}
     <div id="thing" class="product">
 
-        <a id="template" href="{% url 'house_rent' hId=row.hId %}"><img src="{%static '/img/house/'|add:row.hId|add:'-2.jpg' %}" alt="house">  {# 房屋照片 #}
+        <a class="template" href="{% url 'house_rent' hId=row.hId %}"><img src="{%static '/img/house/'|add:row.hId|add:'-2.jpg' %}" alt="house">  {# 房屋照片 #}
             <div class="detail">
                 <h4 class="title">{{ row.title }}</h4>
                 <ul class="situation">
@@ -19,7 +19,12 @@
                     <li class="living">{{ row.living }}廳</li>    {# 幾廳 #}
                     <li class="bath">{{ row.bath }}衛浴</li>  {# 幾衛浴 #}
                 </ul>
-                <p class="favorite">收藏</p>
+
+                <a id="favor" href="{% url 'add_favor' hId=row.hId %}"><button type="submit" class="favorite">收藏</button></a>
+{#                 <form method="post" action="{% url 'my_view' %}">#}
+{#                {% csrf_token %}#}
+{#                    <button type="submit" class="{% if button_clicked %}clicked-style{% else %}default-style{% endif %}">Click Me</button>#}
+{#                </form>#}
                 <p class="price"><span>{{ row.price }}</span>元/月</p>   {# 房屋售價 #}
             </div>
         </a>

@@ -224,6 +224,34 @@
             </div>
           </div>
 
+          <div>
+              <ul id="details">
+                  {% for i in details %}
+                      <p>xxx</p>
+                      <p>{{ i.period }}</p>
+                  {% endfor %}
+{#                  <li> #}
+{#                      #}
+{#                      <div><span>屋齡:</span>{{ details.age}}</div>#}
+{#                      <div><span>租期:</span>{{ details.period}}</div>#}
+{#                      <div><span>樓層:</span>{{ details.level}}</div>#}
+{#                      <div><span>朝向:</span>{{ details.direction}}</div>#}
+{#                  </li>#}
+{#                  <li>#}
+{#                      <div><span>保全:</span>{{ details.security}}</div>#}
+{#                      <div><span>管理員:</span>{{ details.management}}</div>#}
+{#                      <div><span>養寵物:</span>{{ details.pet}}</div>#}
+{#                      <div><span>開伙:</span>{{ details.cook}}</div>#}
+{#                  </li>#}
+{#                  <li>#}
+{#                      <div><span>停車位:</span>{{ details.parking}}</div>#}
+{#                      <div><span>公車站:</span>{{ details.bus}}</div>#}
+{#                      <div><span>火車站:</span>{{ details.train}}</div>#}
+{#                      <div><span>捷運站:</span>{{ details.mrt}}</div>#}
+{#                  </li>#}
+              </ul>
+          </div>
+
           <div id="comments" class="comments-area">
           <h3 class="comments-heading">7 條評論</h3>
 
@@ -246,11 +274,17 @@
                   <div class="comment-content">
                     <p>{{ i.text }}</p>
                   </div>
-                  <div class="text-left">
+{#                  <div class="text-left">#}
 {#                    <a class="comment-reply font-weight-bold" href="#">Reply</a>#}
-                  </div>
+{#                  </div>#}
                 </div>
+                {% if login_people == i.mId_id %}
+                <div id="del">
+                    <a href="{% url 'delete_comment' hId=rows.hId review_seq=i.review_seq %}">刪除</a>
+                </div>
+                {% endif %}
               </div>
+
             <!-- One Comments end -->
             {% endfor %}
 
