@@ -6,6 +6,8 @@ from django.db.models import Min
 from django.urls import reverse_lazy
 from django.views.generic import DeleteView
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Max
+
 import datetime
 
 
@@ -262,7 +264,26 @@ def edit_page_update(request,hId):
 
     return redirect(house)
 
+def add_comment(request,hId):
+    message = request.POST['comment_message']
+    environment = request.POST['comment_environment']
+    attitude = request.POST['comment_attitude']
+    facilities = request.POST['comment_facilities']
 
+    print("=-======================")
+    print(message)
+    print(environment)
+
+    member = request.session['mId']
+    # latest_seq=
+    latest_review_seq = Review.objects.aggregate(Max('review_seq'))['review_seq__max']
+    latest_review_seq=latest_review_seq+1
+    #
+    with connection.cursor() as cursor:
+        cursor.execute('INSERT INTO Review VALUES (%s, %s, %s, %s, %s, %s, %s)', (latest_review_seq, message, environment, attitude, facilities, hId, member))
+
+    house = f'/house_rent/{hId}'
+    return redirect(house)
 #endregion
 
 def testing(request):
@@ -306,22 +327,3 @@ def comment_test(request):
 #     return render(request, 'testimage.html', {'form': form})
 #
 
-# def add_comment(request):
-#     message = request.POST['message']
-#     environment = request.POST['environment']
-#     attitude = request.POST['attitude']
-#     facilities = request.POST['facilities']
-
-    # member_id
-    # member = request.session['mId']
-
-    # house_id
-    # house = request.POST['hId_id']
-
-    # latest_id = Review.objects.filter(hId_id=hId_id).latest('review_seq')
-    # number = int(latest_id)  # 取得數字部分，轉換為整數，即 20
-    # next_id = number + 1  # 數字部分加 1，即 21
-
-    # with connection.cursor() as cursor:
-    #     cursor.execute('INSERT INTO Review VALUES (%s, %s, %s, %s, %s, %s, %s)', (next_id, message, environment, attitude, facilities, house, member))
-    # return redirect('house_rent/'+house)
