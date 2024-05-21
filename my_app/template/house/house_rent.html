@@ -98,11 +98,11 @@
             <div class="comments-form border-box" id="rate">
                 <h3 class="title-normal">新增評論</h3>
 
-                <form role="form">
+                <form role="form" method="post" action="">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="message"><textarea class="form-control required-field" id="message" placeholder="您的評論..." rows="10" required></textarea></label>
+                                <label for="message"><textarea class="form-control required-field" id="message" name="message" placeholder="您的評論..." rows="10" required></textarea></label>
                             </div>
                         </div><!-- Col 12 end -->
 
@@ -233,6 +233,11 @@
                   <div class="meta-data">
                     <span class="comment-author mr-3">{{ i.realname }}</span>
 {#                    <span class="comment-date float-right">1999年2月30日</span>#}
+                  </div>
+                  <div class="star">
+                      <span>環境:{{ i.environment }}</span>
+                      <span>態度:{{ i.attitude }}</span>
+                      <span>設備:{{ i.facilities }}</span>
                   </div>
                   <div class="comment-content">
                     <p>{{ i.text }}</p>
