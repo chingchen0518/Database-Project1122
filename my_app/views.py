@@ -12,7 +12,9 @@ import datetime
 
 
 #引入 Table
-from my_app.models import Member, House, Image,Equipment,User,Member,Browse,Review
+from my_app.models import Member, House, Image, Equipment, User, Member, Browse, Review, Rdetail, Favourite
+
+
 #endregion 引入 Table結束
 
 # region Part 1：首頁
@@ -131,10 +133,12 @@ def house_rent(request,hId):
     image = Image.objects.raw('SELECT path FROM Image WHERE Image.hId_id=%s', [hId])
     equipment = Equipment.objects.raw('SELECT * FROM Equipment WHERE Equipment.hId_id=%s', [hId])
     seller = Member.objects.raw('SELECT * FROM Member JOIN House ON House.mId_id=Member.mId WHERE House.hId=%s', [hId])
-    #
+    details = Rdetail.objects.raw('SELECT * FROM Rdetail WHERE Rdetail.hId_id=%s', [hId])
+
     # Review Data
     review = Review.objects.raw('SELECT review_seq,text,attitude,environment,facilities,realname FROM Review,Member WHERE Review.hId_id=%s AND Review.mId_id = Member.mId',[hId])
 
+    print(details)
     if 'mId' in request.session and 'user' in request.session:
         login_people=request.session['mId']
         login=1
@@ -151,7 +155,7 @@ def house_rent(request,hId):
         login=0
         login_people="0000"
     # print(login)
-    return render(request, "house/house_rent.html", {"rows":rows[0], "image":image, "equipment":equipment[0], "seller":seller[0], "login_people":login_people, "login":login,"review":review})
+    return render(request, "house/house_rent.html", {"rows":rows[0], "image":image, "equipment":equipment[0], "seller":seller[0],  "details":details,"login_people":login_people, "login":login,"review":review})
 
 def search_test(request):
     keyword = request.POST['keyword']
@@ -275,9 +279,12 @@ def add_comment(request,hId):
     print(environment)
 
     member = request.session['mId']
-    # latest_seq=
+
     latest_review_seq = Review.objects.aggregate(Max('review_seq'))['review_seq__max']
-    latest_review_seq=latest_review_seq+1
+    if latest_review_seq:
+        latest_review_seq=latest_review_seq+1
+    else:
+        latest_review_seq = 1
     #
     with connection.cursor() as cursor:
         cursor.execute('INSERT INTO Review VALUES (%s, %s, %s, %s, %s, %s, %s)', (latest_review_seq, message, environment, attitude, facilities, hId, member))
@@ -326,4 +333,28 @@ def comment_test(request):
 #         form = ImageUploadForm()
 #     return render(request, 'testimage.html', {'form': form})
 #
+def delete_comment(request,hId,review_seq):
+    with connection.cursor() as cursor:
+        cursor.execute('DELETE FROM Review WHERE review_seq= %s', (review_seq,))
+    house = f'/house_rent/{hId}'
+    return redirect(house)
 
+# def my_view(request):
+#     if request.method == 'POST':
+#         request.session['button_clicked'] = True
+#         return redirect('my_view')  # 重定向到相同视图以更新页面
+#
+#     button_clicked = request.session.get('button_clicked', False)
+#     return render(request, 'my_template.html', {'button_clicked': button_clicked})
+
+def add_favor(request,hId):
+    latest_favourite_seq = Favourite.objects.aggregate(Max('favourite_seq'))['favourite_seq__max']
+    if latest_favourite_seq:
+        latest_favourite_seq = latest_favourite_seq + 1
+    else:
+        latest_favourite_seq = 1
+    member = request.session['mId']
+    with connection.cursor() as cursor:
+        cursor.execute('INSERT INTO Favourite VALUES (%s, %s, %s)',(latest_favourite_seq, hId, member))
+
+    return redirect('/house_list/')

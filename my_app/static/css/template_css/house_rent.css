@@ -99,10 +99,17 @@
     margin-top: 5px;
 }
 
-/*.col-xl-8 col-lg-8{*/
-/*    width:100%;*/
-/*}*/
-/*.container{*/
-/*    margin-left:10%;*/
-/*    margin-right:10%;*/
-/*}*/
+.comment-body{
+    margin-right: auto;
+}
+
+#del{
+    float: right;
+}
+
+#details{
+    display: flex;
+    list-style: none;
+    justify-content: space-between;
+    padding: 0px;
+}
