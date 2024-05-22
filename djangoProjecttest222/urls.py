@@ -45,7 +45,8 @@ urlpatterns = [
     path('delete_house/<str:hId>/', my_app.views.delete_house,name='delete_house'),
 
     #用戶中心
-        path('account_center/',my_app.views.account_center,name="account_center"),
+        path('account_center2/',my_app.views.account_center2,name="account_center2"),
+        path('account_center/', my_app.views.account_center, name="account_center"),
 
     #沒用的東西
     path('testing/',my_app.views.testing,name="testing"),
@@ -66,5 +67,5 @@ urlpatterns = [
     path('delete_comment/<str:hId>/<int:review_seq>', my_app.views.delete_comment, name='delete_comment'),
     # path('my_view/', my_app.views.my_view, name='my_view'),
     path('add_favor/<str:hId>/', my_app.views.add_favor, name='add_favor'),
-    path('del_favor/', my_app.views.del_favor, name='del_favor'),
+    path('del_favor/<int:favourite_seq>', my_app.views.del_favor, name='del_favor'),
 ]

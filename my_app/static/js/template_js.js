@@ -1,9 +1,4 @@
-/**
- * WEBSITE: https://themefisher.com
- * TWITTER: https://twitter.com/themefisher
- * FACEBOOK: https://www.facebook.com/themefisher
- * GITHUB: https://github.com/themefisher/
- */
+
 
 jQuery(function ($) {
 	'use strict';
@@ -177,28 +172,59 @@ jQuery(function ($) {
 
 
 		// Shuffle js filter and masonry
-		function projectShuffle() {
-			if ($('.shuffle-wrapper').length !== 0) {
-				var Shuffle = window.Shuffle;
-				var myShuffle = new Shuffle(document.querySelector('.shuffle-wrapper'), {
-					itemSelector: '.shuffle-item',
-					sizer: '.shuffle-sizer',
-					buffer: 1
-				});
-				$('input[name="shuffle-filter"]').on('change', function (evt) {
-					var input = evt.currentTarget;
-					if (input.checked) {
-						myShuffle.filter(input.value);
-					}
-				});
-				$('.shuffle-btn-group label').on('click', function () {
-					$('.shuffle-btn-group label').removeClass('active');
-					$(this).addClass('active');
-				});
-			}
-		}
-		projectShuffle();
+		// function projectShuffle() {
+		// 	if ($('.shuffle-wrapper').length !== 0) {
+		// 		var Shuffle = window.Shuffle;
+		// 		var myShuffle = new Shuffle(document.querySelector('.shuffle-wrapper'), {
+		// 			itemSelector: '.shuffle-item',
+		// 			sizer: '.shuffle-sizer',
+		// 			buffer: 1
+		// 		});
+		//
+		// 		$('.shuffle-item').hide();
+		// 		$('input[name="shuffle-filter"]').on('change', function (evt) {
+		// 			var input = evt.currentTarget;
+		// 			if (input.checked) {
+		// 				var filterValue = $(input).val();
+		// 				// 隐藏所有 shuffle-item
+		// 				$('.shuffle-item').hide();
+		// 				// 显示对应的 shuffle-item
+		// 				$('.shuffle-item[data-groups*="' + filterValue + '"]').show();
+		// 			}
+		// 		});
+		//
+		// 		// clicked color
+		// 		$('.shuffle-btn-group label').on('click', function () {
+		// 			$('.shuffle-btn-group label').removeClass('active');
+		// 			$(this).addClass('active');
+		// 		});
+		// 	}
+		// }
+		// projectShuffle();
 
+		$(document).ready(function() {
+			// 隐藏所有 shuffle-item
+			$('.shuffle-item').hide();
+
+			// 点击按钮时显示对应内容
+			$('input[name="shuffle-filter"]').on('change', function(evt) {
+				var input = evt.currentTarget;
+				if (input.checked) {
+					// 获取被选中按钮的值
+					var filterValue = $(input).val();
+					// 隐藏所有 shuffle-item
+					$('.shuffle-item').hide();
+					// 显示对应的 shuffle-item
+					$('.shuffle-item[data-groups*="' + filterValue + '"]').show();
+				}
+			});
+
+			// clicked color
+			$('.shuffle-btn-group label').on('click', function () {
+				$('.shuffle-btn-group label').removeClass('active');
+				$(this).addClass('active');
+			});
+		});
 
 		// testimonial carousel
 		function testimonialCarousel() {

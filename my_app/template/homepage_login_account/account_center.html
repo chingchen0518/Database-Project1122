@@ -3,131 +3,131 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link href= "{%static '/css/account_center.css' %}" type="text/css" rel="stylesheet"/>
-    <link href= "{%static '/css/bootstrap_css/bootstrap.min.css' %}" type="text/css" rel="stylesheet"/>
-    <script src={% static '/js/bootstrap_js/bootstrap.min.js' %}></script>
-    <meta charset="UTF-8">
-    <title>account_center</title>
+
+  <!-- Basic Page Needs
+================================================== -->
+  <meta charset="utf-8">
+  <title>用戶中心</title>
+
+  <!-- Mobile Specific Metas
+================================================== -->
+{#  <meta http-equiv="X-UA-Compatible" content="IE=edge">#}
+{#  <meta name="description" content="Construction Html5 Template">#}
+{#  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">#}
+{#  <meta name=author content="Themefisher">#}
+{#  <meta name=generator content="Themefisher Constra HTML Template v1.0">#}
+
+  <!-- Favicon
+================================================== -->
+  <link rel="icon" type="image/png" href="images/favicon.png">
+
+  <!-- CSS
+================================================== -->
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="{%static '/plugins/bootstrap/bootstrap.min.css'%}">
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="{%static '/plugins/fontawesome/css/all.min.css' %}">
+  <!-- Animation -->
+  <link rel="stylesheet" href="{%static '/plugins/animate-css/animate.css' %}">
+  <!-- slick Carousel -->
+  <link rel="stylesheet" href="{%static '/plugins/slick/slick.css'%}">
+  <link rel="stylesheet" href="{%static '/plugins/slick/slick-theme.css'%}">
+  <!-- Colorbox -->
+  <link rel="stylesheet" href="{%static 'plugins/colorbox/colorbox.css'%}">
+  <!-- Template styles-->
+  <link rel="stylesheet" href="{%static 'css/template_css/style.css'%}">
+
+
+
 </head>
 <body>
-    <div id="yc_navbar">
-        <div id="yc_nav_logo">
-            <a href=""><img src="{%static '\img\equipment\net.png' %}"></a>
-        </div>
-
-        <div id="yc_nav_menu">
-            <div id="yc_nav_content">
-                <a href="">租屋</a>
-                <a href="">售屋</a>
-            </div>
-        </div>
+    <div>
+        {% include 'elements/navbar.html' %}
     </div>
 
-    <div id="yc_gate"></div>
 
-    <nav>
-  <div class="nav nav-tabs" id="nav-tab" role="tablist">
-    <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">個人簡介</button>
-    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">身分認證</button>
-    <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">帳號設定</button>
-    <button class="nav-link" id="nav-disabled-tab" data-bs-toggle="tab" data-bs-target="#nav-disabled" type="button" role="tab" aria-controls="nav-disabled" aria-selected="false">瀏覽紀錄</button>
-  </div>
-</nav>
-<div class="tab-content" id="nav-tabContent">
-  <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
-      {# 個人簡介 #}
-    <div class="yc_introduce">
-        <div>
-            <div id="yc_name">
-                <img src="{% static '\img\person-circle.png' %}" alt="user">
-                <h2>{{ row.realname }}</h2>
-                <button>編輯</button>
-            </div>
-            <hr>
-            <div id="yc_user_detail">
-                <ul>
-                    <li>聯絡方式:
-                        <ul>
-                            <li>tel: {{ row.phone }}</li>
-                            <li>mail: {{ row.email }}</li>
-                        </ul>
-                    </li>
-                    <li>收藏數:</li>
-                </ul>
-                <ul>
-                    <li>特徵:</li>
-                    <li>用戶評分:</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-  </div>
-  <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
-{# 身分認證 #}
-    <div class="yc_introduce">
-        <div>
-            <form>
-                <div id="yc_data_from">
-                    <label><input type="radio" name="cata" value="individual">個人資料認證</label>
-                    <label><input type="radio" name="cata" value="company">公司資料認證</label>
-                </div>
-                <div id="yc_real_details">
-                    <label>真實姓名:<input type="text" name="name" placeholder="請填寫真實姓名"></label>
-                    <label>身分證字號:<input type="text" name="pId" placeholder="請填寫身分證字號"></label>
-                    <label>戶籍地址:<input type="text" name="address" placeholder="請填寫完整的戶籍地址"></label>
-                </div>
-                <div>
-                    <p>上傳身分證認證照</p>
-                    <label>
-                        <img src="{% static '\img\upload.png' %}" alt="upload">
-                        <input type="file" name="identity_card_picture">
-                    </label>
-                </div>
-                <div>
-                    <button>確認</button>
-                </div>
-            </form>
-        </div>
-    </div>
-  </div>
-  <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">
-{#      帳號設定#}
-    <div class="yc_introduce">
-        <div>
-            <h4>帳號設定</h4>
-            <div>
-                <p>電話號碼</p>
-                <label><input type="text" name="tel" value="0912767759"></label>
-                <p>電子信箱</p>
-                <label><input type="text" name="email" value="chenyija168@gmail.com"></label>
-                <button>修改</button>
-            </div>
-        </div>
-    </div>
-    <div class="yc_introduce">
-        <div>
-            <h4>密碼管理</h4>
-            <button>修改密碼</button>
-        </div>
-    </div>
-    <div class="yc_introduce">
-        <div>
-            <h4>身分</h4>
-            <table>
-                <tr>
-                    <td><input type="radio" name="rent_customer">我是租客</td>
-                    <td><input type="radio" name="rent_customer">我是房東</td>
-                </tr>
-            </table>
-        </div>
-    </div>
-  </div>
-  <div class="tab-pane fade" id="nav-disabled" role="tabpanel" aria-labelledby="nav-disabled-tab" tabindex="0">
-      <div>
-          {% include 'product_template.html' %}
+  <div class="body-inner">
+
+<section id="main-container" class="main-container">
+  <div id="whole_container" class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="shuffle-btn-group">
+
+          <label for="personal_information">
+            <input type="radio" name="shuffle-filter" id="personal_information" value="personal_information">個人資料
+          </label>
+          <label for="personal_verify">
+            <input type="radio" name="shuffle-filter" id="personal_verify" value="personal_verify">身份驗證
+          </label>
+          <label for="browse">
+            <input type="radio" name="shuffle-filter" id="browse" value="browse">瀏覽記錄
+          </label>
+          <label for="history">
+            <input type="radio" name="shuffle-filter" id="history" value="favourite">我的收藏
+          </label>
+        </div><!-- project filter end -->
+
+
+        <div class="row shuffle-wrapper">
+          <div class="col-1 shuffle-sizer"></div>
+
+          <div class="col-lg-4 col-md-6 shuffle-item" data-groups="[&quot;personal_information&quot;]">
+            <p>1234</p>
+              <p>5678   </p>
+          </div><!-- shuffle item  end -->
+
+          <div class="col-lg-4 col-md-6 shuffle-item" data-groups="[&quot;personal_verify&quot;]">
+            <p>1234</p>
+              <p>5678   </p>
+          </div><!-- shuffle item  end -->
+
+         <div class="col-lg-4 col-md-6 shuffle-item" data-groups="[&quot;browse&quot;]" style="width:100%;">
+              {% with rows=browse %}
+                {% include 'elements/product_template.html' %}
+            {% endwith %}
+          </div><!-- shuffle item  end -->
+
+         <div class="col-lg-4 col-md-6 shuffle-item" data-groups="[&quot;favourite&quot;]">
+
+             {% include 'elements/product_template.html' %}
+
+          </div><!-- shuffle item  end -->
+        </div><!-- shuffle end -->
       </div>
-  </div>
-</div>
 
-</body>
-</html>
+      <div class="col-12">
+        <div class="general-btn text-center">
+          <a class="btn btn-primary" href="projects.html">View All Projects</a>
+        </div>
+      </div>
+
+    </div><!-- Content row end -->
+
+  </div><!-- Conatiner end -->
+</section><!-- Main container end -->
+
+
+  <!-- Javascript Files
+  ================================================== -->
+  <!-- initialize jQuery Library -->
+  <script src="{% static '/plugins/jQuery/jquery.min.js' %}"></script>
+{#  <!-- Bootstrap jQuery -->#}
+  <script src="{% static '/plugins/bootstrap/bootstrap.min.js' %}" defer></script>
+{#  <!-- Slick Carousel -->#}
+  <script src="{% static '/plugins/slick/slick.min.js' %}"></script>
+  <script src="{% static 'plugins/slick/slick-animation.min.js'%}"></script>
+  <!-- Color box -->
+  <script src="{% static '/plugins/colorbox/jquery.colorbox.js' %}"></script>
+  <!-- shuffle -->
+  <script src="{% static '/plugins/shuffle/shuffle.min.js' %}" defer></script>
+
+  <!-- Template custom -->
+  <script src="{% static '/js/template_js.js' %}"></script>
+ <!-- ChingChen styles-->
+<link rel="stylesheet" href="{%static 'css/account_center.css'%}">
+
+  </div><!-- Body inner end -->
+  </body>
+
+  </html>
