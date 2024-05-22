@@ -31,7 +31,8 @@
     max-width: 100%;
     max-height: 100%;
 }
-/*side_bar*/
+
+/*side_bar（edit，delete）*/
 .call-to-action-btn{
     display:flex;
     justify-content: center;
@@ -52,6 +53,32 @@
     background-color: red;
     color: white;
  }
+
+/*Delete confirm box*/
+#delete_title{
+    font-weight: bold;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+#delete_yes{
+    background-color: #f01919;
+    color: white;
+}
+
+#delete_yes:hover{
+    background-color: #7b0303;
+    color: white;
+}
+#delete_no:hover{
+    background-color: #025a02;
+    color: white;
+}
+
+#delete_no{
+    background-color: #1cc21c;
+    color: white;
+}
 /*Equipment*/
 /*#equipment{*/
 /*    display:flex;*/
