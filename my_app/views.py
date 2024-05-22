@@ -100,37 +100,45 @@ def account_center(request):
 def house_list(request):
     login=0
     if 'user' in request.session and 'mId' in request.session :
+        member = request.session['mId']
         login=1
     else:
         login=0
+        member="000"
 
     # 如果有search東西
-    # member = request.session['mId']
+
+
+    if 'keyword' in request.POST:
+        keyword = request.POST['keyword']
+
+       
+        rows = House.objects.raw('''SELECT * FROM Info JOIN House ON Info.hId_id=House.hId LEFT OUTER JOIN
+                                        (SELECT * FROM Favourite WHERE Favourite.mId_id=%s) f
+                                    ON f.hId_id=hId WHERE Info.address LIKE %s;
+                                    ''',(member,'%' + keyword + '%'))
+        numbers = len(list(rows))  # 转换为列表再计数
+
+
+        return render(request, "house/house_list.html", {'numbers': numbers,'login':login,'rows': rows})
+
+        # 如果沒有search
+    else:
+        
+        rows = House.objects.raw('''SELECT * FROM Info JOIN House ON Info.hId_id=House.hId LEFT OUTER JOIN
+                                                (SELECT * FROM Favourite WHERE Favourite.mId_id=%s) f
+                                            ON f.hId_id=hId;
+                                            ''',[member])
+        numbers = len(list(rows))  # 转换为列表再计数
+        return render(request, "house/house_list.html", {'numbers': numbers,'login':login,'rows': rows})
+
+
     if 'keyword' in request.POST:
         keyword = request.POST['keyword']
 
         rows = House.objects.raw('SELECT * FROM House,Info WHERE Info.address LIKE %s AND House.hId=Info.hId_id AND House.status=0',
                                  ['%' + keyword + '%'])
-        # login_favor=Favourite.objects.raw('SELECT * FROM Favourite WHERE mId_id=%s',[member])
-        # rows_outer_join = House.objects.raw('SELECT * FROM (%s) AS House_Info LEFT OUTER JOIN (%s) AS Favor ON House_Info.hId = Favor.hId_id', [rows.query, login_favor.query])
-        # with connection.cursor() as cursor:
-        #     cursor.execute('''
-        #         SELECT House_Info.*, Favor.*
-        #         FROM (
-        #             SELECT House.*, Info.*
-        #             FROM House
-        #             JOIN Info ON House.hId = Info.hId_id
-        #             WHERE Info.address LIKE %s
-        #         ) AS House_Info
-        #         LEFT OUTER JOIN (
-        #             SELECT *
-        #             FROM Favourite
-        #             WHERE mId_id = %s
-        #         ) AS Favor
-        #         ON House_Info.hId = Favor.hId_id
-        #     ''', ['%' + keyword + '%', member])
-        #
-        #     rows_outer_join = cursor.fetchall()
+        
         if rows:
             print("123456789")
         else:
@@ -141,26 +149,6 @@ def house_list(request):
         # 如果沒有search
     else:
         rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId=Info.hId_id AND House.status=0')
-        # login_favor = Favourite.objects.raw('SELECT * FROM Favourite WHERE mId_id=%s', [member])
-        # rows_outer_join = House.objects.raw('SELECT * FROM (%s) AS House_Info LEFT OUTER JOIN (%s) AS Favor ON House_Info.hId = Favor.hId_id',[rows.query, login_favor.query])
-        # with connection.cursor() as cursor:
-        #     cursor.execute('''
-        #         SELECT House_Info.*, Favor.*
-        #         FROM (
-        #             SELECT House.*, Info.*
-        #             FROM House
-        #             JOIN Info ON House.hId = Info.hId_id
-        #             WHERE Info.address LIKE %s
-        #         ) AS House_Info
-        #         LEFT OUTER JOIN (
-        #             SELECT *
-        #             FROM Favourite
-        #             WHERE mId_id = %s
-        #         ) AS Favor
-        #         ON House_Info.hId = Favor.hId_id
-        #     ''', ['KH%', member])
-        #
-        #     rows_outer_join = cursor.fetchall()
 
         return render(request, "house/house_list.html", {'numbers': len(rows),'login':login,'rows': rows})
 
@@ -494,9 +482,9 @@ def add_favor(request,hId):
 
 def del_favor(request):
     member = request.session['mId']
-    # with connection.cursor() as cursor:
-    #     cursor.execute('DELETE FROM Favourite WHERE favourite_seq= %s', (favourite_seq))
-
+    with connection.cursor() as cursor:
+        cursor.execute('DELETE FROM Favourite WHERE favourite_seq= %s', (favourite_seq,))
+    
     return redirect('/house_list/')
 
 def house_list_sold(request):
@@ -513,26 +501,7 @@ def house_list_sold(request):
 
         rows = House.objects.raw('SELECT * FROM House,Info WHERE Info.address LIKE %s AND House.hId=Info.hId_id  AND House.status=1',
                                  ['%' + keyword + '%'])
-        # login_favor=Favourite.objects.raw('SELECT * FROM Favourite WHERE mId_id=%s',[member])
-        # rows_outer_join = House.objects.raw('SELECT * FROM (%s) AS House_Info LEFT OUTER JOIN (%s) AS Favor ON House_Info.hId = Favor.hId_id', [rows.query, login_favor.query])
-        # with connection.cursor() as cursor:
-        #     cursor.execute('''
-        #         SELECT House_Info.*, Favor.*
-        #         FROM (
-        #             SELECT House.*, Info.*
-        #             FROM House
-        #             JOIN Info ON House.hId = Info.hId_id
-        #             WHERE Info.address LIKE %s
-        #         ) AS House_Info
-        #         LEFT OUTER JOIN (
-        #             SELECT *
-        #             FROM Favourite
-        #             WHERE mId_id = %s
-        #         ) AS Favor
-        #         ON House_Info.hId = Favor.hId_id
-        #     ''', ['%' + keyword + '%', member])
-        #
-        #     rows_outer_join = cursor.fetchall()
+        
         if rows:
             print("123456789")
         else:
@@ -543,26 +512,7 @@ def house_list_sold(request):
         # 如果沒有search
     else:
         rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId=Info.hId_id AND House.status=1')
-        # login_favor = Favourite.objects.raw('SELECT * FROM Favourite WHERE mId_id=%s', [member])
-        # rows_outer_join = House.objects.raw('SELECT * FROM (%s) AS House_Info LEFT OUTER JOIN (%s) AS Favor ON House_Info.hId = Favor.hId_id',[rows.query, login_favor.query])
-        # with connection.cursor() as cursor:
-        #     cursor.execute('''
-        #         SELECT House_Info.*, Favor.*
-        #         FROM (
-        #             SELECT House.*, Info.*
-        #             FROM House
-        #             JOIN Info ON House.hId = Info.hId_id
-        #             WHERE Info.address LIKE %s
-        #         ) AS House_Info
-        #         LEFT OUTER JOIN (
-        #             SELECT *
-        #             FROM Favourite
-        #             WHERE mId_id = %s
-        #         ) AS Favor
-        #         ON House_Info.hId = Favor.hId_id
-        #     ''', ['KH%', member])
-        #
-        #     rows_outer_join = cursor.fetchall()
+        
 
         return render(request, "house/house_list.html", {'numbers': len(rows),'login':login,'rows': rows})
 
