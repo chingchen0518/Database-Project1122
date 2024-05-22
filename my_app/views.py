@@ -113,7 +113,7 @@ def house_list(request):
         keyword = request.POST['keyword']
 
        
-        rows = House.objects.raw('''SELECT * FROM Info JOIN House ON Info.hId_id=House.hId LEFT OUTER JOIN
+        rows = House.objects.raw('''SELECT * FROM Info JOIN House ON Info.hId_id=House.hId AND House.status=0 LEFT OUTER JOIN
                                         (SELECT * FROM Favourite WHERE Favourite.mId_id=%s) f
                                     ON f.hId_id=hId WHERE Info.address LIKE %s;
                                     ''',(member,'%' + keyword + '%'))
@@ -125,32 +125,13 @@ def house_list(request):
         # 如果沒有search
     else:
         
-        rows = House.objects.raw('''SELECT * FROM Info JOIN House ON Info.hId_id=House.hId LEFT OUTER JOIN
+        rows = House.objects.raw('''SELECT * FROM Info JOIN House ON Info.hId_id=House.hId AND House.status=0 LEFT OUTER JOIN
                                                 (SELECT * FROM Favourite WHERE Favourite.mId_id=%s) f
                                             ON f.hId_id=hId;
                                             ''',[member])
         numbers = len(list(rows))  # 转换为列表再计数
         return render(request, "house/house_list.html", {'numbers': numbers,'login':login,'rows': rows})
 
-
-    if 'keyword' in request.POST:
-        keyword = request.POST['keyword']
-
-        rows = House.objects.raw('SELECT * FROM House,Info WHERE Info.address LIKE %s AND House.hId=Info.hId_id AND House.status=0',
-                                 ['%' + keyword + '%'])
-        
-        if rows:
-            print("123456789")
-        else:
-            print("avassaf")
-
-        return render(request, "house/house_list.html", {'numbers': len(rows),'login':login,'rows': rows})
-
-        # 如果沒有search
-    else:
-        rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId=Info.hId_id AND House.status=0')
-
-        return render(request, "house/house_list.html", {'numbers': len(rows),'login':login,'rows': rows})
 
 def house_rent_cont(request,hId):
     rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId=%s AND House.hId=Info.hId_id', [hId])
@@ -480,7 +461,7 @@ def add_favor(request,hId):
 
     return redirect('/house_list/')
 
-def del_favor(request):
+def del_favor(request,favourite_seq):
     member = request.session['mId']
     with connection.cursor() as cursor:
         cursor.execute('DELETE FROM Favourite WHERE favourite_seq= %s', (favourite_seq,))
@@ -507,14 +488,14 @@ def house_list_sold(request):
         else:
             print("avassaf")
 
-        return render(request, "house/house_list.html", {'numbers': len(rows),'login':login,'rows': rows})
+        return render(request, "house/house_list_sold.html", {'numbers': len(rows),'login':login,'rows': rows})
 
         # 如果沒有search
     else:
         rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId=Info.hId_id AND House.status=1')
         
 
-        return render(request, "house/house_list.html", {'numbers': len(rows),'login':login,'rows': rows})
+        return render(request, "house/house_list_sold.html", {'numbers': len(rows),'login':login,'rows': rows})
 
 def house_sold(request, hId):
     # House Data
@@ -526,11 +507,9 @@ def house_sold(request, hId):
     details = Sdetail.objects.raw('SELECT * FROM Sdetail WHERE hId_id=%s', (hId,))
 
     # Review Data
-    review = Review.objects.raw(
-    'SELECT review_seq,text,attitude,environment,facilities,realname FROM Review,Member WHERE Review.hId_id=%s AND Review.mId_id = Member.mId',
-        [hId])
+    review = Review.objects.raw('SELECT review_seq,text,attitude,environment,facilities,realname FROM Review,Member WHERE Review.hId_id=%s AND Review.mId_id = Member.mId',[hId])
 
-        if 'mId' in request.session and 'user' in request.session:
+    if 'mId' in request.session and 'user' in request.session:
             login_people = request.session['mId']
             login = 1
 
@@ -542,10 +521,25 @@ def house_sold(request, hId):
             with connection.cursor() as cursor:
                 cursor.execute('INSERT INTO Browse(hId_id,mId_id) VALUES (%s, %s)', (hId, request.session['mId']))
 
-        else:
-            login = 0
-            login_people = "0000"
-        # print(login)
-        return render(request, "house/house_rent.html",
-                      {"rows": rows[0], "image": image, "equipment": equipment[0], "seller": seller[0],
-                       "details": details[0], "login_people": login_people, "login": login, "review": review})
+    else:
+        login = 0
+        login_people = "0000"
+
+    return render(request, "house/house_sold.html",{"rows": rows[0], "image": image, "equipment": equipment[0], "seller": seller[0],"details": details[0], "login_people": login_people, "login": login, "review": review})
+
+def city_filter(request, city_id, status):
+    if 'user' in request.session and 'mId' in request.session :
+        login=1
+    else:
+        login=0
+
+    if status==0:
+        rows = House.objects.raw(
+            'SELECT * FROM House,Info WHERE House.region=%s AND House.hId=Info.hId_id AND House.status=0',
+            [city_id])
+        return render(request, "house/house_list.html", {'numbers': len(rows), 'login': login, 'rows': rows})
+    else:
+        rows = House.objects.raw(
+            'SELECT * FROM House,Info WHERE House.region=%s AND House.hId=Info.hId_id  AND House.status=1',
+            [city_id])
+        return render(request, "house/house_list_sold.html", {'numbers': len(rows),'login':login,'rows': rows})
