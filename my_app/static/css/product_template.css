@@ -74,3 +74,21 @@
     text-decoration: none;
     color: black;
 }
+
+.template, #favor{
+    text-decoration: none;
+}
+
+.template:hover{
+    color: black;
+    text-decoration: none;
+}
+
+/*.default-style {*/
+/*            background-color: blue;*/
+/*            color: white;*/
+/*        }*/
+/*.clicked-style {*/
+/*    background-color: red;*/
+/*    color: yellow;*/
+/*}*/

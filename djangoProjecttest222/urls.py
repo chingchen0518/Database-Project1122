@@ -61,4 +61,7 @@ urlpatterns = [
     # path('comment_test', my_app.views.comment_test),
     path('add_comment/<str:hId>/', my_app.views.add_comment, name='add_comment'),
     path('upload/', my_app.views.upload_image, name='upload_image'),
+    path('delete_comment/<str:hId>/<int:review_seq>', my_app.views.delete_comment, name='delete_comment'),
+    # path('my_view/', my_app.views.my_view, name='my_view'),
+    path('add_favor/<str:hId>/', my_app.views.add_favor, name='add_favor'),
 ]
