@@ -82,13 +82,13 @@ def logout(request):
     del request.session['mId']
     return redirect("homepage")
 
-def account_center(request):
+def account_center2(request):
     if 'user' in request.session:
         rows = Member.objects.raw('SELECT * FROM Member WHERE Member.username_id=%s', [request.session['user']])
         print(rows)
         print(rows[0])
 
-        return render(request, "homepage_login_account/account_center.html",{'row': rows[0]})
+        return render(request, "homepage_login_account/account_center2.html", {'row': rows[0]})
     else:#若沒有登錄
         return redirect('login_page')#去login_page這個函數
 
@@ -131,7 +131,6 @@ def house_list(request):
                                             ''',[member])
         numbers = len(list(rows))  # 转换为列表再计数
         return render(request, "house/house_list.html", {'numbers': numbers,'login':login,'rows': rows})
-
 
 def house_rent_cont(request,hId):
     rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId=%s AND House.hId=Info.hId_id', [hId])
@@ -462,6 +461,7 @@ def add_favor(request,hId):
     return redirect('/house_list/')
 
 def del_favor(request,favourite_seq):
+
     member = request.session['mId']
     with connection.cursor() as cursor:
         cursor.execute('DELETE FROM Favourite WHERE favourite_seq= %s', (favourite_seq,))
@@ -482,11 +482,6 @@ def house_list_sold(request):
 
         rows = House.objects.raw('SELECT * FROM House,Info WHERE Info.address LIKE %s AND House.hId=Info.hId_id  AND House.status=1',
                                  ['%' + keyword + '%'])
-        
-        if rows:
-            print("123456789")
-        else:
-            print("avassaf")
 
         return render(request, "house/house_list_sold.html", {'numbers': len(rows),'login':login,'rows': rows})
 
@@ -522,7 +517,36 @@ def house_sold(request, hId):
                 cursor.execute('INSERT INTO Browse(hId_id,mId_id) VALUES (%s, %s)', (hId, request.session['mId']))
 
     else:
+            login = 0
+            login_people = "0000"
+        # print(login)
+    return render(request, "house/house_rent.html",
+                      {"rows": rows[0], "image": image, "equipment": equipment[0], "seller": seller[0],
+                       "details": details[0], "login_people": login_people, "login": login, "review": review})
+
+def account_center(request):
+    login = 0
+    if 'user' in request.session and 'mId' in request.session:
+        login = 1
+        member = request.session['mId']
+    else:
         login = 0
+        member = 0000
+
+    Favourite = House.objects.raw('''
+        SELECT * FROM Info JOIN House ON Info.hId_id=House.hId AND House.status=0 
+            JOIN (SELECT * FROM Favourite WHERE Favourite.mId_id=%s ) f
+            ON f.hId_id=hId''',(member,))
+
+    browse = House.objects.raw('''
+        SELECT * FROM Info JOIN House ON Info.hId_id=House.hId AND House.status=0 
+            JOIN (SELECT * FROM Browse WHERE Browse.mId_id=%s ) f ON f.hId_id=hId
+            LEFT OUTER JOIN Favourite ON Favourite.hId_id=hId 
+            ''',(member,))
+
+    return render(request, "homepage_login_account/account_center.html", {'login': login, 'rows': Favourite, 'browse':browse})
+
+  login = 0
         login_people = "0000"
 
     return render(request, "house/house_sold.html",{"rows": rows[0], "image": image, "equipment": equipment[0], "seller": seller[0],"details": details[0], "login_people": login_people, "login": login, "review": review})

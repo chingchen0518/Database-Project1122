@@ -3,6 +3,9 @@
 <link href= "{%static '/css/template_css/style.css' %}" type="text/css" rel="stylesheet"/>
 <link href= "{%static '/plugins/bootstrap/bootstrap.min.css' %}" type="text/css" rel="stylesheet"/>
 <link href= "{%static '/plugins/fontawesome/css/all.min.css' %}" type="text/css" rel="stylesheet"/>
+{#<link rel="stylesheet" href= "{%static '/plugins/bootstrap_icons/font/bootstrap-icons.css' %}"/>#}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link href= "{%static '/css/navbar.css' %}" type="text/css" rel="stylesheet"/>
 
 <header id="header" class="header-one">
     <div class="site-navigation">
@@ -119,7 +122,9 @@
                                   </ul>
                           </li>
 
-
+                            <a href="{% url 'account_center' %}">
+                               <i  id="user_icon" class="bi bi-person bi-lg"></i>
+                            </a>
                           {% if login == 1 %}
                             {# Logout #}
                           <li class="nav-item dropdown">

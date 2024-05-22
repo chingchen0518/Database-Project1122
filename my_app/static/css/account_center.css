@@ -114,3 +114,38 @@ body{
     width: 100%;
     display: block;
 }
+
+/*.product_img{*/
+/*    width: 100%;*/
+/*    height: 300px;*/
+/*    border: 1px solid black;*/
+/*    margin: 20px;*/
+/*    background-color: #ffffff;*/
+/*}*/
+
+@media (min-width: 100px){
+    .col-lg-4.col-md-6.shuffle-item{
+        flex:0 0 100%;
+        max-width: 100%;!important
+    }
+}
+
+/*.template{*/
+/*    display:flex;*/
+/*    width:100%;*/
+/*}*/
+
+/*.template:hover{*/
+/*    text-decoration: none;*/
+/*}*/
+/*.product_img{*/
+/*    width:100px;*/
+/*    height:100px;*/
+/*}*/
+/*.product_title{*/
+/*    margin-top:auto;*/
+/*    margin-bottom:auto;*/
+/*    color:black;*/
+/*    font-size:20px;*/
+/*}*/
+
