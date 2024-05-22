@@ -59,5 +59,6 @@ urlpatterns = [
 
     #其他功能
     # path('comment_test', my_app.views.comment_test),
-    path('add_comment/<str:hId>/', my_app.views.add_comment, name='add_comment')
+    path('add_comment/<str:hId>/', my_app.views.add_comment, name='add_comment'),
+    path('upload/', my_app.views.upload_image, name='upload_image'),
 ]

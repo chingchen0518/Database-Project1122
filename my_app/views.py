@@ -7,6 +7,9 @@ from django.urls import reverse_lazy
 from django.views.generic import DeleteView
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Max
+import os
+
+
 
 import datetime
 
@@ -167,14 +170,29 @@ def search_test(request):
 #region Part 4：新增、刪除、修改
 class HouseDeleteView(DeleteView):
     model = House
-    success_url = reverse_lazy("house/house_lists")
+    success_url = reverse_lazy("house_lists")
     template_name = 'add_renew_delete/delete.html' #之後加一個取消
     pk_url_kwarg = 'hId' #告訴他用url中的哪個東西作爲primary_key
+
+    def delete(self, request, *args, **kwargs):
+        # 获取即将删除的对象
+        hId = kwargs.get(self.pk_url_kwarg)
+
+        image_paths=Image.objects.raw('SELECT path FROM Image WHERE hId=%s', [hId])
+        print(image_paths)
+
+        for img_path in image_paths:
+            file_path = f'my_app/static/img/house/{img_path}'
+            os.remove(file_path)
+
+        response = super().delete(request, *args, **kwargs)
+        return response
+
 
 def upload_page(request):
 
     if 'user' in request.session and 'mId' in request.session:
-        return render(request, "add_renew_delete/add_house_v2.html")
+        return render(request, "add_renew_delete/upload_page.html")
 
     else:
         return redirect('/login/')
@@ -198,7 +216,7 @@ def add_house(request):
     # Equipments
     fields = ['sofa', 'tv', 'washer', 'wifi', 'bed', 'refrigerator', 'heater', 'channel4', 'cabinet', 'aircond', 'gas']
     Equip = {field: request.POST.get(field, '0') for field in fields}
-
+    lift=request.POST['lift']
     #member_id
     member = request.session['mId']
     # Count next id
@@ -214,12 +232,28 @@ def add_house(request):
         next_id = f"{prefix}1"
 
     with connection.cursor() as cursor:
-        cursor.execute('INSERT INTO House VALUES (%s, %s, %s, %s, %s)',(next_id, 0,title,region,member))
+        cursor.execute('INSERT INTO House VALUES (%s, %s, %s,%s, %s, %s)',(next_id, 0,title,region,member,1))
         cursor.execute('INSERT INTO Info  VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s)',(next_id,Info['price'],Info['address'],Info['level'],Info['room'],Info['living'],Info['bath'],Info['type'],Info['size'],current_date))
-        cursor.execute('INSERT INTO Equipment  VALUES (%s, %s,%s,%s, %s,%s, %s, %s, %s, %s, %s, %s)',(next_id,Equip['sofa'], Equip['tv'], Equip['washer'], Equip['wifi'], Equip['bed'], Equip['refrigerator'], Equip['heater'], Equip['channel4'], Equip['cabinet'], Equip['aircond'], Equip['gas']))
+        cursor.execute('INSERT INTO Equipment  VALUES (%s,%s, %s,%s,%s, %s,%s, %s, %s, %s, %s, %s, %s)',(next_id,Equip['sofa'], Equip['tv'], Equip['washer'], Equip['wifi'], Equip['bed'], Equip['refrigerator'], Equip['heater'], Equip['channel4'], Equip['cabinet'], Equip['aircond'], Equip['gas'],lift))
         cursor.execute("INSERT INTO Rdetail VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",(next_id,"0",Rdetails['parking'],Rdetails['pet'],Rdetails['cook'],Rdetails['direction'],Rdetails['level'],Rdetails['security'],Rdetails['management'],Rdetails['period'],Rdetails['bus'],Rdetails['train'],Rdetails['mrt'],Rdetails['age']))
 
-    return redirect('homepage')
+    # 處理圖片上傳+重命名
+    if request.method == 'POST' and request.FILES.getlist('images'):
+        files = request.FILES.getlist('images')
+        i=1
+        for image in files:
+            file_extension = os.path.splitext(image.name)[1].lower()
+            next_path=f'{next_id}-{i}{file_extension}'
+            image_path = os.path.join('my_app/static/img/house/',next_path)
+            with open(image_path, 'wb+') as destination:
+                for chunk in image.chunks():
+                    destination.write(chunk)
+            with connection.cursor() as cursor:
+                cursor.execute('INSERT INTO Image VALUES (%s, %s)',(next_id,next_path))
+            i=i+1
+
+    house = f'/house_rent/{next_id}'
+    return redirect(house)
 
 def edit_page_show(request,hId):
 
@@ -251,6 +285,17 @@ def edit_page_update(request,hId):
     fields = ['sofa', 'tv', 'washer', 'wifi', 'bed', 'refrigerator', 'heater', 'channel4', 'cabinet', 'aircond', 'gas']
     Equip = {field: request.POST.get(field, '0') for field in fields}
 
+    # Image
+    images = request.POST.getlist('img_delete')
+
+    # 删除指定路径的文件
+
+    with connection.cursor() as cursor:
+        for img_path in images:
+            cursor.execute('DELETE FROM Image WHERE path=%s', [img_path])
+            file_path = f'my_app/static/img/house/{img_path}'
+            os.remove(file_path)
+
     with connection.cursor() as cursor:
         cursor.execute('UPDATE House SET  title = %s, region = %s WHERE hId = %s',(title,region,hId))
         cursor.execute('UPDATE Info  SET price = %s, address = %s, level = %s, room = %s, living = %s, bath = %s, type = %s, size = %s, renewdate = %s WHERE hId_id = %s',
@@ -260,7 +305,7 @@ def edit_page_update(request,hId):
         cursor.execute("UPDATE Rdetail SET parking = %s, pet = %s, cook = %s, direction = %s, level = %s, security = %s, management = %s, period = %s, bus = %s, train = %s, mrt = %s, age = %s WHERE hId_id = %s",
                        (Rdetails['parking'],Rdetails['pet'],Rdetails['cook'],Rdetails['direction'],Rdetails['level'],Rdetails['security'],Rdetails['management'],Rdetails['period'],
                         Rdetails['bus'],Rdetails['train'],Rdetails['mrt'],Rdetails['age'],hId))
-    house = f'/houses/{hId}'
+    house = f'/house_rent/{hId}'
 
     return redirect(house)
 
@@ -289,22 +334,54 @@ def add_comment(request,hId):
 def testing(request):
     # 获取当前日期
 
-    mId=Member.objects.latest('mId')
-    # mId=Member.objects.order_by('-mId').last()
-    print(mId.mId)
-    # print("当前日期:", current_date)
-    if House.objects.filter(hId="HC41").exists():
-        print("数据库中存在该数据记录")
-    else:
-        print("数据库中不存在该数据记录")
+    images=request.POST.getlist('images')
+    with connection.cursor() as cursor:
+        for img_path in images:
+            cursor.execute('DELETE FROM Image WHERE path=%s',[img_path])
 
-    return render(request, "homepage_login_account/homepage.html")
+    # print(imag[0])
+    # print(imag[1])
+    # mId=Member.objects.latest('mId')
+    # # mId=Member.objects.order_by('-mId').last()
+    # print(mId.mId)
+    # # print("当前日期:", current_date)
+    # if House.objects.filter(hId="HC41").exists():
+    #     print("数据库中存在该数据记录")
+    # else:
+    #     print("数据库中不存在该数据记录")
 
-def comment_test(request):
+    return render(request, "upload_image.html")
+
+# class Personnel(models.Model):
+#     photos = models.ImageField(max_length=255, blank=True, null=True)
+
+
+# def infoUpload(request):
+#     if request.POST:
+#
+#         img_file = request.FILES.get("image")
+#         img_name = 'test.jpg'
+#
+#         f = open(os.path.join('path/', img_name), 'wb')
+#         for chunk in img_file.chunks(chunk_size=1024):
+#             f.write(chunk)
+#
+#     return HttpResponseRedirect('/visit/upload')
+
+def image_upload(request):
     # return render(request, "elements/comment.html")
-    return render(request, "elements/news-single.html")
+    return render(request, "upload_image.html")
 
-
+def upload_image(request):
+    if request.method == 'POST' and request.FILES.getlist('images'):
+        files = request.FILES.getlist('images')
+        for image in files:
+            image_path = os.path.join('my_app/static/img/temp/', image.name)
+            with open(image_path, 'wb+') as destination:
+                for chunk in image.chunks():
+                    destination.write(chunk)
+        return HttpResponse('Images uploaded successfully!')
+    return render(request, 'upload_image.html')
 
 
 # def map(request):
