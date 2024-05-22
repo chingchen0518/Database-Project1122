@@ -82,18 +82,36 @@
             <!-- Edit and Delete-->
             {% if login_people == seller.mId %}
               <div id="edit_button" class="call-to-action-btn">
-                <a id="edit_button_a"class="btn btn-primary" href="{% url 'edit_page' hId=rows.hId %}">編輯我的房子</a>
+                <a id="edit_button_a" class="btn btn-primary" href="{% url 'edit_page' hId=rows.hId %}">編輯我的房子</a>
               </div>
 
-             <div id="delete_button" class="call-to-action-btn">
-                <a href="{% url 'delete_house' hId=rows.hId %}" id="delete_button_a"class="btn btn-primary">刪除</a>
-              </div>
+            <div id="delete_button" class="call-to-action-btn">
+                <button data-toggle="modal" data-target="#deleteConfirmModal" class="btn btn-primary" id="edit_button_a">刪除</button>
+            </div>
+
+            <!--刪除確認欄-->
+            <div class="modal" id="deleteConfirmModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header"><span id="delete_title">刪除{{ rows.title }}</span></div>
+                        <div class="modal-body">這還是最後的告別，確定要要删除{{ rows.title }}吗？</div>
+                        <div class="modal-footer">
+                            <button class="btn" id="delete_no" data-dismiss="modal">不了，我慫了</button>
+                            <a style="padding-bottom:5px;" href="{% url 'delete_house' hId=rows.hId %}"><button class="btn" id="delete_yes">去吧，此後不再見</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {% else %}
             <!-- 收藏-->
               <div id="favourite" class="call-to-action-btn">
-                <a id="favourite_a"class="btn btn-primary" href="">加入收藏</a>
+                <a id="favourite_a" class="btn btn-primary" href="">加入收藏</a>
               </div>
             {% endif %}
+
+
+
             <!--評價-->
             {% if login %}
             <div class="comments-form border-box" id="rate">
@@ -226,29 +244,24 @@
 
           <div>
               <ul id="details">
-                  {% for i in details %}
-                      <p>xxx</p>
-                      <p>{{ i.period }}</p>
-                  {% endfor %}
-{#                  <li> #}
-{#                      #}
-{#                      <div><span>屋齡:</span>{{ details.age}}</div>#}
-{#                      <div><span>租期:</span>{{ details.period}}</div>#}
-{#                      <div><span>樓層:</span>{{ details.level}}</div>#}
-{#                      <div><span>朝向:</span>{{ details.direction}}</div>#}
-{#                  </li>#}
-{#                  <li>#}
-{#                      <div><span>保全:</span>{{ details.security}}</div>#}
-{#                      <div><span>管理員:</span>{{ details.management}}</div>#}
-{#                      <div><span>養寵物:</span>{{ details.pet}}</div>#}
-{#                      <div><span>開伙:</span>{{ details.cook}}</div>#}
-{#                  </li>#}
-{#                  <li>#}
-{#                      <div><span>停車位:</span>{{ details.parking}}</div>#}
-{#                      <div><span>公車站:</span>{{ details.bus}}</div>#}
-{#                      <div><span>火車站:</span>{{ details.train}}</div>#}
-{#                      <div><span>捷運站:</span>{{ details.mrt}}</div>#}
-{#                  </li>#}
+                  <li>
+                      <div><span>屋齡:</span>{{ details.age}}</div>
+                      <div><span>租期:</span>{{ details.period}}</div>
+                      <div><span>樓層:</span>{{ details.level}}</div>
+                      <div><span>朝向:</span>{{ details.direction}}</div>
+                  </li>
+                  <li>
+                      <div><span>保全:</span>{{ details.security}}</div>
+                      <div><span>管理員:</span>{{ details.management}}</div>
+                      <div><span>養寵物:</span>{{ details.pet}}</div>
+                      <div><span>開伙:</span>{{ details.cook}}</div>
+                  </li>
+                  <li>
+                      <div><span>停車位:</span>{{ details.parking}}</div>
+                      <div><span>公車站:</span>{{ details.bus}}</div>
+                      <div><span>火車站:</span>{{ details.train}}</div>
+                      <div><span>捷運站:</span>{{ details.mrt}}</div>
+                  </li>
               </ul>
           </div>
 

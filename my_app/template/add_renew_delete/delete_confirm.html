@@ -1,0 +1,72 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+{#<!-- CSS for Bootstrap -->#}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+{##}
+{#    <!-- jQuery library -->#}
+      <script src="{% static '/plugins/jQuery/jquery.min.js' %}"></script>
+{#    <!-- JavaScript for Bootstrap -->#}
+      <script src="{% static '/plugins/bootstrap/bootstrap.min.js' %}" defer></script>
+
+
+</head>
+<body>
+<div class="modal" id="deleteConfirmModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">是否確定刪除</div>
+            <div class="modal-body">請問是否確定要刪除，這將一去不復返</div>
+            <div class="modal-footer">
+                <button class="btn" id="delete_no" data-dismiss="modal">不了，我慫了</button>
+                <button class="btn" id="delete_yes">去吧，此後不再見</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<button class="btn" data-toggle="modal" data-target="#deleteConfirmModal">
+  刪除
+</button>
+{#<script type="text/javascript">#}
+{##}
+{#    var readUrl = '@Url.Action("MarkNotificationAsRead")';#}
+{#    var deleteUrl = '@Url.Action("Delete")';#}
+{#    var currentNotificationId;#}
+{##}
+{#    function updateNotification(id, action) {#}
+{#        $("#notificationFormItemId").val(id);#}
+{#        switch (action) {#}
+{#        case 'read':#}
+{#            $("#notificationForm").attr('action', readUrl).submit();#}
+{#            break;#}
+{#        case 'delete':#}
+{#            $("#notificationForm").attr('action', deleteUrl).submit();#}
+{#            break;#}
+{#        default:#}
+{#            console.debug('Unknown action ' + action);#}
+{#        }#}
+{#    }#}
+{##}
+{#    function confirmDelete(id) {#}
+{#        currentNotificationId = id;#}
+{#        $('#deleteConfirmModal').modal('show');#}
+{#    }#}
+{##}
+{#    $(function() {#}
+{#        $("#deleteConfirmModal").on('click', "#deleteConfirm", function() {#}
+{#            updateNotification(currentNotificationId, 'delete');#}
+{#        });#}
+{#    });#}
+{##}
+{#</script>#}
+</body>
+
+
+
+</html>

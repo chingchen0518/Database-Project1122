@@ -40,7 +40,7 @@ urlpatterns = [
     #新增刪除
     path('upload_page',my_app.views.upload_page,name='upload_page'),
     path('upload_page/add_house',my_app.views.add_house, name='add_house'),
-    path('delete/<str:hId>/', my_app.views.HouseDeleteView.as_view(),name='delete_house'),
+    path('delete_house/<str:hId>/', my_app.views.delete_house,name='delete_house'),
 
     #用戶中心
     path('account_center/',my_app.views.account_center,name="account_center"),
