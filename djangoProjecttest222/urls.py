@@ -36,6 +36,8 @@ urlpatterns = [
     path('house_list/',my_app.views.house_list, name='house_lists'),
     path('house_rent_cont/<str:hId>',my_app.views.house_rent_cont),
     path('house_rent/<str:hId>', my_app.views.house_rent, name='house_rent'),
+    path('house_list_sold/',my_app.views.house_list_sold, name='house_lists_sold'),
+    # path('house_sold/<str:hId>', my_app.views.house_sold, name='house_sold'),
 
     #新增刪除
     path('upload_page',my_app.views.upload_page,name='upload_page'),
@@ -64,5 +66,5 @@ urlpatterns = [
     path('delete_comment/<str:hId>/<int:review_seq>', my_app.views.delete_comment, name='delete_comment'),
     # path('my_view/', my_app.views.my_view, name='my_view'),
     path('add_favor/<str:hId>/', my_app.views.add_favor, name='add_favor'),
-    path('del_favor/<int:favourite_seq>', my_app.views.del_favor, name='del_favor'),
+    path('del_favor/', my_app.views.del_favor, name='del_favor'),
 ]
