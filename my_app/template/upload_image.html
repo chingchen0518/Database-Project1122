@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload Images</title>
+</head>
+<body>
+    <h1>Upload Images</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label><input type="checkbox" name="images" value="TN45-6.jpg">xxx</label>
+        <label><input type="checkbox" name="images" value="TN45-7.jpg">xxx</label>
+        <label><input type="checkbox" name="images" value="TN45-8.jpg">xxx</label>
+        <label><input type="checkbox" name="images" value="TN45-9.jpg">xxx</label>
+        <label><input type="checkbox" name="images" value="TN45-10.jpg">xxx</label>
+        <input type="submit" value="Upload">
+    </form>
+</body>
+</html>
