@@ -3,7 +3,7 @@
 <link href= "{%static '/css/product_template.css' %}" type="text/css" rel="stylesheet"/>
 
 
-{% for row in rows_outer_join %}
+{% for row in rows %}
     <div id="thing" class="product">
 
         <a class="template" href="{% url 'house_rent' hId=row.hId %}"><img src="{%static '/img/house/'|add:row.hId|add:'-2.jpg' %}" alt="house">  {# 房屋照片 #}
@@ -23,9 +23,8 @@
                 {% if row.favourite_seq %}
                     <a id="favor" href="{% url 'add_favor' hId=row.hId %}"><button type="submit" class="favorite">收藏</button></a>
                 {% else %}
-                    <a id="del_favor" href="{% url 'del_favor' favourite_seq=row.favourite_seq %}"><button type="submit" class="favorite">取消收藏</button></a>
+                    <a id="del_favor" href="{% url 'del_favor' %}"><button type="submit" class="favorite">取消收藏</button></a>
                 {% endif %}
-{#                 <form method="post" action="{% url 'my_view' %}">#}
 {#                {% csrf_token %}#}
 {#                    <button type="submit" class="{% if button_clicked %}clicked-style{% else %}default-style{% endif %}">Click Me</button>#}
 {#                </form>#}
