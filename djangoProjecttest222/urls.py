@@ -43,7 +43,7 @@ urlpatterns = [
     path('delete_house/<str:hId>/', my_app.views.delete_house,name='delete_house'),
 
     #用戶中心
-    path('account_center/',my_app.views.account_center,name="account_center"),
+        path('account_center/',my_app.views.account_center,name="account_center"),
 
     #沒用的東西
     path('testing/',my_app.views.testing,name="testing"),
