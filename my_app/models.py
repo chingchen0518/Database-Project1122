@@ -166,6 +166,15 @@ class Owner(models.Model):
      class Meta:
         db_table = 'Owner'
 
+class Booking(models.Model):
+     booking_seq = models.AutoField(primary_key=True)
+     customer_id = models.ForeignKey(Member,on_delete=models.CASCADE,to_field='mId',auto_created=False,unique=False)
+     hId = models.ForeignKey(House, to_field='hId', auto_created=False, on_delete=models.CASCADE,unique=False)
+     date=models.DateField(null=True,blank=True)
+     time=models.TimeField(null=True,blank=True)
+
+     class Meta:
+        db_table = 'Booking'
 # class Photo(models.Model):
 #     image = models.ImageField(upload_to='image/', blank=False, null=False)
 #     upload_date = models.DateField(default=timezone.now)

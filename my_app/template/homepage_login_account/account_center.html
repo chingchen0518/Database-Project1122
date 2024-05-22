@@ -66,6 +66,9 @@
           <label for="history">
             <input type="radio" name="shuffle-filter" id="history" value="favourite">我的收藏
           </label>
+          <label for="booking">
+            <input type="radio" name="shuffle-filter" id="booking" value="booking">我的預約
+          </label>
         </div><!-- project filter end -->
 
 
@@ -89,18 +92,38 @@
           </div><!-- shuffle item  end -->
 
          <div class="col-lg-4 col-md-6 shuffle-item" data-groups="[&quot;favourite&quot;]">
-
              {% include 'elements/product_template.html' %}
-
           </div><!-- shuffle item  end -->
+
+        <div class="col-lg-4 col-md-6 shuffle-item" data-groups="[&quot;booking&quot;]">
+             <div class="booking_box">
+                <div class="info">
+                    <p>房子：李景臣的大房子</p>
+                    <p>預約者：李景臣</p>
+                    <p>日期：2021</p>
+                    <p>時間：3.30</p>
+                </div>
+                <form class="operation">
+                <div class="accept_and_reject">
+                    <a class="btn btn-primary accept_button">同意</a>
+                    <a class="btn btn-primary reject_button">拒絕</a>
+                </div>
+                        <select class="form-control situation" id="exampleFormControlSelect1">
+                          <option disabled selected>最新狀態</option>
+                          <option>已預約</option>
+                          <option>已同意</option>
+                          <option>已同意</option>
+                          <option>4</option>
+                          <option>5</option>
+                        </select>
+                    <input type="submit" class="btn btn-primary booking_situation_button" value="更新狀態">
+                </form>
+            </div>
+        </div><!-- shuffle item  end -->
         </div><!-- shuffle end -->
       </div>
 
-      <div class="col-12">
-        <div class="general-btn text-center">
-          <a class="btn btn-primary" href="projects.html">View All Projects</a>
-        </div>
-    </div>
+
   </div>
   <div class="tab-pane fade" id="nav-disabled" role="tabpanel" aria-labelledby="nav-disabled-tab" tabindex="0">
       <div>
