@@ -64,4 +64,5 @@ urlpatterns = [
     path('delete_comment/<str:hId>/<int:review_seq>', my_app.views.delete_comment, name='delete_comment'),
     # path('my_view/', my_app.views.my_view, name='my_view'),
     path('add_favor/<str:hId>/', my_app.views.add_favor, name='add_favor'),
+    path('del_favor/<int:favourite_seq>', my_app.views.del_favor, name='del_favor'),
 ]
