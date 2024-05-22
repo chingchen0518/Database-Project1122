@@ -546,11 +546,6 @@ def account_center(request):
 
     return render(request, "homepage_login_account/account_center.html", {'login': login, 'rows': Favourite, 'browse':browse})
 
-  login = 0
-        login_people = "0000"
-
-    return render(request, "house/house_sold.html",{"rows": rows[0], "image": image, "equipment": equipment[0], "seller": seller[0],"details": details[0], "login_people": login_people, "login": login, "review": review})
-
 def city_filter(request, city_id, status):
     if 'user' in request.session and 'mId' in request.session :
         login=1

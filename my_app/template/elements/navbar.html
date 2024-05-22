@@ -122,10 +122,11 @@
                                   </ul>
                           </li>
 
+
+                          {% if login == 1 %}
                             <a href="{% url 'account_center' %}">
                                <i  id="user_icon" class="bi bi-person bi-lg"></i>
                             </a>
-                          {% if login == 1 %}
                             {# Logout #}
                           <li class="nav-item dropdown">
                               <div class="call-to-action-btn">
