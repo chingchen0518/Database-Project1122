@@ -25,10 +25,7 @@
                 {% else %}
                    <a id="favor" href="{% url 'add_favor' hId=row.hId %}"><button type="submit" class="favorite">收藏</button></a>
                 {% endif %}
-{#                 <form method="post" action="{% url 'my_view' %}">#}
-{#                {% csrf_token %}#}
-{#                    <button type="submit" class="{% if button_clicked %}clicked-style{% else %}default-style{% endif %}">Click Me</button>#}
-{#                </form>#}
+              
                 <p class="price"><span>{{ row.price }}</span>元/月</p>   {# 房屋售價 #}
             </div>
         </a>
