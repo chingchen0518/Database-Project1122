@@ -136,12 +136,11 @@ def house_rent(request,hId):
     image = Image.objects.raw('SELECT path FROM Image WHERE Image.hId_id=%s', [hId])
     equipment = Equipment.objects.raw('SELECT * FROM Equipment WHERE Equipment.hId_id=%s', [hId])
     seller = Member.objects.raw('SELECT * FROM Member JOIN House ON House.mId_id=Member.mId WHERE House.hId=%s', [hId])
-    details = Rdetail.objects.raw('SELECT * FROM Rdetail WHERE Rdetail.hId_id=%s', [hId])
+    details = Rdetail.objects.raw('SELECT * FROM Rdetail WHERE hId_id=%s', (hId,))
 
     # Review Data
     review = Review.objects.raw('SELECT review_seq,text,attitude,environment,facilities,realname FROM Review,Member WHERE Review.hId_id=%s AND Review.mId_id = Member.mId',[hId])
 
-    print(details)
     if 'mId' in request.session and 'user' in request.session:
         login_people=request.session['mId']
         login=1
@@ -158,7 +157,7 @@ def house_rent(request,hId):
         login=0
         login_people="0000"
     # print(login)
-    return render(request, "house/house_rent.html", {"rows":rows[0], "image":image, "equipment":equipment[0], "seller":seller[0],  "details":details,"login_people":login_people, "login":login,"review":review})
+    return render(request, "house/house_rent.html", {"rows":rows[0], "image":image, "equipment":equipment[0], "seller":seller[0],  "details":details[0],"login_people":login_people, "login":login,"review":review})
 
 def search_test(request):
     keyword = request.POST['keyword']
