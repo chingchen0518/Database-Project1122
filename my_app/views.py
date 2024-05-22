@@ -136,12 +136,11 @@ def house_rent(request,hId):
     image = Image.objects.raw('SELECT path FROM Image WHERE Image.hId_id=%s', [hId])
     equipment = Equipment.objects.raw('SELECT * FROM Equipment WHERE Equipment.hId_id=%s', [hId])
     seller = Member.objects.raw('SELECT * FROM Member JOIN House ON House.mId_id=Member.mId WHERE House.hId=%s', [hId])
-    details = Rdetail.objects.raw('SELECT * FROM Rdetail WHERE Rdetail.hId_id=%s', [hId])
+    details = Rdetail.objects.raw('SELECT * FROM Rdetail WHERE hId_id=%s', (hId,))
 
     # Review Data
     review = Review.objects.raw('SELECT review_seq,text,attitude,environment,facilities,realname FROM Review,Member WHERE Review.hId_id=%s AND Review.mId_id = Member.mId',[hId])
 
-    print(details)
     if 'mId' in request.session and 'user' in request.session:
         login_people=request.session['mId']
         login=1
@@ -158,7 +157,7 @@ def house_rent(request,hId):
         login=0
         login_people="0000"
     # print(login)
-    return render(request, "house/house_rent.html", {"rows":rows[0], "image":image, "equipment":equipment[0], "seller":seller[0],  "details":details,"login_people":login_people, "login":login,"review":review})
+    return render(request, "house/house_rent.html", {"rows":rows[0], "image":image, "equipment":equipment[0], "seller":seller[0],  "details":details[0],"login_people":login_people, "login":login,"review":review})
 
 def search_test(request):
     keyword = request.POST['keyword']
@@ -172,25 +171,40 @@ def search_test(request):
 #endregion
 
 #region Part 4：新增、刪除、修改
-class HouseDeleteView(DeleteView):
-    model = House
-    success_url = reverse_lazy("house_lists")
-    template_name = 'add_renew_delete/delete.html' #之後加一個取消
-    pk_url_kwarg = 'hId' #告訴他用url中的哪個東西作爲primary_key
+def delete_house(request,hId):
+    image_paths = Image.objects.raw('SELECT path FROM Image WHERE hId_id=%s', [hId])
 
-    def delete(self, request, *args, **kwargs):
-        # 获取即将删除的对象
-        hId = kwargs.get(self.pk_url_kwarg)
-
-        image_paths=Image.objects.raw('SELECT path FROM Image WHERE hId=%s', [hId])
-        print(image_paths)
-
-        for img_path in image_paths:
-            file_path = f'my_app/static/img/house/{img_path}'
+    # Delete the actual image from server
+    for img_path in image_paths:
+        file_path = f'my_app/static/img/house/{img_path.path}'
+        if os.path.isfile(file_path):
             os.remove(file_path)
 
-        response = super().delete(request, *args, **kwargs)
-        return response
+    # Delete the house
+    houses_to_delete = House.objects.filter(hId=hId)
+
+    return redirect('house_lists')
+
+# class HouseDeleteView(DeleteView):
+#     model = House
+#     success_url = reverse_lazy("house_lists")
+#     template_name = 'add_renew_delete/delete.html' #之後加一個取消
+#     pk_url_kwarg = 'hId' #告訴他用url中的哪個東西作爲primary_key
+#
+#     def delete(self, request, *args, **kwargs):
+#         # 获取即将删除的对象
+#         hId = kwargs.get(self.pk_url_kwarg)
+#
+#         image_paths=Image.objects.raw('SELECT path FROM Image WHERE hId=%s', [hId])
+#         print("satu dua tiga")
+#         print(image_paths)
+#
+#         for img_path in image_paths:
+#             file_path = f'my_app/static/img/house/{img_path}'
+#             os.remove(file_path)
+#
+#         response = super().delete(request, *args, **kwargs)
+#         return response
 
 
 def upload_page(request):
@@ -410,6 +424,7 @@ def upload_image(request):
 #         form = ImageUploadForm()
 #     return render(request, 'testimage.html', {'form': form})
 #
+
 def delete_comment(request,hId,review_seq):
     with connection.cursor() as cursor:
         cursor.execute('DELETE FROM Review WHERE review_seq= %s', (review_seq,))
