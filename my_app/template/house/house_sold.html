@@ -112,81 +112,6 @@
 
 
 
-            <!--評價-->
-            {% if login %}
-            <div class="comments-form border-box" id="rate">
-                <h3 class="title-normal">新增評論</h3>
-
-                <form role="form" method="post" action="{% url 'add_comment' hId=rows.hId %}">
-                    {% csrf_token %}
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="message"><textarea class="form-control required-field" id="message" name="comment_message" placeholder="您的評論..." rows="10" required></textarea></label>
-                            </div>
-                        </div><!-- Col 12 end -->
-
-                        <div class="col-md-4" id="en_rate">
-                            <div class="form-group">
-                              <p>環境評分</p>
-                              <div>
-                                  <input type="radio" id="en1" name="comment_environment" value="1" required>
-                                  <label for="en1">1</label>
-                                  <input type="radio" id="en2" name="comment_environment" value="2">
-                                  <label for="en2">2</label>
-                                  <input type="radio" id="en3" name="comment_environment" value="3">
-                                  <label for="en3">3</label>
-                                  <input type="radio" id="en4" name="comment_environment" value="4">
-                                  <label for="en4">4</label>
-                                  <input type="radio" id="en5" name="comment_environment" value="5">
-                                  <label for="en5">5</label>
-                              </div>
-                            </div>
-                        </div><!-- Col 4 end -->
-
-                        <div class="col-md-4" id="att_rate">
-                            <div class="form-group">
-                                <p>態度評分</p>
-                                <div>
-                                    <input type="radio" id="att1" name="comment_attitude" value="1" required>
-                                    <label for="att1">1</label>
-                                    <input type="radio" id="att2" name="comment_attitude" value="2">
-                                    <label for="att2">2</label>
-                                    <input type="radio" id="att3" name="comment_attitude" value="3">
-                                    <label for="att3">3</label>
-                                    <input type="radio" id="att4" name="comment_attitude" value="4">
-                                    <label for="att4">4</label>
-                                    <input type="radio" id="att5" name="comment_attitude" value="5">
-                                    <label for="att5">5</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4" id="fa_rate">
-                            <div class="form-group">
-                                <p>設備評分</p>
-                                <div>
-                                    <input type="radio" id="fa1" name="comment_facilities" value="1" required>
-                                    <label for="fa1">1</label>
-                                    <input type="radio" id="fa2" name="comment_facilities" value="2">
-                                    <label for="fa2">2</label>
-                                    <input type="radio" id="fa3" name="comment_facilities" value="3">
-                                    <label for="fa3">3</label>
-                                    <input type="radio" id="fa4" name="comment_facilities" value="4">
-                                    <label for="fa4">4</label>
-                                    <input type="radio" id="fa5" name="comment_facilities" value="5">
-                                    <label for="fa5">5</label>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div><!-- Form row end -->
-                    <div class="clearfix">
-                        <button class="btn btn-primary" type="submit" aria-label="post-comment">送出評論</button>
-                    </div>
-                </form><!-- Form end -->
-            </div><!-- Comments form end -->
-            {% endif %}
             </div><!-- Quote item end -->
 
 
@@ -224,29 +149,10 @@
 
           <div class="gap-40"></div>
 
-          <div id="equipment" class="equipment">
-            <div class="equipment_row">
-                <img src="{% static '/img/equipment/bed.png' %}" class="equ_img {% if equipment.bed == 0 %}equ_img_no{% endif %}" alt="bed">
-                <img src="{% static '/img/equipment/closet.png' %}" class="equ_img  {% if equipment.cabinet == 0  %}equ_img_no{% endif %}" alt="cabinet">
-                <img src="{% static '/img/equipment/cold.png' %}" class="equ_img {% if equipment.aircond == 0  %}equ_img_no{% endif %}" alt="cold">
-                <img src="{% static '/img/equipment/fourth.png' %}" class="equ_img {% if equipment.channel4 == 0  %}equ_img_no{% endif %}" alt="fourth">
-                <img src="{% static '/img/equipment/fridge.png' %}" class="equ_img {% if equipment.refrigerator == 0  %}equ_img_no{% endif %}" alt="fridge">
-                <img src="{% static '/img/equipment/gas.png' %}" class="equ_img {% if equipment.gas == 0  %}equ_img_no{% endif %}" alt="gas">
-            </div>
-            <div class="equipment_row">
-                <img src="{% static '/img/equipment/heater.png' %}" class="equ_img {% if equipment.hot_water == 0  %}equ_img_no{% endif %}" alt="heater">
-                <img src="{% static '/img/equipment/sofa.png' %}" class="equ_img {% if equipment.sofa == 0  %}equ_img_no{% endif %}" alt="sofa">
-                <img src="{% static '/img/equipment/tv.png' %}" class="equ_img {% if equipment.table == 0  %}equ_img_no{% endif %}" alt="tv">
-                <img src="{% static '/img/equipment/washer.png'%}" class="equ_img {% if equipment.wash_machine == 0  %}equ_img_no{% endif %}" alt="washer">
-                <img src="{% static '/img/equipment/net.png'%}" class="equ_img {% if equipment.wifi == 0  %}equ_img_no{% endif %}" alt="wifi">
-            </div>
-          </div>
-
           <div>
               <ul id="details">
                   <li>
                       <div><span>屋齡:</span>{{ details.age}}</div>
-                      <div><span>租期:</span>{{ details.period}}</div>
                       <div><span>樓層:</span>{{ details.level}}</div>
                       <div><span>朝向:</span>{{ details.direction}}</div>
                   </li>
@@ -293,69 +199,6 @@
               </ul>
           </div>
 
-          <div id="comments" class="comments-area">
-          <h3 class="comments-heading">7 條評論</h3>
-
-          <ul class="comments-list">
-            <li>
-            <!-- One Comments Start -->
-            {% for i in review %}
-              <div class="comment d-flex">
-                <img loading="lazy" class="comment-avatar" alt="author" src="{% static '/img/liudehua.png' %}">
-                <div class="comment-body">
-                  <div class="meta-data">
-                    <span class="comment-author mr-3">{{ i.realname }}</span>
-{#                    <span class="comment-date float-right">1999年2月30日</span>#}
-                  </div>
-                  <div class="star">
-                      <span>環境:{{ i.environment }}</span>
-                      <span>態度:{{ i.attitude }}</span>
-                      <span>設備:{{ i.facilities }}</span>
-                  </div>
-                  <div class="comment-content">
-                    <p>{{ i.text }}</p>
-                  </div>
-{#                  <div class="text-left">#}
-{#                    <a class="comment-reply font-weight-bold" href="#">Reply</a>#}
-{#                  </div>#}
-                </div>
-                {% if login_people == i.mId_id %}
-                <div id="del">
-                    <a href="{% url 'delete_comment' hId=rows.hId review_seq=i.review_seq %}">刪除</a>
-                </div>
-                {% endif %}
-              </div>
-
-            <!-- One Comments end -->
-            {% endfor %}
-
-
-
-
-
-
-{#              <ul class="comments-reply">#}
-{#                <li>#}
-{#                  <div class="comment d-flex">#}
-{#                    <img loading="lazy" class="comment-avatar" alt="author" src="{% static '/img/liudehua.png' %}">#}
-{#                    <div class="comment-body">#}
-{#                      <div class="meta-data">#}
-{#                        <span class="comment-author mr-3">劉德華</span>#}
-{#                        <span class="comment-date float-right">1999年2月30日</span>#}
-{#                      </div>#}
-{#                      <div class="comment-content">#}
-{#                        <p> 我有賣減肥藥</p>#}
-{#                      </div>#}
-{#                      <div class="text-left">#}
-{#                        <a class="comment-reply font-weight-bold" href="#">Reply</a>#}
-{#                      </div>#}
-{#                    </div>#}
-{#                  </div><!-- Comments end -->#}
-{#                </li>#}
-{#              </ul><!-- comments-reply end -->#}
-            </li><!-- Comments-list li end -->
-          </ul><!-- Comments-list ul end -->
-        </div><!-- Post comment end -->
 
 {#          <div class="row">#}
 {#            <div class="col-md-6">#}
