@@ -8,7 +8,7 @@ from django.views.generic import DeleteView
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Max
 import os
-
+from django.db.models import Count
 
 
 import datetime
@@ -105,23 +105,65 @@ def house_list(request):
         login=0
 
     # 如果有search東西
+    member = request.session['mId']
     if 'keyword' in request.POST:
         keyword = request.POST['keyword']
 
         rows = House.objects.raw('SELECT * FROM House,Info WHERE Info.address LIKE %s AND House.hId=Info.hId_id',
                                  ['%' + keyword + '%'])
+        # login_favor=Favourite.objects.raw('SELECT * FROM Favourite WHERE mId_id=%s',[member])
+        # rows_outer_join = House.objects.raw('SELECT * FROM (%s) AS House_Info LEFT OUTER JOIN (%s) AS Favor ON House_Info.hId = Favor.hId_id', [rows.query, login_favor.query])
+        with connection.cursor() as cursor:
+            cursor.execute('''
+                SELECT House_Info.*, Favor.*
+                FROM (
+                    SELECT House.*, Info.* 
+                    FROM House 
+                    JOIN Info ON House.hId = Info.hId_id
+                    WHERE Info.address LIKE %s
+                ) AS House_Info 
+                LEFT OUTER JOIN (
+                    SELECT * 
+                    FROM Favourite 
+                    WHERE mId_id = %s
+                ) AS Favor 
+                ON House_Info.hId = Favor.hId_id
+            ''', ['%' + keyword + '%', member])
+
+            rows_outer_join = cursor.fetchall()
         if rows:
             print("123456789")
         else:
             print("avassaf")
 
-        return render(request, "house/house_list.html", {'rows': rows, 'numbers': len(rows),'login':login})
+        return render(request, "house/house_list.html", {'numbers': len(rows),'login':login,'rows_outer_join': rows_outer_join})
 
         # 如果沒有search
     else:
         rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId LIKE %s AND House.hId=Info.hId_id',
                                  ['KH%'])
-        return render(request, "house/house_list.html", {'rows': rows, 'numbers': len(rows),'login':login})
+        # login_favor = Favourite.objects.raw('SELECT * FROM Favourite WHERE mId_id=%s', [member])
+        # rows_outer_join = House.objects.raw('SELECT * FROM (%s) AS House_Info LEFT OUTER JOIN (%s) AS Favor ON House_Info.hId = Favor.hId_id',[rows.query, login_favor.query])
+        with connection.cursor() as cursor:
+            cursor.execute('''
+                SELECT House_Info.*, Favor.*
+                FROM (
+                    SELECT House.*, Info.* 
+                    FROM House 
+                    JOIN Info ON House.hId = Info.hId_id
+                    WHERE Info.address LIKE %s
+                ) AS House_Info 
+                LEFT OUTER JOIN (
+                    SELECT * 
+                    FROM Favourite 
+                    WHERE mId_id = %s
+                ) AS Favor 
+                ON House_Info.hId = Favor.hId_id
+            ''', ['KH%', member])
+
+            rows_outer_join = cursor.fetchall()
+
+        return render(request, "house/house_list.html", {'numbers': len(rows),'login':login,'rows_outer_join': rows_outer_join})
 
 def house_rent_cont(request,hId):
     rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId=%s AND House.hId=Info.hId_id', [hId])
@@ -412,7 +454,7 @@ def upload_image(request):
 #
 def delete_comment(request,hId,review_seq):
     with connection.cursor() as cursor:
-        cursor.execute('DELETE FROM Review WHERE review_seq= %s', (review_seq,))
+        cursor.execute('DELETE FROM Review WHERE review_seq= %s', (review_seq))
     house = f'/house_rent/{hId}'
     return redirect(house)
 
@@ -433,5 +475,12 @@ def add_favor(request,hId):
     member = request.session['mId']
     with connection.cursor() as cursor:
         cursor.execute('INSERT INTO Favourite VALUES (%s, %s, %s)',(latest_favourite_seq, hId, member))
+
+    return redirect('/house_list/')
+
+def del_favor(request,favourite_seq):
+    member = request.session['mId']
+    with connection.cursor() as cursor:
+        cursor.execute('DELETE FROM Favourite WHERE favourite_seq= %s', (favourite_seq))
 
     return redirect('/house_list/')
