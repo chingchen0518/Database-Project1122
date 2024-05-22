@@ -42,6 +42,7 @@
 #edit_button_a,#delete_button_a{
     background-color: black;
     color:white;
+    border:black;
 }
 
 #edit_button_a:hover{
