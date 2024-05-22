@@ -85,15 +85,33 @@
                 <a id="edit_button_a"class="btn btn-primary" href="{% url 'edit_page' hId=rows.hId %}">編輯我的房子</a>
               </div>
 
-             <div id="delete_button" class="call-to-action-btn">
-                <a href="{% url 'delete_house' hId=rows.hId %}" id="delete_button_a"class="btn btn-primary">刪除</a>
-              </div>
+            <div id="delete_button" class="call-to-action-btn">
+                <button data-toggle="modal" data-target="#deleteConfirmModal" id="delete_button" class="btn btn-primary">刪除</button>
+            </div>
+
+            <!--刪除確認欄-->
+            <div class="modal" id="deleteConfirmModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header"><span id="delete_title">刪除{{ rows.title }}</span></div>
+                        <div class="modal-body">這還是最後的告別，確定要要删除{{ rows.title }}吗？</div>
+                        <div class="modal-footer">
+                            <button class="btn" id="delete_no" data-dismiss="modal">不了，我慫了</button>
+                            <a style="padding-bottom:5px;" href="{% url 'delete_house' hId=rows.hId %}"><button class="btn" id="delete_yes">去吧，此後不再見</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {% else %}
             <!-- 收藏-->
               <div id="favourite" class="call-to-action-btn">
-                <a id="favourite_a"class="btn btn-primary" href="">加入收藏</a>
+                <a id="favourite_a" class="btn btn-primary" href="">加入收藏</a>
               </div>
             {% endif %}
+
+
+
             <!--評價-->
             {% if login %}
             <div class="comments-form border-box" id="rate">
