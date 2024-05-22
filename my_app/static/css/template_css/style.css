@@ -1044,14 +1044,14 @@ ul.navbar-nav > li > div > a{
 .dropdown-menu li a {
   font-family: "Montserrat", sans-serif;
   display: block;
-  font-size: 12px;
+  font-size: 14px;
   text-transform: uppercase;
   font-weight: 700;
   line-height: normal;
   text-decoration: none;
   padding: 15px 0;
   letter-spacing: 0.3px;
-  border-bottom: 1px solid #e5e5e5;
+  /*border-bottom: 1px solid #e5e5e5;*/
   color: #333333;
 }
 @media (max-width: 991px) {
@@ -3368,3 +3368,19 @@ label {
   width: 50px;
   margin-right: 30px;
 }
+
+.dropdown-menu ul{
+  width: 550px;
+  display: flex;
+  align-items: center;
+  padding: 0px 20px;
+}
+
+.dropdown-menu p{
+  margin: 0px;
+}
+
+.dropdown-menu li{
+  margin: 0px 12px;
+}
+

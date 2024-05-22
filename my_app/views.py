@@ -462,6 +462,7 @@ def add_favor(request,hId):
 
 def del_favor(request,favourite_seq):
 
+    member = request.session['mId']
     with connection.cursor() as cursor:
         cursor.execute('DELETE FROM Favourite WHERE favourite_seq= %s', (favourite_seq,))
     
@@ -482,14 +483,14 @@ def house_list_sold(request):
         rows = House.objects.raw('SELECT * FROM House,Info WHERE Info.address LIKE %s AND House.hId=Info.hId_id  AND House.status=1',
                                  ['%' + keyword + '%'])
 
-        return render(request, "house/house_list.html", {'numbers': len(rows),'login':login,'rows': rows})
+        return render(request, "house/house_list_sold.html", {'numbers': len(rows),'login':login,'rows': rows})
 
         # 如果沒有search
     else:
         rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId=Info.hId_id AND House.status=1')
         
 
-        return render(request, "house/house_list.html", {'numbers': len(rows),'login':login,'rows': rows})
+        return render(request, "house/house_list_sold.html", {'numbers': len(rows),'login':login,'rows': rows})
 
 def house_sold(request, hId):
     # House Data
@@ -501,9 +502,7 @@ def house_sold(request, hId):
     details = Sdetail.objects.raw('SELECT * FROM Sdetail WHERE hId_id=%s', (hId,))
 
     # Review Data
-    review = Review.objects.raw(
-    'SELECT review_seq,text,attitude,environment,facilities,realname FROM Review,Member WHERE Review.hId_id=%s AND Review.mId_id = Member.mId',
-        [hId])
+    review = Review.objects.raw('SELECT review_seq,text,attitude,environment,facilities,realname FROM Review,Member WHERE Review.hId_id=%s AND Review.mId_id = Member.mId',[hId])
 
     if 'mId' in request.session and 'user' in request.session:
             login_people = request.session['mId']
@@ -546,3 +545,25 @@ def account_center(request):
             ''',(member,))
 
     return render(request, "homepage_login_account/account_center.html", {'login': login, 'rows': Favourite, 'browse':browse})
+
+  login = 0
+        login_people = "0000"
+
+    return render(request, "house/house_sold.html",{"rows": rows[0], "image": image, "equipment": equipment[0], "seller": seller[0],"details": details[0], "login_people": login_people, "login": login, "review": review})
+
+def city_filter(request, city_id, status):
+    if 'user' in request.session and 'mId' in request.session :
+        login=1
+    else:
+        login=0
+
+    if status==0:
+        rows = House.objects.raw(
+            'SELECT * FROM House,Info WHERE House.region=%s AND House.hId=Info.hId_id AND House.status=0',
+            [city_id])
+        return render(request, "house/house_list.html", {'numbers': len(rows), 'login': login, 'rows': rows})
+    else:
+        rows = House.objects.raw(
+            'SELECT * FROM House,Info WHERE House.region=%s AND House.hId=Info.hId_id  AND House.status=1',
+            [city_id])
+        return render(request, "house/house_list_sold.html", {'numbers': len(rows),'login':login,'rows': rows})
