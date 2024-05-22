@@ -69,4 +69,5 @@ urlpatterns = [
     path('add_favor/<str:hId>/', my_app.views.add_favor, name='add_favor'),
     path('del_favor/<int:favourite_seq>', my_app.views.del_favor, name='del_favor'),
     path('city_filter/<int:city_id>/<int:status>/', my_app.views.city_filter, name='city_filter'),
+    path('add_appointment/<str:hId>/', my_app.views.add_appointment, name='add_appointment'),
 ]

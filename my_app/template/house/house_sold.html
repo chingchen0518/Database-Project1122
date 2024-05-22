@@ -116,9 +116,23 @@
 
 
           </div><!-- Widget end -->
+          <div>
+            <form action="{% url 'add_appointment' hId=rows.hId %}" method="post" class="appointment">
+                {% csrf_token %}
+                <label for="date">預約日期</label>
+                <input type="date" id="date" name="date" required>
 
+                <label for="time">預約時間</label>
+                <input type="time" id="time" name="time" required>
+
+                <input class="btn btn-primary" type="submit" value="點我預約!!">
+            </form>
+          </div>
         </div><!-- Sidebar end -->
+
       </div><!-- Sidebar Col end -->
+
+
 
       <div class="col-xl-8 col-lg-8">
         <div class="content-inner-page">

@@ -520,7 +520,7 @@ def house_sold(request, hId):
             login = 0
             login_people = "0000"
         # print(login)
-    return render(request, "house/house_rent.html",
+    return render(request, "house/house_sold.html",
                       {"rows": rows[0], "image": image, "equipment": equipment[0], "seller": seller[0],
                        "details": details[0], "login_people": login_people, "login": login, "review": review})
 
@@ -562,3 +562,21 @@ def city_filter(request, city_id, status):
             'SELECT * FROM House,Info WHERE House.region=%s AND House.hId=Info.hId_id  AND House.status=1',
             [city_id])
         return render(request, "house/house_list_sold.html", {'numbers': len(rows),'login':login,'rows': rows})
+
+def add_appointment(request,hId):
+    date = request.POST['date']
+    time = request.POST['time']
+    member = request.session['mId']
+
+    latest_booking_seq = Booking.objects.aggregate(Max('booking_seq'))['booking_seq__max']
+    if latest_booking_seq:
+        latest_booking_seq = latest_booking_seq + 1
+    else:
+        latest_booking_seq = 1
+    #
+    with connection.cursor() as cursor:
+        cursor.execute('INSERT INTO Booking VALUES (%s, %s, %s, %s, %s)',
+                       (latest_booking_seq, date, time, member, hId))
+
+    house = f'/house_rent/{hId}'
+    return redirect(house)
