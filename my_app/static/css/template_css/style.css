@@ -3384,3 +3384,12 @@ label {
   margin: 0px 12px;
 }
 
+.appointment{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.appointment label,.appointment input{
+  margin: 5px 3px;
+}
