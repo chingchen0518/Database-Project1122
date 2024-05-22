@@ -15,7 +15,7 @@ import datetime
 
 
 #引入 Table
-from my_app.models import Member, House, Image, Equipment, User, Member, Browse, Review, Rdetail, Favourite, Sdetail
+from my_app.models import Member, House, Image, Equipment, User, Member, Browse, Review, Rdetail, Favourite, Sdetail,Booking
 
 
 #endregion 引入 Table結束
