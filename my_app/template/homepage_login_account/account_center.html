@@ -66,8 +66,11 @@
           <label for="history">
             <input type="radio" name="shuffle-filter" id="history" value="favourite">我的收藏
           </label>
-          <label for="booking">
-            <input type="radio" name="shuffle-filter" id="booking" value="booking">我的預約
+          <label for="booking_seller">
+            <input type="radio" name="shuffle-filter" id="booking_seller" value="booking_seller">我的預約（我是房東）
+          </label>
+        <label for="booking_customer">
+            <input type="radio" name="shuffle-filter" id="booking_customer" value="booking_customer">我的預約（我是房客）
           </label>
         </div><!-- project filter end -->
 
@@ -75,49 +78,88 @@
         <div class="row shuffle-wrapper">
           <div class="col-1 shuffle-sizer"></div>
 
+          <!-- personal_information -->
           <div class="col-lg-4 col-md-6 shuffle-item" data-groups="[&quot;personal_information&quot;]">
             <p>1234</p>
               <p>5678   </p>
           </div><!-- shuffle item  end -->
 
+          <!-- personal_verify -->
           <div class="col-lg-4 col-md-6 shuffle-item" data-groups="[&quot;personal_verify&quot;]">
             <p>1234</p>
-              <p>5678   </p>
+              <p>5678</p>
           </div><!-- shuffle item  end -->
 
+        <!-- browse -->
          <div class="col-lg-4 col-md-6 shuffle-item" data-groups="[&quot;browse&quot;]" style="width:100%;">
               {% with rows=browse %}
                 {% include 'elements/product_template.html' %}
             {% endwith %}
           </div><!-- shuffle item  end -->
 
+        <!-- favourite -->
          <div class="col-lg-4 col-md-6 shuffle-item" data-groups="[&quot;favourite&quot;]">
              {% include 'elements/product_template.html' %}
           </div><!-- shuffle item  end -->
 
-        <div class="col-lg-4 col-md-6 shuffle-item" data-groups="[&quot;booking&quot;]">
-             <div class="booking_box">
+        <!-- booking_seller -->
+        <div class="col-lg-4 col-md-6 shuffle-item" data-groups="[&quot;booking_seller&quot;]">
+             <!-- 一個booking_box表示一個booking -->
+            {% for book in booking_seller %}
+            <div class="booking_box">
                 <div class="info">
-                    <p>房子：李景臣的大房子</p>
-                    <p>預約者：李景臣</p>
-                    <p>日期：2021</p>
-                    <p>時間：3.30</p>
+                    <p><span class="bold">房子：</span>{{ book.title }}</p>
+                    <p><span class="bold">預約者：</span>{{ book.realname }}</p>
+                    <p><span class="bold">日期：</span>{{ book.date }}</p>
+                    <p><span class="bold">時間：</span>{{ book.time }}</p>
                 </div>
-                <form class="operation">
-                <div class="accept_and_reject">
-                    <a class="btn btn-primary accept_button">同意</a>
-                    <a class="btn btn-primary reject_button">拒絕</a>
-                </div>
-                        <select class="form-control situation" id="exampleFormControlSelect1">
-                          <option disabled selected>最新狀態</option>
-                          <option>收到預約</option>
-                          <option>已同意看房</option>
-                          <option>已成交</option>
-                          <option>已取消</option>
-                        </select>
+
+                <form class="operation" action="{% url 'renew_booking' booking_seq=book.booking_seq %}">
+                    <div class="accept_and_reject">
+                        <a class="btn btn-primary accept_button {% if book.situation == "已成交" %}button-disabled{% endif %}" href="{% url 'accept_booking' booking_seq=book.booking_seq %}">同意</a>
+                        <a class="btn btn-primary reject_button {% if book.situation == "已成交" %}button-disabled{% endif %}" href="{% url 'reject_booking' booking_seq=book.booking_seq %}">拒絕</a>
+                    </div>
+
+                    <select class="form-control situation" id="exampleFormControlSelect1" name="booking_renew">
+                        <option {% if book.situation == "未確認" %}selected{% endif %} value="未確認">未確認</option>
+                        <option {% if book.situation == "同意看房" %}selected{% endif %} value="同意看房">同意看房</option>
+                        <option {% if book.situation == "已成交" %}selected{% endif %} value="已成交">已成交</option>
+                    </select>
+
                     <input type="submit" class="btn btn-primary booking_situation_button" value="更新狀態">
                 </form>
             </div>
+            {% endfor %}
+        </div><!-- shuffle item  end -->
+
+            <!-- booking_customer -->
+        <div class="col-lg-4 col-md-6 shuffle-item" data-groups="[&quot;booking_customer&quot;]">
+             <!-- 一個booking_box表示一個booking -->
+            {% for book in booking_customer %}
+            <div class="booking_box">
+                <div class="info">
+                    <p><span class="bold">房子：</span>{{ book.title }}</p>
+                    <p><span class="bold">日期：</span>{{ book.date }}</p>
+                    <p><span class="bold">時間：</span>{{ book.time }}</p>
+                </div>
+
+{#                <form class="operation" action="{% url 'renew_booking' booking_seq=book.booking_seq %}">#}
+{#                    <div class="accept_and_reject">#}
+{#                        <a class="btn btn-primary accept_button {% if book.situation == "已成交" %}button-disabled{% endif %}" href="{% url 'accept_booking' booking_seq=book.booking_seq %}">同意</a>#}
+{#                        <a class="btn btn-primary reject_button {% if book.situation == "已成交" %}button-disabled{% endif %}" href="{% url 'reject_booking' booking_seq=book.booking_seq %}">拒絕</a>#}
+{#                    </div>#}
+{##}
+{#                    <select class="form-control situation" id="exampleFormControlSelect1" name="booking_renew">#}
+{#                        <option {% if book.situation == "未確認" %}selected{% endif %} value="未確認">未確認</option>#}
+{#                        <option {% if book.situation == "同意看房" %}selected{% endif %} value="同意看房">同意看房</option>#}
+{#                        <option {% if book.situation == "已成交" %}selected{% endif %} value="已成交">已成交</option>#}
+{#                    </select>#}
+{##}
+{#                    <input type="submit" class="btn btn-primary booking_situation_button" value="更新狀態">#}
+{#                </form>#}
+            </div>
+            {% endfor %}
+
         </div><!-- shuffle item  end -->
         </div><!-- shuffle end -->
       </div>
