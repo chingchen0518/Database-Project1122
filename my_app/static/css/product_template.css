@@ -4,6 +4,18 @@
     margin-bottom: 20px;
 }
 
+.product_out{
+    margin-left: 40px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+.button-disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
 .product img{
     float: left;
     width: 270px;

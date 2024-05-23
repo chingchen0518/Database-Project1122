@@ -4,11 +4,11 @@
 
 
 {% for row in rows %}
-    <div id="thing" class="product">
+    <div id="thing" class="{% if row.available == 1 %}product{% else %}product_out{% endif %}">
         {% if row.status == 0 %}
-            <a class="template" href="{% url 'house_rent' hId=row.hId %}">
+            <a class="{% if row.available == 1 %}template{% else %}button-disabled{% endif %}" href="{% url 'house_rent' hId=row.hId %}">
         {% else %}
-            <a class="template" href="{% url 'house_sold' hId=row.hId %}">
+            <a class="{% if row.available == 1 %}template{% else %}button-disabled{% endif %}" href="{% url 'house_sold' hId=row.hId %}">
         {% endif %}
             <img src="{%static '/img/house/'|add:row.hId|add:'-2.jpg' %}" alt="house">  {# 房屋照片 #}
             <div class="detail">
@@ -25,9 +25,9 @@
                     <li class="bath">{{ row.bath }}衛浴</li>  {# 幾衛浴 #}
                 </ul>
                 {% if row.favourite_seq %}
-                   <a id="del_favor" href="{% url 'del_favor' favourite_seq=row.favourite_seq %}"><button type="submit" class="favorite">取消收藏</button></a>
+                   <a id="del_favor" href="{% url 'del_favor' favourite_seq=row.favourite_seq hId=row.hId %}"><button type="submit" class="favorite">取消收藏</button></a>
                 {% else %}
-                   <a id="favor" href="{% url 'add_favor' hId=row.hId %}"><button type="submit" class="favorite">收藏</button></a>
+                   <a id="favor" class="{% if row.available == 1 %}{% else %}button-disabled{% endif %}" href="{% url 'add_favor' hId=row.hId %}"><button type="submit" class="favorite">收藏</button></a>
                 {% endif %}
               
                 <p class="price"><span>{{ row.price }}</span>元/月</p>   {# 房屋售價 #}
