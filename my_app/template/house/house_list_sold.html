@@ -68,10 +68,9 @@
             <div class="yc_search_results">
                 <p id="yc_amount">已為您找到<span> {{ numbers }} </span>間房屋</p>    {# 搜尋到符合條件的房屋數量 #}
                 <ul id="yc_switch_way">    {# 列表排序方式 #}
-                    <li>預設</li>
-                    <li>最新</li>
-                    <li>價格</li>
-                    <li>坪數</li>
+                    <li><a href="{% url 'house_lists_sold' %}?index=0">最新</a></li>
+                    <li><a href="{% url 'house_lists_sold' %}?index=1">價格</a></li>
+                    <li><a href="{% url 'house_lists_sold' %}?index=2">坪數</a></li>
                 </ul>
             </div>
             <div id="yc_content_R">

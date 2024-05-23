@@ -107,16 +107,33 @@ def house_list(request):
         member="000"
 
     # 如果有search東西
+    if 'index' in request.GET:
+        index = int(request.GET['index'])
+    else:
+        index=0
 
+    my_list = ["renewdate", "price", "size"]
+    order_by_field = my_list[index]  # 获取列表中的第一个元素作为排序字段
 
     if 'keyword' in request.POST:
         keyword = request.POST['keyword']
 
-       
-        rows = House.objects.raw('''SELECT * FROM Info JOIN House ON Info.hId_id=House.hId AND House.status=0 AND House.available=1 LEFT OUTER JOIN
-                                        (SELECT * FROM Favourite WHERE Favourite.mId_id=%s) f
-                                    ON f.hId_id=hId WHERE Info.address LIKE %s;
-                                    ''',(member,'%' + keyword + '%'))
+        query = '''
+                    SELECT * FROM Info 
+                    JOIN House ON Info.hId_id=House.hId 
+                    AND House.status=0 
+                    AND House.available=1 
+                    LEFT OUTER JOIN (
+                        SELECT * FROM Favourite WHERE Favourite.mId_id=%s
+                    ) f ON f.hId_id=House.hId WHERE Info.address LIKE %s
+                    ORDER BY Info.%s;  -- 使用字符串格式化将排序字段替换为变量
+                '''
+
+        rows = House.objects.raw(query % (member,'%' + keyword + '%', order_by_field))  # 将变量插入SQL查询中并执行
+        # rows = House.objects.raw('''SELECT * FROM Info JOIN House ON Info.hId_id=House.hId AND House.status=0 AND House.available=1 LEFT OUTER JOIN
+        #                                 (SELECT * FROM Favourite WHERE Favourite.mId_id=%s) f
+        #                             ON f.hId_id=hId WHERE Info.address LIKE %s ;
+        #                             ''',(member,'%' + keyword + '%', ))
         numbers = len(list(rows))  # 转换为列表再计数
 
 
@@ -124,11 +141,22 @@ def house_list(request):
 
         # 如果沒有search
     else:
-        
-        rows = House.objects.raw('''SELECT * FROM Info JOIN House ON Info.hId_id=House.hId AND House.status=0 AND House.available=1 LEFT OUTER JOIN
-                                                (SELECT * FROM Favourite WHERE Favourite.mId_id=%s) f
-                                            ON f.hId_id=hId;
-                                            ''',[member])
+        query = '''
+            SELECT * FROM Info 
+            JOIN House ON Info.hId_id=House.hId 
+            AND House.status=0 
+            AND House.available=1 
+            LEFT OUTER JOIN (
+                SELECT * FROM Favourite WHERE Favourite.mId_id=%s
+            ) f ON f.hId_id=House.hId 
+            ORDER BY Info.%s;  -- 使用字符串格式化将排序字段替换为变量
+        '''
+
+        rows = House.objects.raw(query % (member, order_by_field))  # 将变量插入SQL查询中并执行
+        # rows = House.objects.raw('''SELECT * FROM Info JOIN House ON Info.hId_id=House.hId AND House.status=0 AND House.available=1 LEFT OUTER JOIN
+        #                                         (SELECT * FROM Favourite WHERE Favourite.mId_id=%s) f
+        #                                     ON f.hId_id=hId ORDER BY Info.renewdate;
+        #                                     ''',(member,))
         numbers = len(list(rows))  # 转换为列表再计数
         return render(request, "house/house_list.html", {'numbers': numbers,'login':login,'rows': rows})
 
@@ -436,7 +464,7 @@ def upload_image(request):
 
 def delete_comment(request,hId,review_seq):
     with connection.cursor() as cursor:
-        cursor.execute('DELETE FROM Review WHERE review_seq= %s', (review_seq))
+        cursor.execute('DELETE FROM Review WHERE review_seq= %s', (review_seq,))
     house = f'/house_rent/{hId}'
     return redirect(house)
 
@@ -491,30 +519,63 @@ def renew_booking(request,booking_seq):
 
 def house_list_sold(request):
     login=0
-    if 'user' in request.session and 'mId' in request.session :
-        login=1
+    if 'user' in request.session and 'mId' in request.session:
+        member = request.session['mId']
+        login = 1
     else:
-        login=0
+        login = 0
+        member = "000"
 
     # 如果有search東西
-    member = request.session['mId']
+    if 'index' in request.GET:
+        index = int(request.GET['index'])
+    else:
+        index=0
+
+    my_list = ["renewdate", "price", "size"]
+    order_by_field = my_list[index]  # 获取列表中的第一个元素作为排序字段
+
     if 'keyword' in request.POST:
         keyword = request.POST['keyword']
-        rows = House.objects.raw('''SELECT * FROM Info JOIN House ON Info.hId_id=House.hId AND House.status=1 AND House.available=1 LEFT OUTER JOIN
-                                                (SELECT * FROM Favourite WHERE Favourite.mId_id=%s) f
-                                            ON f.hId_id=hId WHERE Info.address LIKE %s;
-                                            ''', (member, '%' + keyword + '%'))
+
+        query = '''
+                            SELECT * FROM Info 
+                            JOIN House ON Info.hId_id=House.hId 
+                            AND House.status=1 
+                            AND House.available=1 
+                            LEFT OUTER JOIN (
+                                SELECT * FROM Favourite WHERE Favourite.mId_id=%s
+                            ) f ON f.hId_id=House.hId WHERE Info.address LIKE %s
+                            ORDER BY Info.%s;  -- 使用字符串格式化将排序字段替换为变量
+                        '''
+
+        rows = House.objects.raw(query % (member, '%' + keyword + '%', order_by_field))  # 将变量插入SQL查询中并执行
+        # rows = House.objects.raw('''SELECT * FROM Info JOIN House ON Info.hId_id=House.hId AND House.status=1 AND House.available=1 LEFT OUTER JOIN
+        #                                         (SELECT * FROM Favourite WHERE Favourite.mId_id=%s) f
+        #                                     ON f.hId_id=hId WHERE Info.address LIKE %s;
+        #                                     ''', (member, '%' + keyword + '%'))
         numbers = len(list(rows))  # 转换为列表再计数
 
         return render(request, "house/house_list_sold.html", {'numbers': numbers, 'login': login, 'rows': rows})
 
         # 如果沒有search
     else:
+        query = '''
+                    SELECT * FROM Info 
+                    JOIN House ON Info.hId_id=House.hId 
+                    AND House.status=1 
+                    AND House.available=1 
+                    LEFT OUTER JOIN (
+                        SELECT * FROM Favourite WHERE Favourite.mId_id=%s
+                    ) f ON f.hId_id=House.hId 
+                    ORDER BY Info.%s;  -- 使用字符串格式化将排序字段替换为变量
+                '''
 
-        rows = House.objects.raw('''SELECT * FROM Info JOIN House ON Info.hId_id=House.hId AND House.status=1 AND House.available=1 LEFT OUTER JOIN
-                                                        (SELECT * FROM Favourite WHERE Favourite.mId_id=%s) f
-                                                    ON f.hId_id=hId;
-                                                    ''', [member])
+        rows = House.objects.raw(query % (member, order_by_field))  # 将变量插入SQL查询中并执行
+        # rows = House.objects.raw('''SELECT * FROM Info JOIN House ON Info.hId_id=House.hId AND House.status=1 AND House.available=1 LEFT OUTER JOIN
+        #                                                 (SELECT * FROM Favourite WHERE Favourite.mId_id=%s) f
+        #                                             ON f.hId_id=hId;
+        #                                             ''', [member])
         numbers = len(list(rows))  # 转换为列表再计数
         return render(request, "house/house_list_sold.html", {'numbers': numbers, 'login': login, 'rows': rows})
 
