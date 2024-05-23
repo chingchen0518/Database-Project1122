@@ -70,4 +70,8 @@ urlpatterns = [
     path('del_favor/<int:favourite_seq>', my_app.views.del_favor, name='del_favor'),
     path('city_filter/<int:city_id>/<int:status>/', my_app.views.city_filter, name='city_filter'),
     path('add_appointment/<str:hId>/', my_app.views.add_appointment, name='add_appointment'),
+    path('accept_booking/<int:booking_seq>', my_app.views.accept_booking, name='accept_booking'),
+    path('reject_booking/<int:booking_seq>', my_app.views.reject_booking, name='reject_booking'),
+    path('renew_booking/<int:booking_seq>', my_app.views.renew_booking, name='renew_booking'),
+
 ]

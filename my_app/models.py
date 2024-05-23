@@ -172,6 +172,7 @@ class Booking(models.Model):
      hId = models.ForeignKey(House, to_field='hId', auto_created=False, on_delete=models.CASCADE,unique=False)
      date=models.DateField(null=True,blank=True)
      time=models.TimeField(null=True,blank=True)
+     situation = models.CharField(default="未確認",null=False,max_length=20)
 
      class Meta:
         db_table = 'Booking'
