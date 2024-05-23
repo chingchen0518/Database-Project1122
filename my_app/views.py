@@ -489,6 +489,15 @@ def renew_booking(request,booking_seq):
 
     return redirect('/account_center/')
 
+def renew_booking_time(request,booking_seq):
+    time=request.GET['time']
+    date = request.GET['date']
+
+    with connection.cursor() as cursor:
+        cursor.execute('UPDATE Booking SET time=%s,date=%s  WHERE booking_seq=%s', (time,date,booking_seq))
+
+    return redirect('/account_center/')
+
 def house_list_sold(request):
     login=0
     if 'user' in request.session and 'mId' in request.session :
