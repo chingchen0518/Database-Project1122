@@ -179,7 +179,32 @@ body{
 .bold{
     font-weight: bold;
 }
+
+.update_and_cancel_booking{
+    margin-top:10px;
+}
+
+.booking_information{
+    display:flex;
+    color:black;
+
+}
+
+.booking_information:hover{
+    color:black;
+    text-decoration: none;
+}
+
+.houseimg{
+    float: left;
+    width: 270px;
+    border-radius: 5%;
+    margin:20px;
+}
 /*Booking end*/
+
+
+
 @media (min-width: 100px){
     .col-lg-4.col-md-6.shuffle-item{
         flex:0 0 100%;

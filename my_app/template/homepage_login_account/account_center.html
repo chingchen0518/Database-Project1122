@@ -107,12 +107,24 @@
              <!-- 一個booking_box表示一個booking -->
             {% for book in booking_seller %}
             <div class="booking_box">
-                <div class="info">
-                    <p><span class="bold">房子：</span>{{ book.title }}</p>
-                    <p><span class="bold">預約者：</span>{{ book.realname }}</p>
-                    <p><span class="bold">日期：</span>{{ book.date }}</p>
-                    <p><span class="bold">時間：</span>{{ book.time }}</p>
-                </div>
+                <a class="booking_information" href="
+                        {% if book.status == 0 %}
+                            {% url 'house_rent' hId=book.hId %}
+                        {% else %}
+                            {% url 'house_sold' hId=book.hId %}
+                        {% endif %}
+                ">
+                    <img class="houseimg" src="{% static '/img/house/'%}{{ book.hId }}-1.jpg" alt="image">
+
+                    <div class="info">
+                        <p><span class="bold">房子：</span>{{ book.title }}</p>
+                        <p><span class="bold">預約者：</span>{{ book.realname }}</p>
+                        <p><span class="bold">日期：</span>{{ book.date|date:"Y-m-d" }}</p>
+                        <p><span class="bold">時間：</span>{{ book.time }}</p>
+                        <p><span class="bold">地址：</span>{{ book.address }}</p>
+
+                    </div>
+                </a>
 
                 <form class="operation" action="{% url 'renew_booking' booking_seq=book.booking_seq %}">
                     <div class="accept_and_reject">
@@ -132,31 +144,38 @@
             {% endfor %}
         </div><!-- shuffle item  end -->
 
-            <!-- booking_customer -->
+        <!-- booking_customer -->
         <div class="col-lg-4 col-md-6 shuffle-item" data-groups="[&quot;booking_customer&quot;]">
              <!-- 一個booking_box表示一個booking -->
             {% for book in booking_customer %}
             <div class="booking_box">
-                <div class="info">
-                    <p><span class="bold">房子：</span>{{ book.title }}</p>
-                    <p><span class="bold">日期：</span>{{ book.date }}</p>
-                    <p><span class="bold">時間：</span>{{ book.time }}</p>
-                </div>
+                <a class="booking_information" href="
+                    {% if book.status == 0 %}
+                        {% url 'house_rent' hId=book.hId %}
+                    {% else %}
+                        {% url 'house_sold' hId=book.hId %}
+                    {% endif %}
+                ">
+                    <img class="houseimg" src="{% static '/img/house/'%}{{ book.hId }}-1.jpg" alt="image">
 
-{#                <form class="operation" action="{% url 'renew_booking' booking_seq=book.booking_seq %}">#}
-{#                    <div class="accept_and_reject">#}
-{#                        <a class="btn btn-primary accept_button {% if book.situation == "已成交" %}button-disabled{% endif %}" href="{% url 'accept_booking' booking_seq=book.booking_seq %}">同意</a>#}
-{#                        <a class="btn btn-primary reject_button {% if book.situation == "已成交" %}button-disabled{% endif %}" href="{% url 'reject_booking' booking_seq=book.booking_seq %}">拒絕</a>#}
-{#                    </div>#}
-{##}
-{#                    <select class="form-control situation" id="exampleFormControlSelect1" name="booking_renew">#}
-{#                        <option {% if book.situation == "未確認" %}selected{% endif %} value="未確認">未確認</option>#}
-{#                        <option {% if book.situation == "同意看房" %}selected{% endif %} value="同意看房">同意看房</option>#}
-{#                        <option {% if book.situation == "已成交" %}selected{% endif %} value="已成交">已成交</option>#}
-{#                    </select>#}
-{##}
-{#                    <input type="submit" class="btn btn-primary booking_situation_button" value="更新狀態">#}
-{#                </form>#}
+                    <div class="info">
+                        <p><span class="bold">房子：</span>{{ book.title }}</p>
+                        <p><span class="bold">日期：</span>{{ book.date|date:"Y-m-d" }}</p>
+                        <p><span class="bold">時間：</span>{{ book.time }}</p>
+                        <p><span class="bold">地址：</span>{{ book.address }}</p>
+                    </div>
+                </a>
+
+                <form class="operation" action="{% url 'renew_booking_time' booking_seq=book.booking_seq %}">
+                    預約日期<input type="date" id="date" name="date" value="{{ book.date|date:"Y-m-d" }}" required>
+                    預約時間<input type="time" id="time" name="time" value="{{ book.time|time:"H:i" }}" required>
+
+                    <div class="update_and_cancel_booking">
+                        <input id="renew_booking_time" type="submit" class="btn btn-primary booking_situation_button" value="更新">
+                        <a class="btn btn-primary reject_button" href="{% url 'reject_booking' booking_seq=book.booking_seq %}">取消</a>
+                    </div>
+
+                </form>
             </div>
             {% endfor %}
 
