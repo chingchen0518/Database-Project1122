@@ -122,8 +122,11 @@
 
                 <label for="time">預約時間</label>
                 <input type="time" id="time" name="time" required>
-
-                <input class="btn btn-primary" type="submit" value="點我預約!!">
+                {% if login == 1 %}
+                    <input class="btn btn-primary" type="submit" value="點我預約!!">
+                {% else %}
+                    <a class="btn btn-primary">請先登入</a>
+                {% endif %}
             </form>
           </div>
             <!--評價-->

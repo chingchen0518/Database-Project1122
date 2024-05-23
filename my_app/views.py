@@ -113,7 +113,7 @@ def house_list(request):
         keyword = request.POST['keyword']
 
        
-        rows = House.objects.raw('''SELECT * FROM Info JOIN House ON Info.hId_id=House.hId AND House.status=0 LEFT OUTER JOIN
+        rows = House.objects.raw('''SELECT * FROM Info JOIN House ON Info.hId_id=House.hId AND House.status=0 AND House.available=1 LEFT OUTER JOIN
                                         (SELECT * FROM Favourite WHERE Favourite.mId_id=%s) f
                                     ON f.hId_id=hId WHERE Info.address LIKE %s;
                                     ''',(member,'%' + keyword + '%'))
@@ -125,7 +125,7 @@ def house_list(request):
         # 如果沒有search
     else:
         
-        rows = House.objects.raw('''SELECT * FROM Info JOIN House ON Info.hId_id=House.hId AND House.status=0 LEFT OUTER JOIN
+        rows = House.objects.raw('''SELECT * FROM Info JOIN House ON Info.hId_id=House.hId AND House.status=0 AND House.available=1 LEFT OUTER JOIN
                                                 (SELECT * FROM Favourite WHERE Favourite.mId_id=%s) f
                                             ON f.hId_id=hId;
                                             ''',[member])
@@ -449,16 +449,22 @@ def add_favor(request,hId):
     member = request.session['mId']
     with connection.cursor() as cursor:
         cursor.execute('INSERT INTO Favourite VALUES (%s, %s, %s)',(latest_favourite_seq, hId, member))
+    status=House.objects.raw('SELECT hId,status FROM House WHERE hId=%s',[hId])
+    if status[0].status==0:
+        return redirect('/house_list/')
+    else:
+        return redirect('/house_list_sold/')
 
-    return redirect('/house_list/')
-
-def del_favor(request,favourite_seq):
+def del_favor(request,favourite_seq,hId):
 
     member = request.session['mId']
     with connection.cursor() as cursor:
         cursor.execute('DELETE FROM Favourite WHERE favourite_seq= %s', (favourite_seq,))
-    
-    return redirect('/house_list/')
+    status = House.objects.raw('SELECT hId,status FROM House WHERE hId=%s', [hId])
+    if status[0].status==0:
+        return redirect('/house_list/')
+    else:
+        return redirect('/house_list_sold/')
 
 def accept_booking(request,booking_seq):
     with connection.cursor() as cursor:
@@ -491,21 +497,26 @@ def house_list_sold(request):
         login=0
 
     # 如果有search東西
-    # member = request.session['mId']
+    member = request.session['mId']
     if 'keyword' in request.POST:
         keyword = request.POST['keyword']
+        rows = House.objects.raw('''SELECT * FROM Info JOIN House ON Info.hId_id=House.hId AND House.status=1 AND House.available=1 LEFT OUTER JOIN
+                                                (SELECT * FROM Favourite WHERE Favourite.mId_id=%s) f
+                                            ON f.hId_id=hId WHERE Info.address LIKE %s;
+                                            ''', (member, '%' + keyword + '%'))
+        numbers = len(list(rows))  # 转换为列表再计数
 
-        rows = House.objects.raw('SELECT * FROM House,Info WHERE Info.address LIKE %s AND House.hId=Info.hId_id  AND House.status=1',
-                                 ['%' + keyword + '%'])
-
-        return render(request, "house/house_list_sold.html", {'numbers': len(rows),'login':login,'rows': rows})
+        return render(request, "house/house_list_sold.html", {'numbers': numbers, 'login': login, 'rows': rows})
 
         # 如果沒有search
     else:
-        rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId=Info.hId_id AND House.status=1')
-        
 
-        return render(request, "house/house_list_sold.html", {'numbers': len(rows),'login':login,'rows': rows})
+        rows = House.objects.raw('''SELECT * FROM Info JOIN House ON Info.hId_id=House.hId AND House.status=1 AND House.available=1 LEFT OUTER JOIN
+                                                        (SELECT * FROM Favourite WHERE Favourite.mId_id=%s) f
+                                                    ON f.hId_id=hId;
+                                                    ''', [member])
+        numbers = len(list(rows))  # 转换为列表再计数
+        return render(request, "house/house_list_sold.html", {'numbers': numbers, 'login': login, 'rows': rows})
 
 def house_sold(request, hId):
     # House Data
@@ -549,14 +560,14 @@ def account_center(request):
         member = 0000
 
     Favourite = House.objects.raw('''
-        SELECT * FROM Info JOIN House ON Info.hId_id=House.hId AND House.status=0 
+        SELECT * FROM Info JOIN House ON Info.hId_id=House.hId 
             JOIN (SELECT * FROM Favourite WHERE Favourite.mId_id=%s ) f
             ON f.hId_id=hId''',(member,))
 
     browse = House.objects.raw('''
-        SELECT * FROM Info JOIN House ON Info.hId_id=House.hId AND House.status=0 
-            JOIN (SELECT * FROM Browse WHERE Browse.mId_id=%s ) f ON f.hId_id=hId
-            LEFT OUTER JOIN Favourite ON Favourite.hId_id=hId 
+        SELECT * FROM Info JOIN House ON Info.hId_id=House.hId 
+            JOIN (SELECT * FROM Browse WHERE Browse.mId_id=%s) f ON f.hId_id=hId
+            LEFT OUTER JOIN Favourite ON Favourite.hId_id=hId  ORDER BY f.browse_seq DESC
             ''',(member,))
 
     booking_seller = House.objects.raw('''SELECT booking_seq,date,time,hId,title,status,address,mId_id,situation,realname FROM Booking,House,Info,Member
@@ -574,6 +585,8 @@ def account_center(request):
     print(booking_seller[0].booking_seq)
     return render(request, "homepage_login_account/account_center.html", {'login': login, 'rows': Favourite, 'browse':browse, 'booking_seller':booking_seller,"booking_customer":booking_customer})
 
+    return render(request, "homepage_login_account/account_center.html", {'login': login, 'rows': Favourite, 'browse':browse})
+
 def city_filter(request, city_id, status):
     if 'user' in request.session and 'mId' in request.session :
         login=1
@@ -582,12 +595,12 @@ def city_filter(request, city_id, status):
 
     if status==0:
         rows = House.objects.raw(
-            'SELECT * FROM House,Info WHERE House.region=%s AND House.hId=Info.hId_id AND House.status=0',
+            'SELECT * FROM House,Info WHERE House.region=%s AND House.hId=Info.hId_id AND House.status=0 AND House.available=1',
             [city_id])
         return render(request, "house/house_list.html", {'numbers': len(rows), 'login': login, 'rows': rows})
     else:
         rows = House.objects.raw(
-            'SELECT * FROM House,Info WHERE House.region=%s AND House.hId=Info.hId_id  AND House.status=1',
+            'SELECT * FROM House,Info WHERE House.region=%s AND House.hId=Info.hId_id  AND House.status=1 AND House.available=1',
             [city_id])
         return render(request, "house/house_list_sold.html", {'numbers': len(rows),'login':login,'rows': rows})
 

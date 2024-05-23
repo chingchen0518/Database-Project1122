@@ -3382,6 +3382,7 @@ label {
 
 .dropdown-menu li{
   margin: 0px 12px;
+  list-style: none;
 }
 
 .appointment{
@@ -3393,3 +3394,4 @@ label {
 .appointment label,.appointment input{
   margin: 5px 3px;
 }
+
