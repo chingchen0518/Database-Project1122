@@ -73,5 +73,6 @@ urlpatterns = [
     path('accept_booking/<int:booking_seq>', my_app.views.accept_booking, name='accept_booking'),
     path('reject_booking/<int:booking_seq>', my_app.views.reject_booking, name='reject_booking'),
     path('renew_booking/<int:booking_seq>', my_app.views.renew_booking, name='renew_booking'),
+    path('renew_booking_time/<int:booking_seq>', my_app.views.renew_booking_time, name='renew_booking_time'),
 
 ]
