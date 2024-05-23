@@ -440,14 +440,6 @@ def delete_comment(request,hId,review_seq):
     house = f'/house_rent/{hId}'
     return redirect(house)
 
-# def my_view(request):
-#     if request.method == 'POST':
-#         request.session['button_clicked'] = True
-#         return redirect('my_view')  # 重定向到相同视图以更新页面
-#
-#     button_clicked = request.session.get('button_clicked', False)
-#     return render(request, 'my_template.html', {'button_clicked': button_clicked})
-
 def add_favor(request,hId):
     latest_favourite_seq = Favourite.objects.aggregate(Max('favourite_seq'))['favourite_seq__max']
     if latest_favourite_seq:
@@ -473,6 +465,29 @@ def del_favor(request,favourite_seq,hId):
         return redirect('/house_list/')
     else:
         return redirect('/house_list_sold/')
+
+def accept_booking(request,booking_seq):
+    with connection.cursor() as cursor:
+        cursor.execute('UPDATE Booking SET situation=%s WHERE booking_seq=%s',("同意看房",booking_seq))
+
+    return redirect('/account_center/')
+def reject_booking(request,booking_seq):
+    with connection.cursor() as cursor:
+        cursor.execute('DELETE FROM Booking WHERE booking_seq=%s',(booking_seq,))
+    return redirect('/account_center/')
+
+def renew_booking(request,booking_seq):
+    latest_sitaution=request.GET['booking_renew']
+
+
+    with connection.cursor() as cursor:
+            cursor.execute('UPDATE Booking SET situation=%s WHERE booking_seq=%s',(latest_sitaution,booking_seq))
+            cursor.execute('UPDATE House SET available=1 WHERE hId=(SELECT hId_id FROM Booking WHERE booking_seq=%s)',
+                           (booking_seq,))
+            if latest_sitaution=="已成交":
+                cursor.execute('UPDATE House SET available=0 WHERE hId=(SELECT hId_id FROM Booking WHERE booking_seq=%s)',(booking_seq,))
+
+    return redirect('/account_center/')
 
 def house_list_sold(request):
     login=0
@@ -555,6 +570,20 @@ def account_center(request):
             LEFT OUTER JOIN Favourite ON Favourite.hId_id=hId  ORDER BY f.browse_seq DESC
             ''',(member,))
 
+    booking_seller = House.objects.raw('''SELECT booking_seq,date,time,hId,title,status,address,mId_id,situation,realname FROM Booking,House,Info,Member
+        WHERE Booking.hId_id=House.hId AND House.hId=Info.hId_id AND Member.mId=Booking.customer_id_id
+            AND House.mId_id=%s ORDER BY Booking.booking_seq DESC''',[member])
+
+    booking_customer = House.objects.raw('''SELECT booking_seq,date,time,hId,title,status,address,mId_id,situation FROM Booking,House,Info
+            WHERE Booking.hId_id=House.hId 
+            AND House.hId=Info.hId_id 
+            AND Booking.customer_id_id=%s
+            AND Booking.situation != %s
+            ORDER BY Booking.booking_seq DESC''', (member, "已成交"))
+
+    print(booking_seller)
+    print(booking_seller[0].booking_seq)
+    return render(request, "homepage_login_account/account_center.html", {'login': login, 'rows': Favourite, 'browse':browse, 'booking_seller':booking_seller,"booking_customer":booking_customer})
 
     return render(request, "homepage_login_account/account_center.html", {'login': login, 'rows': Favourite, 'browse':browse})
 
@@ -587,8 +616,8 @@ def add_appointment(request,hId):
         latest_booking_seq = 1
     #
     with connection.cursor() as cursor:
-        cursor.execute('INSERT INTO Booking VALUES (%s, %s, %s, %s, %s)',
-                       (latest_booking_seq, date, time, member, hId))
+        cursor.execute('INSERT INTO Booking VALUES (%s, %s, %s, %s, %s, %s)',
+                       (latest_booking_seq, date, time, member, hId, "未確認"))
 
     house = f'/house_rent/{hId}'
     return redirect(house)
