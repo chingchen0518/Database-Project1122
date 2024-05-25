@@ -43,6 +43,7 @@ urlpatterns = [
     path('upload_page',my_app.views.upload_page,name='upload_page'),
     path('upload_page/add_house',my_app.views.add_house, name='add_house'),
     path('delete_house/<str:hId>/', my_app.views.delete_house,name='delete_house'),
+    path('delete_browse', my_app.views.delete_browse, name='delete_browse'),
 
     #用戶中心
         path('account_center2/',my_app.views.account_center2,name="account_center2"),
