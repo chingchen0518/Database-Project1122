@@ -92,7 +92,14 @@
 
         <!-- browse -->
          <div class="col-lg-4 col-md-6 shuffle-item" data-groups="[&quot;browse&quot;]" style="width:100%;">
-              {% with rows=browse %}
+            {% if browse %}
+            <div id="delete_history_button_up">
+            <a id="delete_history_button" href="{% url 'delete_browse'%}">
+                <button class="btn btn-primary reject_button">清空記錄</button>
+            </a>
+            </div>
+            {% endif %}
+            {% with rows=browse %}
                 {% include 'elements/product_template.html' %}
             {% endwith %}
           </div><!-- shuffle item  end -->
@@ -119,7 +126,7 @@
                     <div class="info">
                         <p><span class="bold">房子：</span>{{ book.title }}</p>
                         <p><span class="bold">預約者：</span>{{ book.realname }}</p>
-                        <p><span class="bold">日期：</span>{{ book.date|date:"Y-m-d" }}</p>
+                        <p><span clbass="bold">日期：</span>{{ book.date|date:"Y-m-d" }}</p>
                         <p><span class="bold">時間：</span>{{ book.time }}</p>
                         <p><span class="bold">地址：</span>{{ book.address }}</p>
 

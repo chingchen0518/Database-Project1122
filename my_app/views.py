@@ -691,3 +691,11 @@ def add_appointment(request,hId):
 
     house = f'/house_rent/{hId}'
     return redirect(house)
+
+def delete_browse(request):
+    mId = request.session['mId']
+
+    with connection.cursor() as cursor:
+        cursor.execute('DELETE FROM Browse WHERE mId_id=%s', [mId])
+
+    return redirect('/account_center/')
