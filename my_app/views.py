@@ -278,7 +278,7 @@ def add_house(request):
     if(House.objects.filter(region=region)):
         latest_id = House.objects.filter(region=region).latest('hId')
         prefix = latest_id.hId[:-2]  # 取得 ID 前綴，即 'KH'
-        number_part = int(latest_id.hId[-2:])  # 取得數字部分，轉換為整數，即 20
+        number_part = int(latest_id.hId[2:])  # 取得數字部分，轉換為整數，即 20
         next_number = number_part + 1  # 數字部分加 1，即 21
         next_id = f"{prefix}{next_number:02}"  # 將 ID 前綴與新的數字部分結合，並確保數字部分有兩位數，即 'KH21'
     else:
@@ -308,6 +308,68 @@ def add_house(request):
             i=i+1
 
     house = f'/house_rent/{next_id}'
+    return redirect(house)
+
+def upload_page_sold(request):
+
+    if 'user' in request.session and 'mId' in request.session:
+        return render(request, "add_renew_delete/upload_page_sold.html")
+
+    else:
+        return redirect('/login/')
+
+def add_house_sold(request):
+    # del request.session['user']
+    current_date = datetime.date.today()
+    # House
+    region = int(request.POST['region'])
+    title = request.POST['title']
+    # Info
+    fields = ['address', 'room', 'bath', 'living', 'size', 'type', 'level', 'price']
+    Info = {field: request.POST[field] for field in fields}
+    print(Info)
+
+    # Rdetails
+    fields = ['parking','direction','level','security','management','period','bus','train','mrt','age']
+    Rdetails = {field: request.POST.get(field, '0') for field in fields}
+    print(Rdetails)
+    # Equipments
+    lift=request.POST['lift']
+    #member_id
+    member = request.session['mId']
+    # Count next id
+    if(House.objects.filter(region=region)):
+        latest_id = House.objects.filter(region=region).latest('hId')
+        prefix = latest_id.hId[0:2]  # 取得 ID 前綴，即 'KH'
+        number_part = int(latest_id.hId[2:])  # 取得數字部分，轉換為整數，即 20
+        next_number = number_part + 1  # 數字部分加 1，即 21
+        next_id = f"{prefix}{next_number:02}"  # 將 ID 前綴與新的數字部分結合，並確保數字部分有兩位數，即 'KH21'
+    else:
+        regions = ["TP", "NT", "TY", "TC", "TN","KH", "YL", "HC", "ML", "CH","NT", "YL", "JY", "PT", "TT","HL", "PH", "KL", "XZ", "CY","KM", "LJ"]
+        prefix=regions[region-1]
+        next_id = f"{prefix}1"
+
+    with connection.cursor() as cursor:
+        cursor.execute('INSERT INTO House VALUES (%s, %s, %s,%s, %s, %s)',(next_id, 1,title,region,member,1))
+        cursor.execute('INSERT INTO Info  VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s)',(next_id,Info['price'],Info['address'],Info['level'],Info['room'],Info['living'],Info['bath'],Info['type'],Info['size'],current_date))
+        cursor.execute("INSERT INTO Sdetail VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",(next_id,"1",Rdetails['parking'],Rdetails['direction'],Rdetails['level'],Rdetails['age'],Rdetails['security'],Rdetails['management'],Rdetails['bus'],Rdetails['train'],Rdetails['mrt'],lift))
+
+    # 處理圖片上傳+重命名
+    if request.method == 'POST' and request.FILES.getlist('images'):
+        files = request.FILES.getlist('images')
+        i=1
+        for image in files:
+            file_extension = os.path.splitext(image.name)[1].lower()
+            next_path=f'{next_id}-{i}{file_extension}'
+            image_path = os.path.join('my_app/static/img/house/',next_path)
+            with open(image_path, 'wb+') as destination:
+                for chunk in image.chunks():
+                    destination.write(chunk)
+            with connection.cursor() as cursor:
+                cursor.execute('INSERT INTO Image VALUES (%s, %s)',(next_id,next_path))
+            i=i+1
+
+    house = f'/house_sold/{next_id}'
     return redirect(house)
 
 def edit_page_show(request,hId):
@@ -592,7 +654,6 @@ def house_sold(request, hId):
     # House Data
     rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId=%s AND House.hId=Info.hId_id', [hId])
     image = Image.objects.raw('SELECT path FROM Image WHERE Image.hId_id=%s', [hId])
-    equipment = Equipment.objects.raw('SELECT * FROM Equipment WHERE Equipment.hId_id=%s', [hId])
     seller = Member.objects.raw('SELECT * FROM Member JOIN House ON House.mId_id=Member.mId WHERE House.hId=%s',
                                 [hId])
     details = Sdetail.objects.raw('SELECT * FROM Sdetail WHERE hId_id=%s', (hId,))
@@ -617,7 +678,7 @@ def house_sold(request, hId):
             login_people = "0000"
         # print(login)
     return render(request, "house/house_sold.html",
-                      {"rows": rows[0], "image": image, "equipment": equipment[0], "seller": seller[0],
+                      {"rows": rows[0], "image": image, "seller": seller[0],
                        "details": details[0], "login_people": login_people, "login": login, "review": review})
 
 def account_center(request):

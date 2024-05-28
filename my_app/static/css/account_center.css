@@ -115,6 +115,27 @@ body{
     display: block;
 }
 
+/*Personal Information*/
+.form-container {
+    margin:10px;
+}
+
+.change_button{
+    color: Black;
+    font-weight: bold;
+}
+
+.change_button:hover{
+    color: Black;
+    background-color: #e9ac3b;
+    font-weight: bold;
+}
+.form-control {
+    width: 300px; /* 或者任何你想要的宽度值 */
+    border:1px black solid;
+}
+
+
 /*History*/
 #delete_history_button_up{
     margin-bottom:30px;

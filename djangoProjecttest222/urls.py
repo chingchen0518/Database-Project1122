@@ -42,6 +42,9 @@ urlpatterns = [
     #新增刪除
     path('upload_page',my_app.views.upload_page,name='upload_page'),
     path('upload_page/add_house',my_app.views.add_house, name='add_house'),
+    path('upload_page/sold', my_app.views.upload_page_sold, name='upload_page_sold'),
+    path('upload_page/add_house/sold', my_app.views.add_house_sold, name='add_house_sold'),
+
     path('delete_house/<str:hId>/', my_app.views.delete_house,name='delete_house'),
     path('delete_browse', my_app.views.delete_browse, name='delete_browse'),
 
