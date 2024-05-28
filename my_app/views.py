@@ -862,14 +862,22 @@ def recognize(request):
 
 def recognize_face():
     try:
+        # 获取当前文件的目录
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        template_dir = os.path.join(base_dir, 'template')
+
+        # 构建相对路径
+        recognizer_path = os.path.join(template_dir, 'trainer.yml')
+        face_cascade_path = os.path.join(template_dir, 'haarcascade_frontalface_default.xml')
+        names_path = os.path.join(template_dir, 'names.json')
+
         # 加载模型文件
         recognizer = cv2.face.LBPHFaceRecognizer_create()
-        recognizer.read("C:/Users/YOYOBILL/Desktop/Database-Project1122/my_app/template/trainer.yml")
-        face_cascade_Path = "C:/Users/YOYOBILL/Desktop/Database-Project1122/my_app/template/haarcascade_frontalface_default.xml"
-        faceCascade = cv2.CascadeClassifier(face_cascade_Path)
+        recognizer.read(recognizer_path)
+        faceCascade = cv2.CascadeClassifier(face_cascade_path)
 
         # 加载姓名数据
-        with open('C:/Users/YOYOBILL/Desktop/Database-Project1122/my_app/template/names.json', 'r') as fs:
+        with open(names_path, 'r') as fs:
             names = json.load(fs)
             names = list(names.values())
 
@@ -936,11 +944,6 @@ def recognize_face():
 
         cam.release()
         cv2.destroyAllWindows()
-
-        if recognized_name:
-            root = tk.Tk()
-            root.withdraw()
-            messagebox.showinfo("Alert", "hello, super manager")
 
         return recognized_name
     except Exception as e:
