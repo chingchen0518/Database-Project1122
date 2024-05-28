@@ -82,7 +82,7 @@
             <!-- Edit and Delete-->
             {% if login_people == seller.mId %}
               <div id="edit_button" class="call-to-action-btn">
-                <a id="edit_button_a" class="btn btn-primary" href="{% url 'edit_page' hId=rows.hId %}">編輯我的房子</a>
+                <a id="edit_button_a" class="btn btn-primary" href="{% url 'edit_page_sold' hId=rows.hId %}">編輯我的房子</a>
               </div>
 
             <div id="delete_button" class="call-to-action-btn">

@@ -95,7 +95,7 @@
             <!-- 坪數 -->
             <div class="mb-3">
               <label for="area" class="form-label">坪數(請填數字)：</label>
-              <input type="text" class="form-control" id="area" name="size" placeholder="單位:坪，例:40" pattern="[1-9]\d*" title="只能輸入大於0的整數">
+              <input type="text" class="form-control" id="area" name="size" placeholder="單位:坪，例:40" pattern="[1-9]\d*|\d*\.\d+" title="請輸入>0的小數" required>
             </div>
 
             <!-- 類型 -->
@@ -124,7 +124,7 @@
             <!-- 樓層 -->
             <div class="mb-3">
               <label for="floor" class="form-label">樓層：</label>
-              <input type="text" class="form-control" id="floor" name="level" placeholder="單位:樓，例:11"  pattern="[1-9]\d" title="請輸入0-99">
+              <input type="text" class="form-control" id="floor" name="level" placeholder="單位:樓，例:11"  pattern="[1-9]\d*" title="請輸入0-99" required>
             </div>
           </div>
         </div>
@@ -196,14 +196,14 @@
 
             <!-- 月租費 -->
             <div class="mb-3">
-              <label for="rent_fee">月租費(請填數字)：</label>
-              <input type="text" class="form-control" id="rent_fee" name="price" placeholder="單位: 新台幣，例:6000" pattern="[1-9]\d*" title="只能輸入大於0的整數">
+              <label for="rent_fee">售價：</label>
+              <input type="text" class="form-control" id="rent_fee" name="price" placeholder="單位: 新台幣，例:6000" pattern="[1-9]\d*" title="只能輸入大於0的整數" required>
             </div>
 
             <!-- 管理費 -->
             <div class="mb-3">
               <label for="management_fee">管理費(請填數字)：</label>
-              <input type="text" class="form-control" id="management_fee" name="management" placeholder="單位: 新台幣，例:800" pattern="[1-9]\d*" title="只能輸入大於0的整數">
+              <input type="text" class="form-control" id="management_fee" name="management" placeholder="單位: 新台幣，例:800" pattern="[1-9]\d*" title="只能輸入大於0的整數" required>
             </div>
 
             <!-- 最短租期 -->
