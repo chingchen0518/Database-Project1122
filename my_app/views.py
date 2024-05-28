@@ -804,8 +804,6 @@ def delete_browse(request):
 
     return redirect('/account_center/')
 
-
-<<<<<<< Updated upstream
 def update_user_detail(request):
     mId = request.session['mId']
     phone = request.POST['phone']
@@ -948,4 +946,3 @@ def recognize_face():
     except Exception as e:
         print(f"Error in recognize_face: {str(e)}")
         raise
->>>>>>> Stashed changes
