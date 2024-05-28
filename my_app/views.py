@@ -10,6 +10,14 @@ from django.db.models import Max
 import os
 from django.db.models import Count
 
+import cv2
+import numpy as np
+import time
+import tkinter as tk
+from tkinter import messagebox
+import logging
+from django.views.decorators.csrf import csrf_exempt  # 添加 CSRF 装饰器
+# from .face_recognition import recognize_face
 
 import datetime
 
@@ -797,6 +805,7 @@ def delete_browse(request):
     return redirect('/account_center/')
 
 
+<<<<<<< Updated upstream
 def update_user_detail(request):
     mId = request.session['mId']
     phone = request.POST['phone']
@@ -832,3 +841,111 @@ def update_password(request):
 
         # 如果是 GET 请求，返回修改密码页面
     return render(request, 'change_password.html')
+def face_recognize_html(request):
+    return render(request, 'face_recognize.html')
+
+logger = logging.getLogger(__name__)
+@csrf_exempt
+def recognize(request):
+    try:
+        recognized_name = recognize_face()
+        if recognized_name:
+            message = "Hello, super manager"
+            alert = True
+        else:
+            message = "Face not recognized"
+            alert = False
+        return JsonResponse({'message': message, 'alert': alert})
+    except Exception as e:
+        # 捕获并记录异常信息
+        print(f"Error during face recognition: {str(e)}")
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+def recognize_face():
+    try:
+        # 加载模型文件
+        recognizer = cv2.face.LBPHFaceRecognizer_create()
+        recognizer.read("C:/Users/YOYOBILL/Desktop/Database-Project1122/my_app/template/trainer.yml")
+        face_cascade_Path = "C:/Users/YOYOBILL/Desktop/Database-Project1122/my_app/template/haarcascade_frontalface_default.xml"
+        faceCascade = cv2.CascadeClassifier(face_cascade_Path)
+
+        # 加载姓名数据
+        with open('C:/Users/YOYOBILL/Desktop/Database-Project1122/my_app/template/names.json', 'r') as fs:
+            names = json.load(fs)
+            names = list(names.values())
+
+        cam = cv2.VideoCapture(0)
+        cam.set(3, 640)
+        cam.set(4, 480)
+        minW = 0.1 * cam.get(3)
+        minH = 0.1 * cam.get(4)
+
+        if not cam.isOpened():
+            raise Exception("Could not open video stream from camera.")
+
+        stop_program = False
+        recognized_name = None
+        detection_start_time = {}
+        current_detected_id = None
+        current_detection_start = None
+
+        while True:
+            ret, img = cam.read()
+            if not ret:
+                raise Exception("Failed to capture image")
+
+            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            faces = faceCascade.detectMultiScale(
+                gray,
+                scaleFactor=1.3,
+                minNeighbors=8,
+                minSize=(int(minW), int(minH)),
+            )
+            current_time = time.time()
+            for (x, y, w, h) in faces:
+                cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                id, confidence = recognizer.predict(gray[y:y + h, x:x + w])
+                if confidence >= 90:
+                    try:
+                        name = names[id]
+                        confidence_text = "  {0}%".format(round(confidence))
+                    except IndexError as e:
+                        name = "Who are you?"
+                        confidence_text = "N/A"
+                else:
+                    name = "Who are you?"
+                    confidence_text = "N/A"
+                display_name = "got it" if name != "Who are you?" else name
+                cv2.putText(img, display_name, (x + 5, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+                cv2.putText(img, confidence_text, (x + 5, y + h - 5), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 1)
+                if name != "Who are you?":
+                    if current_detected_id == id:
+                        if current_time - current_detection_start >= 3:
+                            recognized_name = name
+                            stop_program = True
+                            break
+                    else:
+                        current_detected_id = id
+                        current_detection_start = current_time
+                else:
+                    current_detected_id = None
+                    current_detection_start = None
+            cv2.imshow('camera', img)
+            k = cv2.waitKey(10) & 0xff
+            if k == 27 or stop_program:
+                break
+
+        cam.release()
+        cv2.destroyAllWindows()
+
+        if recognized_name:
+            root = tk.Tk()
+            root.withdraw()
+            messagebox.showinfo("Alert", "hello, super manager")
+
+        return recognized_name
+    except Exception as e:
+        print(f"Error in recognize_face: {str(e)}")
+        raise
+>>>>>>> Stashed changes
