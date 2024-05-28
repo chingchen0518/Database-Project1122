@@ -42,26 +42,32 @@ def register(request):
         return redirect('homepage')
 
     else:
-        return render(request,"homepage_login_account/register.html")
+        error_message = request.GET.get('error_message', '')
+        return render(request,"homepage_login_account/register.html",{'error_message': error_message})
 
 def register_received(request):
     fields=['username','realname','phone','password','email','gender']
     Users = {field: request.POST[field] for field in fields}
 
-    # Count next mId
-    try:
-        latestid = Member.objects.latest('mId')
-        mId = int(latestid.mId)+1
-    except ObjectDoesNotExist:
-        mId ="888"
+    names = User.objects.raw('SELECT username FROM User WHERE username=%s',[Users['username']])
 
-    with connection.cursor() as cursor:
-        cursor.execute('INSERT INTO User  VALUES (%s, %s)',(Users['username'],Users['password']))
-        cursor.execute('INSERT INTO Member VALUES (%s, %s, %s, %s, %s, %s, %s)',(mId,Users['gender'],Users['email'],Users['phone'],None,Users['realname'],Users['username']))
+    if names:
+        return redirect('/register/?error_message=用戶名已存在!')
+    else:
+        try:
+            latestid = Member.objects.latest('mId')
+            mId = int(latestid.mId)+1
+        except ObjectDoesNotExist:
+            mId ="888"
 
-    request.session['user'] = Users['username']
-    request.session['mId'] = mId
-    return redirect('homepage')
+        with connection.cursor() as cursor:
+            cursor.execute('INSERT INTO User  VALUES (%s, %s)',(Users['username'],Users['password']))
+            cursor.execute('INSERT INTO Member VALUES (%s, %s, %s, %s, %s, %s, %s)',(mId,Users['gender'],Users['email'],Users['phone'],None,Users['realname'],Users['username']))
+
+        request.session['user'] = Users['username']
+        request.session['mId'] = mId
+        return redirect('homepage')
+
 
 def login_page(request):
     if 'user' in request.session and 'mId' in request.session:
@@ -755,9 +761,11 @@ def account_center(request):
 
     member_detail = User.objects.raw('SELECT * FROM Member,User WHERE Member.username_id=User.username AND Member.mId=%s',[member])
 
+    success_message = request.GET.get('success_message', '')
+    error_message = request.GET.get('error_message', '')
     # print(booking_seller)
     # print(booking_seller[0].booking_seq)
-    return render(request, "homepage_login_account/account_center.html", {'login': login, 'rows': Favourite, 'browse':browse, 'booking_seller':booking_seller,"booking_customer":booking_customer,"member_detail":member_detail})
+    return render(request, "homepage_login_account/account_center.html", {'login': login, 'rows': Favourite, 'browse':browse, 'booking_seller':booking_seller,"booking_customer":booking_customer,"member_detail":member_detail,'success_message': success_message, 'error_message': error_message})
 
     # return render(request, "homepage_login_account/account_center.html", {'login': login, 'rows': Favourite, 'browse':browse})
 
@@ -809,34 +817,31 @@ def update_user_detail(request):
     mId = request.session['mId']
     phone = request.POST['phone']
     email = request.POST['email']
-    username = request.POST['username']
+    realname = request.POST['realname']
     gender = request.POST['gender']
     with connection.cursor() as cursor:
-        cursor.execute('UPDATE Member SET username_id=%s,gender=%s,phone=%s,email=%s WHERE mId=%s',(username,gender,phone,email,mId))
+        cursor.execute('UPDATE Member SET realname=%s,gender=%s,phone=%s,email=%s WHERE mId=%s',(realname,gender,phone,email,mId))
 
     return redirect('/account_center/')
 
 def update_password(request):
-    if request.method == 'POST':
-        old_password = request.POST.get('old_password')
-        new_password = request.POST.get('new_password')
+    mId = request.session['mId']
+    users = User.objects.raw('SELECT * FROM Member,User WHERE Member.username_id=User.username AND Member.mId=%s',[mId])
 
-        # 检查用户输入的旧密码是否正确
-        if request.user.check_password(old_password):
-            # 设置新密码并保存
-            request.user.set_password(new_password)
-            request.user.save()
-
-            # 更新会话中的用户身份验证哈希以防止用户被注销
-            update_session_auth_hash(request, request.user)
-
-            # 重定向到成功页面或者给出成功消息
-            messages.success(request, 'Your password was successfully updated!')
-            return redirect('password_updated_successfully')  # 替换为你的成功页面URL名称或路径
+    old_password = request.POST.get('old_password')
+    new_password = request.POST.get('new_password')
+    for user in users:
+        # 比對輸入的舊密碼是否與資料庫中原本儲存的相同
+        if user.password == old_password:
+            # 更新資料庫中的舊密碼為新密碼
+            user.password = new_password
+            user.save()
+            return redirect('/account_center/?success_message=密碼已成功更新')
         else:
-            # 如果旧密码不正确，显示错误消息
-            messages.error(request, 'Your old password is incorrect.')
-            return redirect('change_password')  # 替换为你的修改密码页面URL名称或路径
+            return redirect('/account_center/?error_message=舊密碼輸入錯誤')
+
+def verify(request):
+    return render(request, "homepage_login_account/verify.html")
 
         # 如果是 GET 请求，返回修改密码页面
     return render(request, 'change_password.html')
@@ -942,3 +947,4 @@ def recognize_face():
     except Exception as e:
         print(f"Error in recognize_face: {str(e)}")
         raise
+
