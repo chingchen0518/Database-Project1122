@@ -24,19 +24,10 @@
                     <li class="living">{{ row.living }}廳</li>    {# 幾廳 #}
                     <li class="bath">{{ row.bath }}衛浴</li>  {# 幾衛浴 #}
                 </ul>
-
                 {% if row.favourite_seq %}
-                    {% if index %}
-                        <a id="del_favor" href="{% url 'del_favor' favourite_seq=row.favourite_seq hId=row.hId index=index %}"><button type="submit" class="favorite">取消收藏</button></a>
-                    {% else %}
-                        <a id="del_favor" href="{% url 'del_favor' favourite_seq=row.favourite_seq hId=row.hId index=0 %}"><button type="submit" class="favorite">取消收藏</button></a>
-                    {% endif %}
+                   <a id="del_favor" href="{% url 'del_favor' favourite_seq=row.favourite_seq hId=row.hId %}"><button type="submit" class="favorite">取消收藏</button></a>
                 {% else %}
-                    {% if index %}
-                        <a id="favor" class="{% if row.available == 1 %}{% else %}button-disabled{% endif %}" href="{% url 'add_favor' hId=row.hId index=index %}"><button type="submit" class="favorite">收藏</button></a>
-                    {% else %}
-                        <a id="favor" class="{% if row.available == 1 %}{% else %}button-disabled{% endif %}" href="{% url 'add_favor' hId=row.hId index=0 %}"><button type="submit" class="favorite">收藏</button></a>
-                    {% endif %}
+                   <a id="favor" class="{% if row.available == 1 %}{% else %}button-disabled{% endif %}" href="{% url 'add_favor' hId=row.hId %}"><button type="submit" class="favorite">收藏</button></a>
                 {% endif %}
 
                 {% if row.status == 0 %}

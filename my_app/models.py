@@ -148,3 +148,10 @@ class Booking(models.Model):
 
      class Meta:
         db_table = 'Booking'
+
+class KeyPair(models.Model):
+     booking_seq = models.OneToOneField(Booking,primary_key=True,on_delete=models.CASCADE,to_field='booking_seq',auto_created=False,unique=True)
+     private_key = models.BinaryField()
+     public_key = models.BinaryField()
+     class Meta:
+          db_table = 'KeyPair'
