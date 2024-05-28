@@ -49,8 +49,8 @@ urlpatterns = [
     path('delete_browse', my_app.views.delete_browse, name='delete_browse'),
 
     #用戶中心
-        path('account_center2/',my_app.views.account_center2,name="account_center2"),
-        path('account_center/', my_app.views.account_center, name="account_center"),
+    path('account_center2/',my_app.views.account_center2,name="account_center2"),
+    path('account_center/', my_app.views.account_center, name="account_center"),
 
     #沒用的東西
     path('testing/',my_app.views.testing,name="testing"),
@@ -61,6 +61,8 @@ urlpatterns = [
     #編輯
     path('edit_page/<str:hId>/',my_app.views.edit_page_show,name='edit_page'),
     path('edit_page/edit_house/<str:hId>/',my_app.views.edit_page_update, name='edit_house'),
+    path('edit_page_sold/<str:hId>/', my_app.views.edit_page_show_sold, name='edit_page_sold'),
+    path('edit_page_sold/edit_house/<str:hId>/', my_app.views.edit_page_update_sold, name='edit_house_sold'),
 
     #Templates
 

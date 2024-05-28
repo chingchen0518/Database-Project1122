@@ -67,7 +67,7 @@
             <!-- 屋齡 -->
             <div class="mb-3">
               <label for="age" class="form-label">屋齡(請填數字)：</label>
-              <input type="text" class="form-control" id="age" name="age" placeholder="單位:年，例:10" required>
+              <input type="text" class="form-control" id="age" name="age" placeholder="單位:年，例:10" pattern="[1-9]\d*" title="請輸入>0的整數" required>
             </div>
 
             <!-- 地址 -->
@@ -81,13 +81,13 @@
               <label class="form-label">格局(請填數字)：</label>
               <div class="row">
                 <div class="col">
-                  <input type="text" class="form-control" id="room" name="room" placeholder="房">
+                  <input type="text" class="form-control" id="room" name="room" placeholder="房" pattern="[1-9]" title="請輸入>0的整數" required>
                 </div>
                 <div class="col">
-                  <input type="text" class="form-control" id="living" name="living" placeholder="客廳">
+                  <input type="text" class="form-control" id="living" name="living" placeholder="客廳" pattern="[1-9]" title="請輸入>0的整數" required>
                 </div>
                 <div class="col">
-                  <input type="text" class="form-control" id="bath" name="bath" placeholder="衛">
+                  <input type="text" class="form-control" id="bath" name="bath" placeholder="衛" pattern="[1-9]" title="請輸入>0的整數" required>
                 </div>
               </div>
             </div>
@@ -95,7 +95,7 @@
             <!-- 坪數 -->
             <div class="mb-3">
               <label for="area" class="form-label">坪數(請填數字)：</label>
-              <input type="text" class="form-control" id="area" name="size" placeholder="單位:坪，例:40">
+              <input type="text" class="form-control" id="area" name="size" placeholder="單位:坪，例:40" pattern="[1-9]\d*|\d*\.\d+" title="請輸入>0的小數" required>
             </div>
 
             <!-- 類型 -->
@@ -124,7 +124,7 @@
             <!-- 樓層 -->
             <div class="mb-3">
               <label for="floor" class="form-label">樓層：</label>
-              <input type="text" class="form-control" id="floor" name="level" placeholder="單位:樓，例:11">
+              <input type="text" class="form-control" id="floor" name="level" placeholder="單位:樓，例:11" pattern="[1-9]\d*" title="請輸入>0的整數" required>
             </div>
           </div>
         </div>
@@ -240,13 +240,13 @@
             <!-- 月租費 -->
             <div class="mb-3">
               <label for="rent_fee">月租費(請填數字)：</label>
-              <input type="text" class="form-control" id="rent_fee" name="price" placeholder="單位: 新台幣，例:6000">
+              <input type="text" class="form-control" id="rent_fee" name="price" placeholder="單位: 新台幣，例:6000" pattern="[1-9]\d*" title="請輸入>0的整數">
             </div>
 
             <!-- 管理費 -->
             <div class="mb-3">
               <label for="management_fee">管理費(請填數字)：</label>
-              <input type="text" class="form-control" id="management_fee" name="management" placeholder="單位: 新台幣，例:800">
+              <input type="text" class="form-control" id="management_fee" name="management" placeholder="單位: 新台幣，例:800" pattern="[1-9]\d*" title="請輸入>0的整數">
             </div>
 
             <!-- 最短租期 -->

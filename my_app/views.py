@@ -221,30 +221,8 @@ def delete_house(request,hId):
 
     # Delete the house
     houses_to_delete = House.objects.filter(hId=hId)
-
+    houses_to_delete.delete()
     return redirect('house_lists')
-
-# class HouseDeleteView(DeleteView):
-#     model = House
-#     success_url = reverse_lazy("house_lists")
-#     template_name = 'add_renew_delete/delete.html' #之後加一個取消
-#     pk_url_kwarg = 'hId' #告訴他用url中的哪個東西作爲primary_key
-#
-#     def delete(self, request, *args, **kwargs):
-#         # 获取即将删除的对象
-#         hId = kwargs.get(self.pk_url_kwarg)
-#
-#         image_paths=Image.objects.raw('SELECT path FROM Image WHERE hId=%s', [hId])
-#         print("satu dua tiga")
-#         print(image_paths)
-#
-#         for img_path in image_paths:
-#             file_path = f'my_app/static/img/house/{img_path}'
-#             os.remove(file_path)
-#
-#         response = super().delete(request, *args, **kwargs)
-#         return response
-
 
 def upload_page(request):
 
@@ -258,7 +236,7 @@ def add_house(request):
     # del request.session['user']
     current_date = datetime.date.today()
     # House
-    region = request.POST['region']
+    region = int(request.POST['region'])
     title = request.POST['title']
     # Info
     fields = ['address', 'room', 'bath', 'living', 'size', 'type', 'level', 'price']
@@ -279,19 +257,19 @@ def add_house(request):
     # Count next id
     if(House.objects.filter(region=region)):
         latest_id = House.objects.filter(region=region).latest('hId')
-        prefix = latest_id.hId[:-2]  # 取得 ID 前綴，即 'KH'
+        prefix = latest_id.hId[0:2]  # 取得 ID 前綴，即 'KH'
         number_part = int(latest_id.hId[2:])  # 取得數字部分，轉換為整數，即 20
         next_number = number_part + 1  # 數字部分加 1，即 21
-        next_id = f"{prefix}{next_number:02}"  # 將 ID 前綴與新的數字部分結合，並確保數字部分有兩位數，即 'KH21'
+        next_id = prefix + str(next_number)  # 将前缀与新的数字部分直接拼接
     else:
-        regions = ["TP", "NT", "TY", "TC", "TN","KH", "YL", "HC", "ML", "CH","NT", "YL", "JY", "PT", "TT","HL", "PH", "KL", "XZ", "CY","KM", "LJ"]
-        prefix=regions[region-1]
+        regions = ["TP", "NT", "TY", "TC", "TN", "KH", "YL", "HC", "ML", "CH", "NT", "YL", "JY", "PT", "TT", "HL", "PH",
+                   "KL", "XZ", "CY", "KM", "LJ"]
+        prefix = regions[region - 1]
         next_id = f"{prefix}1"
 
     with connection.cursor() as cursor:
         cursor.execute('INSERT INTO House VALUES (%s, %s, %s,%s, %s, %s)',(next_id, 0,title,region,member,1))
-        cursor.execute('INSERT INTO Info  VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s)',(next_id,Info['price'],Info['address'],Info['level'],Info['room'],Info['living'],Info['bath'],Info['type'],Info['size'],current_date))
-        cursor.execute('INSERT INTO Equipment  VALUES (%s,%s, %s,%s,%s, %s,%s, %s, %s, %s, %s, %s, %s)',(next_id,Equip['sofa'], Equip['tv'], Equip['washer'], Equip['wifi'], Equip['bed'], Equip['refrigerator'], Equip['heater'], Equip['channel4'], Equip['cabinet'], Equip['aircond'], Equip['gas'],lift))
+        cursor.execute('INSERT INTO Info  VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s)',(next_id,Info['price'],Info['address'],Info['level'],Info['room'],Info['living'],Info['bath'],Info['type'],current_date,Info['size']))
         cursor.execute("INSERT INTO Rdetail VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",(next_id,"0",Rdetails['parking'],Rdetails['pet'],Rdetails['cook'],Rdetails['direction'],Rdetails['level'],Rdetails['security'],Rdetails['management'],Rdetails['period'],Rdetails['bus'],Rdetails['train'],Rdetails['mrt'],Rdetails['age']))
 
     # 處理圖片上傳+重命名
@@ -309,7 +287,7 @@ def add_house(request):
                 cursor.execute('INSERT INTO Image VALUES (%s, %s)',(next_id,next_path))
             i=i+1
 
-    house = f'/house_rent/{next_id}'
+    house = f'/house_sold/{next_id}'
     return redirect(house)
 
 def upload_page_sold(request):
@@ -345,7 +323,7 @@ def add_house_sold(request):
         prefix = latest_id.hId[0:2]  # 取得 ID 前綴，即 'KH'
         number_part = int(latest_id.hId[2:])  # 取得數字部分，轉換為整數，即 20
         next_number = number_part + 1  # 數字部分加 1，即 21
-        next_id = f"{prefix}{next_number:02}"  # 將 ID 前綴與新的數字部分結合，並確保數字部分有兩位數，即 'KH21'
+        next_id = prefix + str(next_number)  # 将前缀与新的数字部分直接拼接
     else:
         regions = ["TP", "NT", "TY", "TC", "TN","KH", "YL", "HC", "ML", "CH","NT", "YL", "JY", "PT", "TT","HL", "PH", "KL", "XZ", "CY","KM", "LJ"]
         prefix=regions[region-1]
@@ -353,7 +331,7 @@ def add_house_sold(request):
 
     with connection.cursor() as cursor:
         cursor.execute('INSERT INTO House VALUES (%s, %s, %s,%s, %s, %s)',(next_id, 1,title,region,member,1))
-        cursor.execute('INSERT INTO Info  VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s)',(next_id,Info['price'],Info['address'],Info['level'],Info['room'],Info['living'],Info['bath'],Info['type'],Info['size'],current_date))
+        cursor.execute('INSERT INTO Info  VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s)',(next_id,Info['price'],Info['address'],Info['level'],Info['room'],Info['living'],Info['bath'],Info['type'],current_date,Info['size']))
         cursor.execute("INSERT INTO Sdetail VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",(next_id,"1",Rdetails['parking'],Rdetails['direction'],Rdetails['level'],Rdetails['age'],Rdetails['security'],Rdetails['management'],Rdetails['bus'],Rdetails['train'],Rdetails['mrt'],lift))
 
     # 處理圖片上傳+重命名
@@ -418,13 +396,60 @@ def edit_page_update(request,hId):
     with connection.cursor() as cursor:
         cursor.execute('UPDATE House SET  title = %s, region = %s WHERE hId = %s',(title,region,hId))
         cursor.execute('UPDATE Info  SET price = %s, address = %s, level = %s, room = %s, living = %s, bath = %s, type = %s, size = %s, renewdate = %s WHERE hId_id = %s',
-                       (Info['price'],Info['address'],Info['level'],Info['room'],Info['living'],Info['bath'],Info['type'],Info['size'],current_date,hId))
+                       (Info['price'],Info['address'],Info['level'],Info['room'],Info['living'],Info['bath'],Info['type'],current_date,Info['size'],hId))
         cursor.execute('UPDATE Equipment  SET sofa = %s, tv = %s, washer = %s, wifi = %s, bed = %s, refrigerator = %s, heater = %s, channel4 = %s, cabinet = %s, aircond = %s, gas = %s WHERE hId_id = %s',
                        (Equip['sofa'], Equip['tv'], Equip['washer'], Equip['wifi'], Equip['bed'], Equip['refrigerator'], Equip['heater'], Equip['channel4'], Equip['cabinet'], Equip['aircond'], Equip['gas'],hId))
         cursor.execute("UPDATE Rdetail SET parking = %s, pet = %s, cook = %s, direction = %s, level = %s, security = %s, management = %s, period = %s, bus = %s, train = %s, mrt = %s, age = %s WHERE hId_id = %s",
                        (Rdetails['parking'],Rdetails['pet'],Rdetails['cook'],Rdetails['direction'],Rdetails['level'],Rdetails['security'],Rdetails['management'],Rdetails['period'],
                         Rdetails['bus'],Rdetails['train'],Rdetails['mrt'],Rdetails['age'],hId))
     house = f'/house_rent/{hId}'
+
+    return redirect(house)
+
+def edit_page_show_sold(request,hId):
+
+    if 'user' in request.session:
+        # 查询数据库，获取对应 hId 的标题数据
+        house = House.objects.raw("SELECT * FROM House,Info,Sdetail WHERE House.hId=%s AND House.hId=Info.hId_id AND House.hId=Sdetail.hId_id", [hId])
+        img_path = Image.objects.raw("SELECT * FROM Image WHERE Image.hId_id=%s",[hId])
+        return render(request, "add_renew_delete/edit_house_sold.html", {'house': house[0], 'img_path': img_path})
+
+    else:
+        return redirect('/login/')
+
+def edit_page_update_sold(request,hId):
+    current_date = datetime.date.today()
+    # House
+    region = request.POST['region']
+    title = request.POST['title']
+    # Info
+    fields = ['address', 'room', 'bath', 'living', 'size', 'type', 'level', 'price']
+    Info = {field: request.POST[field] for field in fields}
+    print(Info)
+
+    #Sdetails
+    fields = ['parking','direction','level','security','management','bus','train','mrt','age','lift']
+    Rdetails = {field: request.POST.get(field, '0') for field in fields}
+
+    # Image
+    images = request.POST.getlist('img_delete')
+
+    # 删除指定路径的文件
+
+    with connection.cursor() as cursor:
+        for img_path in images:
+            cursor.execute('DELETE FROM Image WHERE path=%s', [img_path])
+            file_path = f'my_app/static/img/house/{img_path}'
+            os.remove(file_path)
+
+    with connection.cursor() as cursor:
+        cursor.execute('UPDATE House SET title = %s, region = %s WHERE hId = %s',(title,region,hId))
+        cursor.execute('UPDATE Info SET price = %s, address = %s, level = %s, room = %s, living = %s, bath = %s, type = %s, size = %s, renewdate = %s WHERE hId_id = %s',
+                       (Info['price'],Info['address'],Info['level'],Info['room'],Info['living'],Info['bath'],Info['type'],current_date,Info['size'],hId))
+        cursor.execute("UPDATE Sdetail SET parking = %s, direction = %s, level = %s, security = %s, management = %s, bus = %s, train = %s, mrt = %s, age = %s, lift=%s WHERE hId_id = %s",
+                       (Rdetails['parking'],Rdetails['direction'],Rdetails['level'],Rdetails['security'],Rdetails['management'],
+                        Rdetails['bus'],Rdetails['train'],Rdetails['mrt'],Rdetails['age'],Rdetails['lift'],hId))
+    house = f'/house_sold/{hId}'
 
     return redirect(house)
 
