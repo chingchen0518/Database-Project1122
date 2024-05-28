@@ -15,7 +15,8 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
+from my_app import views as myapp_views  # 导入myapp应用的视图模块
 
 import my_app.views
 # from .views import YourModelDeleteView
@@ -80,7 +81,16 @@ urlpatterns = [
     path('reject_booking/<int:booking_seq>', my_app.views.reject_booking, name='reject_booking'),
     path('renew_booking/<int:booking_seq>', my_app.views.renew_booking, name='renew_booking'),
     path('renew_booking_time/<int:booking_seq>', my_app.views.renew_booking_time, name='renew_booking_time'),
+
     path('update_user_detail/', my_app.views.update_user_detail, name='update_user_detail'),
     path('update_password/', my_app.views.update_password, name='update_password'),
+
     path('verify/', my_app.views.verify, name='verify'),
+
+
+    
+    path('recognize_page', my_app.views.face_recognize_html, name='face_html_page'),
+    path('recognize', my_app.views.recognize, name='recognize'),  # recognize路径映射到recognize视图
+
+
 ]
