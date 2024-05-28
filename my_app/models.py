@@ -103,15 +103,12 @@ class Sdetail(models.Model):
      bus = models.IntegerField(default=0)
      train = models.IntegerField(default=0)
      mrt = models.IntegerField(default=0)
+     lift = models.IntegerField(default=0)
+
 
      class Meta:
         db_table = 'Sdetail'
 
-class Userssss(models.Model):
-     mId = models.CharField(max_length=100, primary_key=True,unique=True)
-     password= models.CharField(max_length=100, default="0")
-     class Meta:
-        db_table = 'Userssss'
 
 class Browse(models.Model):
      browse_seq = models.AutoField(primary_key=True)
@@ -129,16 +126,6 @@ class Favourite(models.Model):
      class Meta:
         db_table = 'Favourite'
 
-class Transaction(models.Model):
-     tId = models.AutoField(primary_key=True)
-     mId = models.ForeignKey(Member,on_delete=models.CASCADE,to_field='mId',auto_created=False,unique=False)
-     hId = models.ForeignKey(House, to_field='hId', auto_created=False, on_delete=models.CASCADE,unique=False)
-     status = models.IntegerField(default=0)
-     price = models.IntegerField(default=0)
-
-     class Meta:
-        db_table = 'Transaction'
-
 class Review(models.Model):
      review_seq = models.AutoField(primary_key=True)
      text = models.CharField(max_length=1000, default="-")
@@ -151,21 +138,6 @@ class Review(models.Model):
 
      class Meta:
         db_table = 'Review'
-
-class Customer(models.Model):
-     mId = models.OneToOneField(Member,to_field='mId',on_delete=models.CASCADE,unique=True,auto_created=False,default="-")
-     c_rate = models.FloatField(default=0)
-
-     class Meta:
-        db_table = 'Customer'
-
-class Owner(models.Model):
-     mId = models.OneToOneField(Member,to_field='mId',on_delete=models.CASCADE,unique=True,auto_created=False,default="-")
-     o_rate = models.FloatField(default=0)
-
-     class Meta:
-        db_table = 'Owner'
-
 class Booking(models.Model):
      booking_seq = models.AutoField(primary_key=True)
      customer_id = models.ForeignKey(Member,on_delete=models.CASCADE,to_field='mId',auto_created=False,unique=False)
@@ -176,6 +148,3 @@ class Booking(models.Model):
 
      class Meta:
         db_table = 'Booking'
-# class Photo(models.Model):
-#     image = models.ImageField(upload_to='image/', blank=False, null=False)
-#     upload_date = models.DateField(default=timezone.now)
