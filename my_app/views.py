@@ -137,7 +137,7 @@ def house_list(request):
         numbers = len(list(rows))  # 转换为列表再计数
 
 
-        return render(request, "house/house_list.html", {'numbers': numbers,'login':login,'rows': rows})
+        return render(request, "house/house_list.html", {'numbers': numbers,'login':login,'rows': rows, 'index': index})
 
         # 如果沒有search
     else:
@@ -158,7 +158,7 @@ def house_list(request):
         #                                     ON f.hId_id=hId ORDER BY Info.renewdate;
         #                                     ''',(member,))
         numbers = len(list(rows))  # 转换为列表再计数
-        return render(request, "house/house_list.html", {'numbers': numbers,'login':login,'rows': rows})
+        return render(request, "house/house_list.html", {'numbers': numbers,'login':login,'rows': rows, 'index': index})
 
 def house_rent_cont(request,hId):
     rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId=%s AND House.hId=Info.hId_id', [hId])
@@ -221,30 +221,8 @@ def delete_house(request,hId):
 
     # Delete the house
     houses_to_delete = House.objects.filter(hId=hId)
-
+    houses_to_delete.delete()
     return redirect('house_lists')
-
-# class HouseDeleteView(DeleteView):
-#     model = House
-#     success_url = reverse_lazy("house_lists")
-#     template_name = 'add_renew_delete/delete.html' #之後加一個取消
-#     pk_url_kwarg = 'hId' #告訴他用url中的哪個東西作爲primary_key
-#
-#     def delete(self, request, *args, **kwargs):
-#         # 获取即将删除的对象
-#         hId = kwargs.get(self.pk_url_kwarg)
-#
-#         image_paths=Image.objects.raw('SELECT path FROM Image WHERE hId=%s', [hId])
-#         print("satu dua tiga")
-#         print(image_paths)
-#
-#         for img_path in image_paths:
-#             file_path = f'my_app/static/img/house/{img_path}'
-#             os.remove(file_path)
-#
-#         response = super().delete(request, *args, **kwargs)
-#         return response
-
 
 def upload_page(request):
 
@@ -258,7 +236,7 @@ def add_house(request):
     # del request.session['user']
     current_date = datetime.date.today()
     # House
-    region = request.POST['region']
+    region = int(request.POST['region'])
     title = request.POST['title']
     # Info
     fields = ['address', 'room', 'bath', 'living', 'size', 'type', 'level', 'price']
@@ -279,20 +257,84 @@ def add_house(request):
     # Count next id
     if(House.objects.filter(region=region)):
         latest_id = House.objects.filter(region=region).latest('hId')
-        prefix = latest_id.hId[:-2]  # 取得 ID 前綴，即 'KH'
-        number_part = int(latest_id.hId[-2:])  # 取得數字部分，轉換為整數，即 20
+        prefix = latest_id.hId[0:2]  # 取得 ID 前綴，即 'KH'
+        number_part = int(latest_id.hId[2:])  # 取得數字部分，轉換為整數，即 20
         next_number = number_part + 1  # 數字部分加 1，即 21
-        next_id = f"{prefix}{next_number:02}"  # 將 ID 前綴與新的數字部分結合，並確保數字部分有兩位數，即 'KH21'
+        next_id = prefix + str(next_number)  # 将前缀与新的数字部分直接拼接
+    else:
+        regions = ["TP", "NT", "TY", "TC", "TN", "KH", "YL", "HC", "ML", "CH", "NT", "YL", "JY", "PT", "TT", "HL", "PH",
+                   "KL", "XZ", "CY", "KM", "LJ"]
+        prefix = regions[region - 1]
+        next_id = f"{prefix}1"
+
+    with connection.cursor() as cursor:
+        cursor.execute('INSERT INTO House VALUES (%s, %s, %s,%s, %s, %s)',(next_id, 0,title,region,member,1))
+        cursor.execute('INSERT INTO Info  VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s)',(next_id,Info['price'],Info['address'],Info['level'],Info['room'],Info['living'],Info['bath'],Info['type'],current_date,Info['size']))
+        cursor.execute('INSERT INTO Equipment  VALUES (%s,%s, %s,%s,%s, %s,%s, %s, %s, %s, %s, %s, %s)',(next_id,Equip['sofa'], Equip['tv'], Equip['washer'], Equip['wifi'], Equip['bed'], Equip['refrigerator'], Equip['heater'], Equip['channel4'], Equip['cabinet'], Equip['aircond'], Equip['gas'],lift))
+        cursor.execute("INSERT INTO Rdetail VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",(next_id,"0",Rdetails['parking'],Rdetails['pet'],Rdetails['cook'],Rdetails['direction'],Rdetails['level'],Rdetails['security'],Rdetails['management'],Rdetails['period'],Rdetails['bus'],Rdetails['train'],Rdetails['mrt'],Rdetails['age']))
+
+    # 處理圖片上傳+重命名
+    # 處理圖片上傳+重命名
+    if request.method == 'POST' and request.FILES.getlist('images'):
+        files = request.FILES.getlist('images')
+        i=1
+        for image in files:
+            file_extension = os.path.splitext(image.name)[1].lower()
+            next_path=f'{next_id}-{i}{file_extension}'
+            image_path = os.path.join('my_app/static/img/house/',next_path)
+            with open(image_path, 'wb+') as destination:
+                for chunk in image.chunks():
+                    destination.write(chunk)
+            with connection.cursor() as cursor:
+                cursor.execute('INSERT INTO Image VALUES (%s, %s)',(next_id,next_path))
+            i=i+1
+
+    house = f'/house_sold/{next_id}'
+    return redirect(house)
+
+def upload_page_sold(request):
+
+    if 'user' in request.session and 'mId' in request.session:
+        return render(request, "add_renew_delete/upload_page_sold.html")
+
+    else:
+        return redirect('/login/')
+
+def add_house_sold(request):
+    # del request.session['user']
+    current_date = datetime.date.today()
+    # House
+    region = int(request.POST['region'])
+    title = request.POST['title']
+    # Info
+    fields = ['address', 'room', 'bath', 'living', 'size', 'type', 'level', 'price']
+    Info = {field: request.POST[field] for field in fields}
+    print(Info)
+
+    # Rdetails
+    fields = ['parking','direction','level','security','management','period','bus','train','mrt','age']
+    Rdetails = {field: request.POST.get(field, '0') for field in fields}
+    print(Rdetails)
+    # Equipments
+    lift=request.POST['lift']
+    #member_id
+    member = request.session['mId']
+    # Count next id
+    if(House.objects.filter(region=region)):
+        latest_id = House.objects.filter(region=region).latest('hId')
+        prefix = latest_id.hId[0:2]  # 取得 ID 前綴，即 'KH'
+        number_part = int(latest_id.hId[2:])  # 取得數字部分，轉換為整數，即 20
+        next_number = number_part + 1  # 數字部分加 1，即 21
+        next_id = prefix + str(next_number)  # 将前缀与新的数字部分直接拼接
     else:
         regions = ["TP", "NT", "TY", "TC", "TN","KH", "YL", "HC", "ML", "CH","NT", "YL", "JY", "PT", "TT","HL", "PH", "KL", "XZ", "CY","KM", "LJ"]
         prefix=regions[region-1]
         next_id = f"{prefix}1"
 
     with connection.cursor() as cursor:
-        cursor.execute('INSERT INTO House VALUES (%s, %s, %s,%s, %s, %s)',(next_id, 0,title,region,member,1))
-        cursor.execute('INSERT INTO Info  VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s)',(next_id,Info['price'],Info['address'],Info['level'],Info['room'],Info['living'],Info['bath'],Info['type'],Info['size'],current_date))
-        cursor.execute('INSERT INTO Equipment  VALUES (%s,%s, %s,%s,%s, %s,%s, %s, %s, %s, %s, %s, %s)',(next_id,Equip['sofa'], Equip['tv'], Equip['washer'], Equip['wifi'], Equip['bed'], Equip['refrigerator'], Equip['heater'], Equip['channel4'], Equip['cabinet'], Equip['aircond'], Equip['gas'],lift))
-        cursor.execute("INSERT INTO Rdetail VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",(next_id,"0",Rdetails['parking'],Rdetails['pet'],Rdetails['cook'],Rdetails['direction'],Rdetails['level'],Rdetails['security'],Rdetails['management'],Rdetails['period'],Rdetails['bus'],Rdetails['train'],Rdetails['mrt'],Rdetails['age']))
+        cursor.execute('INSERT INTO House VALUES (%s, %s, %s,%s, %s, %s)',(next_id, 1,title,region,member,1))
+        cursor.execute('INSERT INTO Info  VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s)',(next_id,Info['price'],Info['address'],Info['level'],Info['room'],Info['living'],Info['bath'],Info['type'],current_date,Info['size']))
+        cursor.execute("INSERT INTO Sdetail VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",(next_id,"1",Rdetails['parking'],Rdetails['direction'],Rdetails['level'],Rdetails['age'],Rdetails['security'],Rdetails['management'],Rdetails['bus'],Rdetails['train'],Rdetails['mrt'],lift))
 
     # 處理圖片上傳+重命名
     if request.method == 'POST' and request.FILES.getlist('images'):
@@ -309,7 +351,7 @@ def add_house(request):
                 cursor.execute('INSERT INTO Image VALUES (%s, %s)',(next_id,next_path))
             i=i+1
 
-    house = f'/house_rent/{next_id}'
+    house = f'/house_sold/{next_id}'
     return redirect(house)
 
 def edit_page_show(request,hId):
@@ -356,13 +398,60 @@ def edit_page_update(request,hId):
     with connection.cursor() as cursor:
         cursor.execute('UPDATE House SET  title = %s, region = %s WHERE hId = %s',(title,region,hId))
         cursor.execute('UPDATE Info  SET price = %s, address = %s, level = %s, room = %s, living = %s, bath = %s, type = %s, size = %s, renewdate = %s WHERE hId_id = %s',
-                       (Info['price'],Info['address'],Info['level'],Info['room'],Info['living'],Info['bath'],Info['type'],Info['size'],current_date,hId))
+                       (Info['price'],Info['address'],Info['level'],Info['room'],Info['living'],Info['bath'],Info['type'],current_date,Info['size'],hId))
         cursor.execute('UPDATE Equipment  SET sofa = %s, tv = %s, washer = %s, wifi = %s, bed = %s, refrigerator = %s, heater = %s, channel4 = %s, cabinet = %s, aircond = %s, gas = %s WHERE hId_id = %s',
                        (Equip['sofa'], Equip['tv'], Equip['washer'], Equip['wifi'], Equip['bed'], Equip['refrigerator'], Equip['heater'], Equip['channel4'], Equip['cabinet'], Equip['aircond'], Equip['gas'],hId))
         cursor.execute("UPDATE Rdetail SET parking = %s, pet = %s, cook = %s, direction = %s, level = %s, security = %s, management = %s, period = %s, bus = %s, train = %s, mrt = %s, age = %s WHERE hId_id = %s",
                        (Rdetails['parking'],Rdetails['pet'],Rdetails['cook'],Rdetails['direction'],Rdetails['level'],Rdetails['security'],Rdetails['management'],Rdetails['period'],
                         Rdetails['bus'],Rdetails['train'],Rdetails['mrt'],Rdetails['age'],hId))
     house = f'/house_rent/{hId}'
+
+    return redirect(house)
+
+def edit_page_show_sold(request,hId):
+
+    if 'user' in request.session:
+        # 查询数据库，获取对应 hId 的标题数据
+        house = House.objects.raw("SELECT * FROM House,Info,Sdetail WHERE House.hId=%s AND House.hId=Info.hId_id AND House.hId=Sdetail.hId_id", [hId])
+        img_path = Image.objects.raw("SELECT * FROM Image WHERE Image.hId_id=%s",[hId])
+        return render(request, "add_renew_delete/edit_house_sold.html", {'house': house[0], 'img_path': img_path})
+
+    else:
+        return redirect('/login/')
+
+def edit_page_update_sold(request,hId):
+    current_date = datetime.date.today()
+    # House
+    region = request.POST['region']
+    title = request.POST['title']
+    # Info
+    fields = ['address', 'room', 'bath', 'living', 'size', 'type', 'level', 'price']
+    Info = {field: request.POST[field] for field in fields}
+    print(Info)
+
+    #Sdetails
+    fields = ['parking','direction','level','security','management','bus','train','mrt','age','lift']
+    Rdetails = {field: request.POST.get(field, '0') for field in fields}
+
+    # Image
+    images = request.POST.getlist('img_delete')
+
+    # 删除指定路径的文件
+
+    with connection.cursor() as cursor:
+        for img_path in images:
+            cursor.execute('DELETE FROM Image WHERE path=%s', [img_path])
+            file_path = f'my_app/static/img/house/{img_path}'
+            os.remove(file_path)
+
+    with connection.cursor() as cursor:
+        cursor.execute('UPDATE House SET title = %s, region = %s WHERE hId = %s',(title,region,hId))
+        cursor.execute('UPDATE Info SET price = %s, address = %s, level = %s, room = %s, living = %s, bath = %s, type = %s, size = %s, renewdate = %s WHERE hId_id = %s',
+                       (Info['price'],Info['address'],Info['level'],Info['room'],Info['living'],Info['bath'],Info['type'],current_date,Info['size'],hId))
+        cursor.execute("UPDATE Sdetail SET parking = %s, direction = %s, level = %s, security = %s, management = %s, bus = %s, train = %s, mrt = %s, age = %s, lift=%s WHERE hId_id = %s",
+                       (Rdetails['parking'],Rdetails['direction'],Rdetails['level'],Rdetails['security'],Rdetails['management'],
+                        Rdetails['bus'],Rdetails['train'],Rdetails['mrt'],Rdetails['age'],Rdetails['lift'],hId))
+    house = f'/house_sold/{hId}'
 
     return redirect(house)
 
@@ -470,31 +559,35 @@ def delete_comment(request,hId,review_seq):
     house = f'/house_rent/{hId}'
     return redirect(house)
 
-def add_favor(request,hId):
+def add_favor(request,hId,index):
     latest_favourite_seq = Favourite.objects.aggregate(Max('favourite_seq'))['favourite_seq__max']
     if latest_favourite_seq:
         latest_favourite_seq = latest_favourite_seq + 1
     else:
         latest_favourite_seq = 1
     member = request.session['mId']
+    house_rent = f'/house_list/?index={index}'
+    house_sold = f'/house_list_sold/?index={index}'
     with connection.cursor() as cursor:
         cursor.execute('INSERT INTO Favourite VALUES (%s, %s, %s)',(latest_favourite_seq, hId, member))
     status=House.objects.raw('SELECT hId,status FROM House WHERE hId=%s',[hId])
     if status[0].status==0:
-        return redirect('/house_list/')
+        return redirect(house_rent)
     else:
-        return redirect('/house_list_sold/')
+        return redirect(house_sold)
 
-def del_favor(request,favourite_seq,hId):
+def del_favor(request,favourite_seq,hId,index):
 
     member = request.session['mId']
     with connection.cursor() as cursor:
         cursor.execute('DELETE FROM Favourite WHERE favourite_seq= %s', (favourite_seq,))
     status = House.objects.raw('SELECT hId,status FROM House WHERE hId=%s', [hId])
+    house_rent = f'/house_list/?index={index}'
+    house_sold = f'/house_list_sold/?index={index}'
     if status[0].status==0:
-        return redirect('/house_list/')
+        return redirect(house_rent)
     else:
-        return redirect('/house_list_sold/')
+        return redirect(house_sold)
 
 def accept_booking(request,booking_seq):
     with connection.cursor() as cursor:
@@ -567,7 +660,7 @@ def house_list_sold(request):
         #                                     ''', (member, '%' + keyword + '%'))
         numbers = len(list(rows))  # 转换为列表再计数
 
-        return render(request, "house/house_list_sold.html", {'numbers': numbers, 'login': login, 'rows': rows})
+        return render(request, "house/house_list_sold.html", {'numbers': numbers, 'login': login, 'rows': rows, 'index': index})
 
         # 如果沒有search
     else:
@@ -594,7 +687,6 @@ def house_sold(request, hId):
     # House Data
     rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId=%s AND House.hId=Info.hId_id', [hId])
     image = Image.objects.raw('SELECT path FROM Image WHERE Image.hId_id=%s', [hId])
-    equipment = Equipment.objects.raw('SELECT * FROM Equipment WHERE Equipment.hId_id=%s', [hId])
     seller = Member.objects.raw('SELECT * FROM Member JOIN House ON House.mId_id=Member.mId WHERE House.hId=%s',
                                 [hId])
     details = Sdetail.objects.raw('SELECT * FROM Sdetail WHERE hId_id=%s', (hId,))
@@ -619,7 +711,7 @@ def house_sold(request, hId):
             login_people = "0000"
         # print(login)
     return render(request, "house/house_sold.html",
-                      {"rows": rows[0], "image": image, "equipment": equipment[0], "seller": seller[0],
+                      {"rows": rows[0], "image": image, "seller": seller[0],
                        "details": details[0], "login_people": login_people, "login": login, "review": review})
 
 def account_center(request):
@@ -653,11 +745,13 @@ def account_center(request):
             AND Booking.situation != %s
             ORDER BY Booking.booking_seq DESC''', (member, "已成交"))
 
-    print(booking_seller)
-    print(booking_seller[0].booking_seq)
-    return render(request, "homepage_login_account/account_center.html", {'login': login, 'rows': Favourite, 'browse':browse, 'booking_seller':booking_seller,"booking_customer":booking_customer})
+    member_detail = User.objects.raw('SELECT * FROM Member,User WHERE Member.username_id=User.username AND Member.mId=%s',[member])
 
-    return render(request, "homepage_login_account/account_center.html", {'login': login, 'rows': Favourite, 'browse':browse})
+    # print(booking_seller)
+    # print(booking_seller[0].booking_seq)
+    return render(request, "homepage_login_account/account_center.html", {'login': login, 'rows': Favourite, 'browse':browse, 'booking_seller':booking_seller,"booking_customer":booking_customer,"member_detail":member_detail})
+
+    # return render(request, "homepage_login_account/account_center.html", {'login': login, 'rows': Favourite, 'browse':browse})
 
 def city_filter(request, city_id, status):
     if 'user' in request.session and 'mId' in request.session :
@@ -701,3 +795,40 @@ def delete_browse(request):
         cursor.execute('DELETE FROM Browse WHERE mId_id=%s', [mId])
 
     return redirect('/account_center/')
+
+
+def update_user_detail(request):
+    mId = request.session['mId']
+    phone = request.POST['phone']
+    email = request.POST['email']
+    username = request.POST['username']
+    gender = request.POST['gender']
+    with connection.cursor() as cursor:
+        cursor.execute('UPDATE Member SET username_id=%s,gender=%s,phone=%s,email=%s WHERE mId=%s',(username,gender,phone,email,mId))
+
+    return redirect('/account_center/')
+
+def update_password(request):
+    if request.method == 'POST':
+        old_password = request.POST.get('old_password')
+        new_password = request.POST.get('new_password')
+
+        # 检查用户输入的旧密码是否正确
+        if request.user.check_password(old_password):
+            # 设置新密码并保存
+            request.user.set_password(new_password)
+            request.user.save()
+
+            # 更新会话中的用户身份验证哈希以防止用户被注销
+            update_session_auth_hash(request, request.user)
+
+            # 重定向到成功页面或者给出成功消息
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('password_updated_successfully')  # 替换为你的成功页面URL名称或路径
+        else:
+            # 如果旧密码不正确，显示错误消息
+            messages.error(request, 'Your old password is incorrect.')
+            return redirect('change_password')  # 替换为你的修改密码页面URL名称或路径
+
+        # 如果是 GET 请求，返回修改密码页面
+    return render(request, 'change_password.html')

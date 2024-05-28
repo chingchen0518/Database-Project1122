@@ -13,8 +13,8 @@
 <div class="container">
   <!-- 本頁面標題 -->
 
-  <h1 class="mt-5">新增租房</h1>
-  <form id="house-form" method="POST" action="{% url 'add_house' %}" enctype="multipart/form-data">
+  <h1 class="mt-5">新增售房</h1>
+  <form id="house-form" method="POST" action="{% url 'add_house_sold' %}" enctype="multipart/form-data">
       {% csrf_token %}
 
     <div class="accordion" id="accordion">
@@ -67,7 +67,7 @@
             <!-- 屋齡 -->
             <div class="mb-3">
               <label for="age" class="form-label">屋齡(請填數字)：</label>
-              <input type="text" class="form-control" id="age" name="age" placeholder="單位:年，例:10" pattern="[1-9]\d*" title="請輸入>0的整數" required>
+              <input type="text" class="form-control" id="age" name="age" placeholder="單位:年，例:10" required>
             </div>
 
             <!-- 地址 -->
@@ -81,13 +81,13 @@
               <label class="form-label">格局(請填數字)：</label>
               <div class="row">
                 <div class="col">
-                  <input type="text" class="form-control" id="room" name="room" placeholder="房" pattern="[1-9]" title="請輸入>0的整數" required>
+                  <input type="text" class="form-control" id="room" name="room" placeholder="房" pattern="[1-9]" title="只能輸入0-9">
                 </div>
                 <div class="col">
-                  <input type="text" class="form-control" id="living" name="living" placeholder="客廳" pattern="[1-9]" title="請輸入>0的整數" required>
+                  <input type="text" class="form-control" id="living" name="living" placeholder="客廳" pattern="[1-9]" title="只能輸入0-9">
                 </div>
                 <div class="col">
-                  <input type="text" class="form-control" id="bath" name="bath" placeholder="衛" pattern="[1-9]" title="請輸入>0的整數" required>
+                  <input type="text" class="form-control" id="bath" name="bath" placeholder="衛" pattern="[1-9]" title="只能輸入0-9">
                 </div>
               </div>
             </div>
@@ -124,7 +124,7 @@
             <!-- 樓層 -->
             <div class="mb-3">
               <label for="floor" class="form-label">樓層：</label>
-              <input type="text" class="form-control" id="floor" name="level" placeholder="單位:樓，例:11" pattern="[1-9]\d*" title="請輸入>0的整數" required>
+              <input type="text" class="form-control" id="floor" name="level" placeholder="單位:樓，例:11"  pattern="[1-9]\d*" title="請輸入0-99" required>
             </div>
           </div>
         </div>
@@ -139,29 +139,6 @@
         </h2>
         <div id="details" class="accordion-collapse collapse" aria-labelledby="details-heading" data-bs-parent="#accordion">
           <div class="accordion-body">
-
-            <!-- 設備 -->
-            <div class="mb-3">
-              <label class="form-label">設備：</label>
-              <!-- 設備(勾選框) -->
-              <label><input type="checkbox" name="tv" value="1"><span>電視機</span></label>
-              <label><input type="checkbox" name="washer" value="1"><span>洗衣機</span></label>
-              <label><input type="checkbox" name="wifi" value="1"><span>網絡</span></label>
-              <label><input type="checkbox" name="refrigerator" value="1"><span>冰箱</span></label>
-              <label><input type="checkbox" name="gas" value="1"><span>瓦斯爐</span></label>
-              <label><input type="checkbox" name="aircond" value="1"><span>冷氣</span></label>
-              <label><input type="checkbox" name="heater" value="1"><span>熱水器</span></label>
-              <label><input type="checkbox" name="channel4" value="1"><span>第四台</span></label>
-            </div>
-
-            <!-- 家具 -->
-            <div class="mb-3">
-              <label class="form-label">家具：</label>
-              <!-- 設備(勾選框) -->
-              <label><input type="checkbox" name="sofa" value="1"><span>沙發</span></label>
-              <label><input type="checkbox" name="bed" value="1"><span>床組</span></label>
-              <label><input type="checkbox" name="cabinet" value="1"><span>櫃子</span></label>
-            </div>
 
             <!-- 附近交通 -->
             <div class="mb-3">
@@ -179,26 +156,6 @@
                 <!-- 電梯選項 -->
                 <option value="1">有</option>
                 <option value="0">無</option>
-              </select>
-            </div>
-
-            <!-- 開伙 -->
-            <div class="mb-3">
-              <label for="cook" class="form-label">開伙：</label>
-              <select class="form-select" id="cook" name="cook">
-                <!-- 開伙選項 -->
-                <option value="1">可以</option>
-                <option value="0">不可以</option>
-              </select>
-            </div>
-
-            <!-- 寵物 -->
-            <div class="mb-3">
-              <label for="pet" class="form-label">寵物：</label>
-              <select class="form-select" id="pet" name="pet">
-                <!-- 寵物選項 -->
-                <option value="1">可以</option>
-                <option value="0">不可以</option>
               </select>
             </div>
 
@@ -239,14 +196,14 @@
 
             <!-- 月租費 -->
             <div class="mb-3">
-              <label for="rent_fee">月租費(請填數字)：</label>
-              <input type="text" class="form-control" id="rent_fee" name="price" placeholder="單位: 新台幣，例:6000" pattern="[1-9]\d*" title="請輸入>0的整數">
+              <label for="rent_fee">售價：</label>
+              <input type="text" class="form-control" id="rent_fee" name="price" placeholder="單位: 新台幣，例:6000" pattern="[1-9]\d*" title="只能輸入大於0的整數" required>
             </div>
 
             <!-- 管理費 -->
             <div class="mb-3">
               <label for="management_fee">管理費(請填數字)：</label>
-              <input type="text" class="form-control" id="management_fee" name="management" placeholder="單位: 新台幣，例:800" pattern="[1-9]\d*" title="請輸入>0的整數">
+              <input type="text" class="form-control" id="management_fee" name="management" placeholder="單位: 新台幣，例:800" pattern="[1-9]\d*" title="只能輸入大於0的整數" required>
             </div>
 
             <!-- 最短租期 -->
@@ -285,7 +242,7 @@
 
     <!-- 上傳表單按鈕 -->
     <div class="d-flex justify-content-center mt-3">
-      <input type="submit" class="btn btn-primary" value="上傳">
+      <input type="submit" class="btn btn-primary" value="新增">
     </div>
   </form>
 
