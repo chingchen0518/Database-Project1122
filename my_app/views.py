@@ -10,12 +10,20 @@ from django.db.models import Max
 import os
 from django.db.models import Count
 
-
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import PKCS1_OAEP
+from Crypto.Signature import pkcs1_15
+from Crypto.Hash import SHA256
+from Crypto.Random import get_random_bytes
+import base64
+from PyPDF2 import PdfWriter, PdfReader
+import io
 import datetime
 
 
 #引入 Table
-from my_app.models import Member, House, Image, Equipment, User, Member, Browse, Review, Rdetail, Favourite, Sdetail,Booking
+from my_app.models import Member, House, Image, Equipment, User, Member, Browse, Review, Rdetail, Favourite, Sdetail, \
+    Booking, KeyPair
 
 
 #endregion 引入 Table結束
@@ -81,16 +89,6 @@ def logout(request):
     del request.session['user']
     del request.session['mId']
     return redirect("homepage")
-
-def account_center2(request):
-    if 'user' in request.session:
-        rows = Member.objects.raw('SELECT * FROM Member WHERE Member.username_id=%s', [request.session['user']])
-        print(rows)
-        print(rows[0])
-
-        return render(request, "homepage_login_account/account_center2.html", {'row': rows[0]})
-    else:#若沒有登錄
-        return redirect('login_page')#去login_page這個函數
 
 
 
@@ -593,9 +591,72 @@ def reject_booking(request,booking_seq):
         cursor.execute('DELETE FROM Booking WHERE booking_seq=%s',(booking_seq,))
     return redirect('/account_center/')
 
-def renew_booking(request,booking_seq):
-    latest_sitaution=request.GET['booking_renew']
+def encrypt(booking_seq):
+    # print("123")
+    # 生成RSA密钥对
+    key = RSA.generate(2048)
+    private_key = key.export_key()
+    public_key = key.publickey().export_key()
 
+    with connection.cursor() as cursor:
+        if KeyPair.objects.filter(booking_seq=booking_seq):
+            cursor.execute('UPDATE KeyPair SET private_key=%s,public_key=%s',(private_key,public_key))
+        else:
+            cursor.execute('INSERT INTO KeyPair VALUES (%s,%s,%s)', (booking_seq,private_key,public_key))
+
+    # 保存密钥到文件
+    with open("private.pem", "wb") as f:
+        f.write(private_key)
+
+    with open("public.pem", "wb") as f:
+        f.write(public_key)
+    input_pdf_path = f'my_app/static/contract/{booking_seq}.pdf'
+        # f'static/contract/{booking_seq}.pdf'
+    output_pdf_path = f'my_app/static/contract/{booking_seq}.pdf'
+
+    # 读取PDF并获取其内容
+    with open(input_pdf_path, 'rb') as pdf_file:
+        reader = PdfReader(pdf_file)
+        writer = PdfWriter()
+
+        # 复制所有页面到新的PDF
+        for page in reader.pages:
+            writer.add_page(page)
+
+        # 获取PDF内容的二进制数据
+        output_stream = io.BytesIO()
+        writer.write(output_stream)
+        pdf_data = output_stream.getvalue()
+
+    # 创建SHA-256哈希对象
+    hash_obj = SHA256.new(pdf_data)
+
+    # 使用私钥签名PDF数据
+    signature = pkcs1_15.new(key).sign(hash_obj)
+
+    with open(output_pdf_path, 'wb') as output_pdf_file:
+        writer.write(output_pdf_file)
+        # 添加签名到文件末尾
+        output_pdf_file.write(b'\nSignature: ' + signature)
+
+def renew_booking(request,booking_seq):
+    latest_sitaution=request.POST['booking_renew']
+
+    if request.method == 'POST' and request.FILES['file']:
+        file = request.FILES['file']
+        # 設置文件上傳的目錄
+        upload_dir = 'my_app/static/contract/'
+        if not os.path.exists(upload_dir):
+            os.makedirs(upload_dir)
+        # 構造新的文件路徑，將文件名更改為 "xxx"
+        new_file_path = f'{upload_dir}{str(booking_seq)}.pdf'
+        # 寫入文件到指定目錄
+        with open(new_file_path, 'wb+') as destination:
+            for chunk in file.chunks():
+                destination.write(chunk)
+
+        encrypt(booking_seq)
+        return redirect('/account_center/')
 
     with connection.cursor() as cursor:
             cursor.execute('UPDATE Booking SET situation=%s WHERE booking_seq=%s',(latest_sitaution,booking_seq))
@@ -605,6 +666,9 @@ def renew_booking(request,booking_seq):
                 cursor.execute('UPDATE House SET available=0 WHERE hId=(SELECT hId_id FROM Booking WHERE booking_seq=%s)',(booking_seq,))
 
     return redirect('/account_center/')
+
+# def decrypt(booking_seq):
+
 
 def renew_booking_time(request,booking_seq):
     time=request.GET['time']
@@ -736,11 +800,8 @@ def account_center(request):
             WHERE Booking.hId_id=House.hId 
             AND House.hId=Info.hId_id 
             AND Booking.customer_id_id=%s
-            AND Booking.situation != %s
-            ORDER BY Booking.booking_seq DESC''', (member, "已成交"))
+            ORDER BY Booking.booking_seq DESC''', (member,))
 
-    print(booking_seller)
-    print(booking_seller[0].booking_seq)
     return render(request, "homepage_login_account/account_center.html", {'login': login, 'rows': Favourite, 'browse':browse, 'booking_seller':booking_seller,"booking_customer":booking_customer})
 
     return render(request, "homepage_login_account/account_center.html", {'login': login, 'rows': Favourite, 'browse':browse})
@@ -776,8 +837,12 @@ def add_appointment(request,hId):
     with connection.cursor() as cursor:
         cursor.execute('INSERT INTO Booking VALUES (%s, %s, %s, %s, %s, %s)',
                        (latest_booking_seq, date, time, member, hId, "未確認"))
+    status = Member.objects.raw('SELECT status FROM House WHERE hId=%s', [hId])
 
-    house = f'/house_rent/{hId}'
+    if(status):
+        house = f'/house_sold/{hId}'
+    else:
+        house = f'/house_rent/{hId}'
     return redirect(house)
 
 def delete_browse(request):

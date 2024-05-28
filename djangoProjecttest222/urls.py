@@ -49,7 +49,6 @@ urlpatterns = [
     path('delete_browse', my_app.views.delete_browse, name='delete_browse'),
 
     #用戶中心
-    path('account_center2/',my_app.views.account_center2,name="account_center2"),
     path('account_center/', my_app.views.account_center, name="account_center"),
 
     #沒用的東西

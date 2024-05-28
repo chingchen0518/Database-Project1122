@@ -1,4 +1,5 @@
 {% load static %}
+{% load custom_tags %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -143,14 +144,15 @@
                     <div class="info">
                         <p><span class="bold">房子：</span>{{ book.title }}</p>
                         <p><span class="bold">預約者：</span>{{ book.realname }}</p>
-                        <p><span clbass="bold">日期：</span>{{ book.date|date:"Y-m-d" }}</p>
+                        <p><span class="bold">日期：</span>{{ book.date|date:"Y-m-d" }}</p>
                         <p><span class="bold">時間：</span>{{ book.time }}</p>
                         <p><span class="bold">地址：</span>{{ book.address }}</p>
 
                     </div>
                 </a>
 
-                <form class="operation" action="{% url 'renew_booking' booking_seq=book.booking_seq %}">
+                <form class="operation" action="{% url 'renew_booking' booking_seq=book.booking_seq %}" method='POST' enctype="multipart/form-data">
+                    {% csrf_token %}
                     <div class="accept_and_reject">
                         <a class="btn btn-primary accept_button {% if book.situation == "已成交" %}button-disabled{% endif %}" href="{% url 'accept_booking' booking_seq=book.booking_seq %}">同意</a>
                         <a class="btn btn-primary reject_button {% if book.situation == "已成交" %}button-disabled{% endif %}" href="{% url 'reject_booking' booking_seq=book.booking_seq %}">拒絕</a>
@@ -161,8 +163,17 @@
                         <option {% if book.situation == "同意看房" %}selected{% endif %} value="同意看房">同意看房</option>
                         <option {% if book.situation == "已成交" %}selected{% endif %} value="已成交">已成交</option>
                     </select>
+{#                    <label for="formFile" class="form-label">上傳租約#}
+{#                    <input name="file" type="file" id="formFile" class="file form-control" style="display: none;">#}
+{#                    </label>#}
+                    {% if book.situation == "已成交" %}
+                        <label for="formFile">上傳租約</label>
+                        <input name="file" type="file" id="formFile">
+                    {% endif %}
 
                     <input type="submit" class="btn btn-primary booking_situation_button" value="更新狀態">
+{#                    <div class="mb-3">#}
+{#                    </div>#}
                 </form>
             </div>
             {% endfor %}
@@ -191,6 +202,14 @@
                 </a>
 
                 <form class="operation" action="{% url 'renew_booking_time' booking_seq=book.booking_seq %}">
+                    {% if book.situation == "已成交" %}
+                        <p>已成交</p>
+
+                        {% if book.booking_seq|check_file_exist %}
+                            <a href="/static/contract/{{ book.booking_seq }}.pdf" download>下載租約</a>
+                        {% endif %}
+{#                        <a href="/static/contract/{{ book.booking_seq }}.pdf" download>下載租約</a>#}
+                    {% else %}
                     預約日期<input type="date" id="date" name="date" value="{{ book.date|date:"Y-m-d" }}" required>
                     預約時間<input type="time" id="time" name="time" value="{{ book.time|time:"H:i" }}" required>
 
@@ -198,6 +217,8 @@
                         <input id="renew_booking_time" type="submit" class="btn btn-primary booking_situation_button" value="更新">
                         <a class="btn btn-primary reject_button" href="{% url 'reject_booking' booking_seq=book.booking_seq %}">取消</a>
                     </div>
+                    {% endif %}
+
 
                 </form>
             </div>

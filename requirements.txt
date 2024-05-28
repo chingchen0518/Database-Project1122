@@ -58,3 +58,5 @@ tzdata==2023.3
 urllib3==2.0.4
 wcwidth==0.2.6
 wsproto==1.2.0
+
+crypto~=1.4.1
