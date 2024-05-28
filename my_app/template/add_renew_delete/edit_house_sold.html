@@ -51,7 +51,7 @@
   <!-- 本頁面標題 -->
 
   <h1 class="mt-5">編輯房屋資訊</h1>
-  <form id="house-form" method="POST" action="{% url 'edit_house' hId=house.hId %}">
+  <form id="house-form" method="POST" action="{% url 'edit_house_sold' hId=house.hId %}">
       {% csrf_token %}
 
     <div class="accordion" id="accordion">
@@ -63,7 +63,7 @@
             簡介
           </button>
         </h2>
-        <div id="introduction" class="accordion-collapse collapse show" aria-labelledby="introduction-heading" data-bs-parent="#accordion" >
+        <div id="introduction" class="accordion-collapse collapse show" aria-labelledby="introduction-heading" data-bs-parent="#accordion">
             <div class="accordion-body">
                 <!-- 標題 -->
                 <div class="mb-3">
@@ -105,7 +105,7 @@
             <!-- 屋齡 -->
             <div class="mb-3">
               <label for="age" class="form-label">屋齡(請填數字)：</label>
-              <input type="text" class="form-control" id="age" name="age" placeholder="單位:年，例:10" required value="{{ house.age }}">
+              <input type="text" class="form-control" id="age" name="age" placeholder="單位:年，例:10" required value="{{ house.age }}" pattern="[1-9]\d*" title="請輸入>0的整數">
             </div>
 
             <!-- 地址 -->
@@ -141,7 +141,7 @@
               <label for="type" class="form-label">類型：</label>
               <select class="form-select" id="type" name="type">
                 <!-- 類型選項 -->
-                 <option value="--" {% if house.type == "--" %}selected{% endif %}>--</option>
+                <option value="--" {% if house.type == "--" %}selected{% endif %}>--</option>
                 <option value="公寓" {% if house.type == "公寓" %}selected{% endif %}>公寓</option>
                 <option value="別墅" {% if house.type == "別墅" %}selected{% endif %}>別墅</option>
                 <option value="透天厝" {% if house.type == "透天厝" %}selected{% endif %}>透天厝</option>
@@ -184,29 +184,6 @@
         <div id="details" class="accordion-collapse collapse" aria-labelledby="details-heading" data-bs-parent="#accordion">
           <div class="accordion-body">
 
-            <!-- 設備 -->
-            <div class="mb-3">
-              <label class="form-label">設備：</label>
-              <!-- 設備(勾選框) -->
-              <label><input type="checkbox" name="tv" value="1" {% if house.tv %} checked {% endif %}><span>電視機</span></label>
-              <label><input type="checkbox" name="washer" value="1" {% if house.washer %} checked {% endif %}><span>洗衣機</span></label>
-              <label><input type="checkbox" name="wifi" value="1" {% if house.wifi %} checked {% endif %}><span>網絡</span></label>
-              <label><input type="checkbox" name="refrigerator" value="1" {% if house.refrigerator %} checked {% endif %}><span>冰箱</span></label>
-              <label><input type="checkbox" name="gas" value="1" {% if house.gas %} checked {% endif %}><span>瓦斯爐</span></label>
-              <label><input type="checkbox" name="aircond" value="1" {% if house.aircond %} checked {% endif %}><span>冷氣</span></label>
-              <label><input type="checkbox" name="heater" value="1" {% if house.heater %} checked {% endif %}><span>熱水器</span></label>
-              <label><input type="checkbox" name="channel4" value="1" {% if house.channel4 %} checked {% endif %}><span>第四台</span></label>
-            </div>
-
-            <!-- 家具 -->
-            <div class="mb-3">
-              <label class="form-label">家具：</label>
-              <!-- 設備(勾選框) -->
-              <label><input type="checkbox" name="sofa" value="1" {% if house.sofa %} checked {% endif %}><span>沙發</span></label>
-              <label><input type="checkbox" name="bed" value="1" {% if house.bed %} checked {% endif %}><span>床組</span></label>
-              <label><input type="checkbox" name="cabinet" value="1" {% if house.cabinet %} checked {% endif %}><span>櫃子</span></label>
-            </div>
-
             <!-- 附近交通 -->
             <div class="mb-3">
               <label class="form-label">附近交通：</label>
@@ -223,26 +200,6 @@
                 <!-- 電梯選項 -->
                 <option value="1" {% if house.heater %} selected {% endif %}>有</option>
                 <option value="0" {% if house.heater == 0 %} checked {% endif %}>無</option>
-              </select>
-            </div>
-
-            <!-- 開伙 -->
-            <div class="mb-3">
-              <label for="cook" class="form-label">開伙：</label>
-              <select class="form-select" id="cook" name="cook">
-                <!-- 開伙選項 -->
-                <option value="1" {% if house.cook == 1 %} selected {% endif %}>可以</option>
-                <option value="0" {% if house.cook == 0 %} selected {% endif %}>不可以</option>
-              </select>
-            </div>
-
-            <!-- 寵物 -->
-            <div class="mb-3">
-              <label for="pet" class="form-label">寵物：</label>
-              <select class="form-select" id="pet" name="pet">
-                <!-- 寵物選項 -->
-                <option value="1" {% if house.pet == 1 %}selected{% endif %}>可以</option>
-                <option value="0" {% if house.pet == 0 %}selected{% endif %}>不可以</option>
               </select>
             </div>
 
@@ -284,14 +241,14 @@
 
             <!-- 月租費 -->
             <div class="mb-3">
-              <label for="rent_fee">月租費(請填數字)：</label>
-              <input type="text" class="form-control" id="rent_fee" name="price" placeholder="單位: 新台幣，例:6000" value="{{ house.price }}" pattern="[1-9]\d*" title="請輸入>0的整數" required>
+              <label for="rent_fee">售價：</label>
+              <input type="text" class="form-control" id="rent_fee" name="price" placeholder="單位: 新台幣，例:6000" value="{{ house.price }}" pattern="[1-9]\d*" title="只能輸入大於0的整數" required>
             </div>
 
             <!-- 管理費 -->
             <div class="mb-3">
               <label for="management_fee">管理費(請填數字)：</label>
-              <input type="text" class="form-control" id="management_fee" name="management" placeholder="單位: 新台幣，例:800" value="{{ house.management }}" pattern="[1-9]\d*" title="請輸入>0的整數" required>
+              <input type="text" class="form-control" id="management_fee" name="management" placeholder="單位: 新台幣，例:800" value="{{ house.management }}" pattern="[1-9]\d*" title="只能輸入大於0的整數" required>
             </div>
 
             <!-- 最短租期 -->
@@ -317,7 +274,11 @@
         </h2>
         <div id="images" class="accordion-collapse collapse" aria-labelledby="images-heading" data-bs-parent="#accordion">
           <div class="accordion-body">
-
+{#            <div id="show_img">#}
+{#                {% for i in img_path %}#}
+{#                <img src="i.path" alt="">#}
+{#                {% endfor %}#}
+{#            </div>#}
             <!-- 上傳圖片的按鈕 -->
             <div class="mb-3">
               <label for="image-upload" class="form-label">上傳圖片：</label>
