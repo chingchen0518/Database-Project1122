@@ -82,4 +82,5 @@ urlpatterns = [
     path('renew_booking_time/<int:booking_seq>', my_app.views.renew_booking_time, name='renew_booking_time'),
     path('update_user_detail/', my_app.views.update_user_detail, name='update_user_detail'),
     path('update_password/', my_app.views.update_password, name='update_password'),
+    path('verify/', my_app.views.verify, name='verify'),
 ]
