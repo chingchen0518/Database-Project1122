@@ -29,8 +29,12 @@
                 {% else %}
                    <a id="favor" class="{% if row.available == 1 %}{% else %}button-disabled{% endif %}" href="{% url 'add_favor' hId=row.hId %}"><button type="submit" class="favorite">收藏</button></a>
                 {% endif %}
-              
+
+                {% if row.status == 0 %}
                 <p class="price"><span>{{ row.price }}</span>元/月</p>   {# 房屋售價 #}
+                {% else %}
+                <p class="price"><span>{{ row.price }}</span>萬元</p>   {# 房屋售價 #}
+                {% endif %}
             </div>
         </a>
     </div>
