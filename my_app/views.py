@@ -137,7 +137,7 @@ def house_list(request):
         numbers = len(list(rows))  # 转换为列表再计数
 
 
-        return render(request, "house/house_list.html", {'numbers': numbers,'login':login,'rows': rows})
+        return render(request, "house/house_list.html", {'numbers': numbers,'login':login,'rows': rows, 'index': index})
 
         # 如果沒有search
     else:
@@ -158,7 +158,7 @@ def house_list(request):
         #                                     ON f.hId_id=hId ORDER BY Info.renewdate;
         #                                     ''',(member,))
         numbers = len(list(rows))  # 转换为列表再计数
-        return render(request, "house/house_list.html", {'numbers': numbers,'login':login,'rows': rows})
+        return render(request, "house/house_list.html", {'numbers': numbers,'login':login,'rows': rows, 'index': index})
 
 def house_rent_cont(request,hId):
     rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId=%s AND House.hId=Info.hId_id', [hId])
@@ -290,10 +290,11 @@ def add_house(request):
 
     with connection.cursor() as cursor:
         cursor.execute('INSERT INTO House VALUES (%s, %s, %s,%s, %s, %s)',(next_id, 0,title,region,member,1))
-        cursor.execute('INSERT INTO Info  VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s)',(next_id,Info['price'],Info['address'],Info['level'],Info['room'],Info['living'],Info['bath'],Info['type'],Info['size'],current_date))
+        cursor.execute('INSERT INTO Info  VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s)',(next_id,Info['price'],Info['address'],Info['level'],Info['room'],Info['living'],Info['bath'],Info['type'],current_date,Info['size']))
         cursor.execute('INSERT INTO Equipment  VALUES (%s,%s, %s,%s,%s, %s,%s, %s, %s, %s, %s, %s, %s)',(next_id,Equip['sofa'], Equip['tv'], Equip['washer'], Equip['wifi'], Equip['bed'], Equip['refrigerator'], Equip['heater'], Equip['channel4'], Equip['cabinet'], Equip['aircond'], Equip['gas'],lift))
         cursor.execute("INSERT INTO Rdetail VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",(next_id,"0",Rdetails['parking'],Rdetails['pet'],Rdetails['cook'],Rdetails['direction'],Rdetails['level'],Rdetails['security'],Rdetails['management'],Rdetails['period'],Rdetails['bus'],Rdetails['train'],Rdetails['mrt'],Rdetails['age']))
 
+    # 處理圖片上傳+重命名
     # 處理圖片上傳+重命名
     if request.method == 'POST' and request.FILES.getlist('images'):
         files = request.FILES.getlist('images')
@@ -532,31 +533,35 @@ def delete_comment(request,hId,review_seq):
     house = f'/house_rent/{hId}'
     return redirect(house)
 
-def add_favor(request,hId):
+def add_favor(request,hId,index):
     latest_favourite_seq = Favourite.objects.aggregate(Max('favourite_seq'))['favourite_seq__max']
     if latest_favourite_seq:
         latest_favourite_seq = latest_favourite_seq + 1
     else:
         latest_favourite_seq = 1
     member = request.session['mId']
+    house_rent = f'/house_list/?index={index}'
+    house_sold = f'/house_list_sold/?index={index}'
     with connection.cursor() as cursor:
         cursor.execute('INSERT INTO Favourite VALUES (%s, %s, %s)',(latest_favourite_seq, hId, member))
     status=House.objects.raw('SELECT hId,status FROM House WHERE hId=%s',[hId])
     if status[0].status==0:
-        return redirect('/house_list/')
+        return redirect(house_rent)
     else:
-        return redirect('/house_list_sold/')
+        return redirect(house_sold)
 
-def del_favor(request,favourite_seq,hId):
+def del_favor(request,favourite_seq,hId,index):
 
     member = request.session['mId']
     with connection.cursor() as cursor:
         cursor.execute('DELETE FROM Favourite WHERE favourite_seq= %s', (favourite_seq,))
     status = House.objects.raw('SELECT hId,status FROM House WHERE hId=%s', [hId])
+    house_rent = f'/house_list/?index={index}'
+    house_sold = f'/house_list_sold/?index={index}'
     if status[0].status==0:
-        return redirect('/house_list/')
+        return redirect(house_rent)
     else:
-        return redirect('/house_list_sold/')
+        return redirect(house_sold)
 
 def accept_booking(request,booking_seq):
     with connection.cursor() as cursor:
@@ -629,7 +634,7 @@ def house_list_sold(request):
         #                                     ''', (member, '%' + keyword + '%'))
         numbers = len(list(rows))  # 转换为列表再计数
 
-        return render(request, "house/house_list_sold.html", {'numbers': numbers, 'login': login, 'rows': rows})
+        return render(request, "house/house_list_sold.html", {'numbers': numbers, 'login': login, 'rows': rows, 'index': index})
 
         # 如果沒有search
     else:
@@ -714,8 +719,8 @@ def account_center(request):
             AND Booking.situation != %s
             ORDER BY Booking.booking_seq DESC''', (member, "已成交"))
 
-    print(booking_seller)
-    print(booking_seller[0].booking_seq)
+    # print(booking_seller)
+    # print(booking_seller[0].booking_seq)
     return render(request, "homepage_login_account/account_center.html", {'login': login, 'rows': Favourite, 'browse':browse, 'booking_seller':booking_seller,"booking_customer":booking_customer})
 
     return render(request, "homepage_login_account/account_center.html", {'login': login, 'rows': Favourite, 'browse':browse})
