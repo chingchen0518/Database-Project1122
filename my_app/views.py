@@ -719,11 +719,13 @@ def account_center(request):
             AND Booking.situation != %s
             ORDER BY Booking.booking_seq DESC''', (member, "已成交"))
 
+    member_detail = User.objects.raw('SELECT * FROM Member,User WHERE Member.username_id=User.username AND Member.mId=%s',[member])
+
     # print(booking_seller)
     # print(booking_seller[0].booking_seq)
-    return render(request, "homepage_login_account/account_center.html", {'login': login, 'rows': Favourite, 'browse':browse, 'booking_seller':booking_seller,"booking_customer":booking_customer})
+    return render(request, "homepage_login_account/account_center.html", {'login': login, 'rows': Favourite, 'browse':browse, 'booking_seller':booking_seller,"booking_customer":booking_customer,"member_detail":member_detail})
 
-    return render(request, "homepage_login_account/account_center.html", {'login': login, 'rows': Favourite, 'browse':browse})
+    # return render(request, "homepage_login_account/account_center.html", {'login': login, 'rows': Favourite, 'browse':browse})
 
 def city_filter(request, city_id, status):
     if 'user' in request.session and 'mId' in request.session :
@@ -767,3 +769,40 @@ def delete_browse(request):
         cursor.execute('DELETE FROM Browse WHERE mId_id=%s', [mId])
 
     return redirect('/account_center/')
+
+
+def update_user_detail(request):
+    mId = request.session['mId']
+    phone = request.POST['phone']
+    email = request.POST['email']
+    username = request.POST['username']
+    gender = request.POST['gender']
+    with connection.cursor() as cursor:
+        cursor.execute('UPDATE Member SET username_id=%s,gender=%s,phone=%s,email=%s WHERE mId=%s',(username,gender,phone,email,mId))
+
+    return redirect('/account_center/')
+
+def update_password(request):
+    if request.method == 'POST':
+        old_password = request.POST.get('old_password')
+        new_password = request.POST.get('new_password')
+
+        # 检查用户输入的旧密码是否正确
+        if request.user.check_password(old_password):
+            # 设置新密码并保存
+            request.user.set_password(new_password)
+            request.user.save()
+
+            # 更新会话中的用户身份验证哈希以防止用户被注销
+            update_session_auth_hash(request, request.user)
+
+            # 重定向到成功页面或者给出成功消息
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('password_updated_successfully')  # 替换为你的成功页面URL名称或路径
+        else:
+            # 如果旧密码不正确，显示错误消息
+            messages.error(request, 'Your old password is incorrect.')
+            return redirect('change_password')  # 替换为你的修改密码页面URL名称或路径
+
+        # 如果是 GET 请求，返回修改密码页面
+    return render(request, 'change_password.html')
