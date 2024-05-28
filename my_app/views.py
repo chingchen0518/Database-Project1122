@@ -938,11 +938,6 @@ def recognize_face():
         cam.release()
         cv2.destroyAllWindows()
 
-        if recognized_name:
-            root = tk.Tk()
-            root.withdraw()
-            messagebox.showinfo("Alert", "hello, super manager")
-
         return recognized_name
     except Exception as e:
         print(f"Error in recognize_face: {str(e)}")
