@@ -88,8 +88,8 @@ urlpatterns = [
 
 
     
-    path('recognize_page', my_app.views.face_recognize_html, name='face_html_page'),
-    path('recognize', my_app.views.recognize, name='recognize'),  # recognize路径映射到recognize视图
+    path('recognize_page/', my_app.views.face_recognize_html, name='face_html_page'),
+    path('recognize/', my_app.views.recognize, name='recognize'),  # recognize路径映射到recognize视图
 
 
 ]
