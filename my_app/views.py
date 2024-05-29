@@ -10,7 +10,7 @@ from django.db.models import Max
 import os
 from django.db.models import Count
 
-import cv2
+# import cv2
 import numpy as np
 import time
 import tkinter as tk
@@ -902,8 +902,65 @@ def update_password(request):
         else:
             return redirect('/account_center/?error_message=舊密碼輸入錯誤')
 
+def decrypt(booking_seq):
+    # public_key = (
+    Keys = KeyPair.objects.raw('SELECT * FROM KeyPair WHERE booking_seq_id=%s',[booking_seq])
+
+    if Keys:
+        key=Keys[0].public_key
+        # with open("public.pem", "rb") as f:
+        #     # print(f.read())
+        public_key = RSA.import_key(key)
+
+        # 打开签名和加密的PDF文档
+        signed_pdf_path = f'my_app/static/contract/{booking_seq}_waitingVerify.pdf'
+
+        # 读取PDF文件内容和签名
+        with open(signed_pdf_path, 'rb') as pdf_file:
+            pdf_content = pdf_file.read()
+
+        # 分离PDF内容和签名
+        # try:
+
+        try:
+            content, signature = pdf_content.rsplit(b'\nSignature: ', 1)
+            signature = bytes(signature)
+            hash_obj = SHA256.new(content)
+            pkcs1_15.new(public_key).verify(hash_obj, signature)
+            return 1
+        except (ValueError, TypeError):
+            return 2
+        # pkcs1_15.new(public_key).verify(hash_obj, signature)
+        # print("The signature is valid.")
+        # except ValueError:
+        #     print("The signature is not valid.")
+        #     exit()
+    else:
+        return 2
+
 def verify(request):
-    return render(request, "homepage_login_account/verify.html")
+    if 'booking_seq' in request.POST:
+        booking_seq= request.POST['booking_seq']
+
+    validity = 0
+
+    if request.method == 'POST' and request.FILES['certificate']:
+        file = request.FILES['certificate']
+        # 設置文件上傳的目錄
+        upload_dir = 'my_app/static/contract/'
+        if not os.path.exists(upload_dir):
+            os.makedirs(upload_dir)
+        # 構造新的文件路徑，將文件名更改為 "xxx"
+        #
+        new_file_path = f'{upload_dir}{str(booking_seq)}_waitingVerify.pdf'
+        # 寫入文件到指定目錄
+        with open(new_file_path, 'wb+') as destination:
+            for chunk in file.chunks():
+                destination.write(chunk)
+
+        validity = decrypt(booking_seq)
+
+    return render(request, "homepage_login_account/verify.html", {'validity': validity})
 
         # 如果是 GET 请求，返回修改密码页面
     return render(request, 'change_password.html')

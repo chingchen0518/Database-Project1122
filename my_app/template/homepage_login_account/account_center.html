@@ -163,6 +163,7 @@
                     <img class="houseimg" src="{% static '/img/house/'%}{{ book.hId }}-1.jpg" alt="image">
 
                     <div class="info">
+                        <p><span class="bold">預約編號：</span>{{ book.booking_seq }}</p>
                         <p><span class="bold">房子：</span>{{ book.title }}</p>
                         <p><span class="bold">預約者：</span>{{ book.realname }}</p>
                         <p><span class="bold">日期：</span>{{ book.date|date:"Y-m-d" }}</p>
