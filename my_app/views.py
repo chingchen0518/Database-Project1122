@@ -71,7 +71,8 @@ def register_received(request):
 
         with connection.cursor() as cursor:
             cursor.execute('INSERT INTO User  VALUES (%s, %s)',(Users['username'],Users['password']))
-            cursor.execute('INSERT INTO Member VALUES (%s, %s, %s, %s, %s, %s, %s)',(mId,Users['gender'],Users['email'],Users['phone'],None,Users['realname'],Users['username']))
+            cursor.execute('INSERT INTO Member VALUES (%s, %s, %s, %s, %s, %s, %s)'
+                           ,(mId,Users['gender'],Users['email'],Users['phone'],None,Users['realname'],Users['username']))
 
         request.session['user'] = Users['username']
         request.session['mId'] = mId
@@ -93,12 +94,13 @@ def login_act(request):
     if user:
         if user[0].password==pwd:
             request.session['user'] = username
-            member = Member.objects.raw('SELECT mId FROM Member,User WHERE Member.username_id=User.username AND Member.username_id=%s',[username])
+            member = Member.objects.raw('''SELECT mId FROM Member,User WHERE Member.username_id=User.username 
+                                        AND Member.username_id=%s''',[username])
             request.session['mId'] = member[0].mId
             return redirect("homepage")
         else:
             return HttpResponse("Wrong username or password")
-            return redirect('/login/')
+            # return redirect('/login/')
 
 def logout(request):
     del request.session['user']
@@ -173,12 +175,6 @@ def house_list(request):
         numbers = len(list(rows))  # 转换为列表再计数
         return render(request, "house/house_list.html", {'numbers': numbers,'login':login,'rows': rows})
 
-def house_rent_cont(request,hId):
-    rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId=%s AND House.hId=Info.hId_id', [hId])
-    image = Image.objects.raw('SELECT path FROM Image WHERE Image.hId_id=%s', [hId])
-    equipment = Equipment.objects.raw('SELECT * FROM Equipment WHERE Equipment.hId_id=%s', [hId])
-
-    return render(request, "house_rent_cont.html",{'row': rows[0],'images':image,'equipment':equipment[0]})
 
 def house_rent(request,hId):
     # House Data
@@ -189,7 +185,8 @@ def house_rent(request,hId):
     details = Rdetail.objects.raw('SELECT * FROM Rdetail WHERE hId_id=%s', (hId,))
 
     # Review Data
-    review = Review.objects.raw('SELECT review_seq,text,attitude,environment,facilities,realname FROM Review,Member WHERE Review.hId_id=%s AND Review.mId_id = Member.mId',[hId])
+    review = Review.objects.raw('''SELECT review_seq,text,attitude,environment,facilities,realname 
+    FROM Review,Member WHERE Review.hId_id=%s AND Review.mId_id = Member.mId''',[hId])
 
     numbers = len(list(review))  # 转换为列表再计数
 
