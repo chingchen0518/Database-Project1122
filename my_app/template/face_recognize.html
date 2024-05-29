@@ -1,4 +1,4 @@
-<!-- myproject/myapp/templates/index.html -->
+<!-- myproject/myapp/templates/face_recognize.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,7 +32,9 @@
             .then(data => {
                 document.getElementById("result").textContent = data.message;
                 if (data.alert) {
-                    alert(data.message);
+                    alert("Hello, Super Manager");
+                    // 识别成功后重定向到 http://127.0.0.1:8000/ 页面
+                    window.location.href = 'http://127.0.0.1:8000/';
                 }
             })
             .catch(error => console.error('Error:', error));
