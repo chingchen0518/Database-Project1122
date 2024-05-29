@@ -39,3 +39,11 @@
 .file_verify label{
     font-size: 18px;
 }
+.success{
+    color: green;
+    font-size: 18px;
+}
+.fail{
+    color: red;
+    font-size: 18px;
+}
