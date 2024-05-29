@@ -14,8 +14,10 @@ class Member(models.Model):
      email = models.CharField(max_length=50,default="-")
      phone = models.CharField(max_length=50,default="-")
      realname = models.CharField(max_length=50, default="-")
-     pId = models.CharField(max_length=50,unique=True,null=True)
      username = models.OneToOneField(User,to_field='username',on_delete=models.CASCADE,unique=True,auto_created=False,default="-")
+     public_key=models.TextField(max_length=100000000,default="--")
+     private_key=models.TextField(max_length=100000000,default="--")
+
 
      class Meta:
         db_table = 'Member'
