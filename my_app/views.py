@@ -940,6 +940,10 @@ def decrypt(booking_seq):
         return 2
 
 def verify(request):
+    if 'user' in request.session and 'mId' in request.session :
+        login=1
+    else:
+        login=0
     if 'booking_seq' in request.POST:
         booking_seq= request.POST['booking_seq']
 
@@ -961,7 +965,7 @@ def verify(request):
 
         validity = decrypt(booking_seq)
 
-    return render(request, "homepage_login_account/verify.html", {'validity': validity})
+    return render(request, "homepage_login_account/verify.html", {'validity': validity,'login': login,})
 
         # 如果是 GET 请求，返回修改密码页面
     return render(request, 'change_password.html')
