@@ -33,7 +33,7 @@ import datetime
 
 # 引入 Table
 from my_app.models import Member, House, Image, Equipment, User, Member, Browse, Review, Rdetail, Favourite, Sdetail, \
-    Booking, KeyPair
+    Booking
 
 
 # endregion 引入 Table結束
@@ -78,12 +78,9 @@ def register_received(request):
 
         with connection.cursor() as cursor:
             cursor.execute('INSERT INTO User  VALUES (%s, %s)',(Users['username'],Users['password']))
-<<<<<<< HEAD
             cursor.execute('INSERT INTO Member VALUES (%s, %s, %s, %s, %s, %s, %s)'
                            ,(mId,Users['gender'],Users['email'],Users['phone'],None,Users['realname'],Users['username']))
-=======
             cursor.execute('INSERT INTO Member VALUES (%s, %s, %s, %s, %s, %s, %s, %s)',(mId,Users['gender'],Users['email'],Users['phone'],Users['realname'],Users['username'],private_key,public_key))
->>>>>>> 6244b680f953bd51d9b9fee53792a5a84d0aab6d
 
         request.session['user'] = Users['username']
         request.session['mId'] = mId
@@ -188,17 +185,12 @@ def house_list(request):
         numbers = len(list(rows))  # 转换为列表再计数
         return render(request, "house/house_list.html", {'numbers': numbers,'login':login,'rows': rows})
 
-<<<<<<< HEAD
-=======
-
 def house_rent_cont(request,hId):
     rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId=%s AND House.hId=Info.hId_id', [hId])
     image = Image.objects.raw('SELECT path FROM Image WHERE Image.hId_id=%s', [hId])
     equipment = Equipment.objects.raw('SELECT * FROM Equipment WHERE Equipment.hId_id=%s', [hId])
 
     return render(request, "house_rent_cont.html",{'row': rows[0],'images':image,'equipment':equipment[0]})
->>>>>>> 6244b680f953bd51d9b9fee53792a5a84d0aab6d
-
 
 def house_rent(request,hId):
     # House Data
@@ -951,22 +943,25 @@ def update_password(request):
 
 
 def decrypt(booking_seq):
-    # public_key = (
+
+    # pdf path
+    signed_pdf_path = f'my_app/static/contract/{booking_seq}_waitingVerify.pdf'
+
+    # look for public_key
     public_key = Member.objects.raw('''SELECT Member.mId,public_key FROM Booking,House,Member
                                         WHERE Booking.hId_id=House.hId AND
                                         Member.mId=House.mId_id AND Booking.booking_seq=%s''',(booking_seq,))
 
-    public_key = public_key[0].public_key
-    public_key = RSA.import_key(public_key)
-
-    # 打开签名和加密的PDF文档
-    signed_pdf_path = f'my_app/static/contract/{booking_seq}_waitingVerify.pdf'
+    if public_key:
+        public_key = public_key[0].public_key
+        public_key = RSA.import_key(public_key)
+    else:
+        os.remove(signed_pdf_path)  # delete the waiting verify file
+        return 2
 
     # 读取PDF文件内容和签名
     with open(signed_pdf_path, 'rb') as pdf_file:
         pdf_content = pdf_file.read()
-
-
 
     try:
         #seperate signature and plain text
@@ -989,7 +984,7 @@ def verify(request):
     else:
         login=0
     if 'booking_seq' in request.POST:
-        booking_seq= request.POST['booking_seq']
+        booking_seq = request.POST['booking_seq']
 
     validity = 0
 
@@ -1011,10 +1006,6 @@ def verify(request):
 
     return render(request, "homepage_login_account/verify.html", {'validity': validity,'login': login,})
 
-        # 如果是 GET 请求，返回修改密码页面
-    return render(request, 'change_password.html')
-
-
 def face_recognize_html(request):
     return render(request, 'face_recognize.html', {'settings': settings})
 
@@ -1033,7 +1024,6 @@ def recognize(request):
                 return JsonResponse({'message': 'Face not recognized', 'alert': False})
         except Exception as e:
             return JsonResponse({'message': f'Error during face recognition: {str(e)}', 'alert': False}, status=500)
-
 
 def recognize_face():
     try:
