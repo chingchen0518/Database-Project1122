@@ -10,7 +10,11 @@ from django.db.models import Max
 from django.conf import settings
 from django.db.models import Count
 from pathlib import Path
+import requests
 
+from django.utils.decorators import method_decorator
+from django.http import HttpResponseForbidden
+from django.shortcuts import render
 import os
 import cv2
 import numpy as np
@@ -20,15 +24,17 @@ from tkinter import messagebox
 import logging
 from django.views.decorators.csrf import csrf_exempt  # 添加 CSRF 装饰器
 
-from Crypto.PublicKey import RSA
-from Crypto.Cipher import PKCS1_OAEP
-from Crypto.Signature import pkcs1_15
-from Crypto.Hash import SHA256
-from Crypto.Random import get_random_bytes
+# from Crypto.PublicKey import RSA
+# from Crypto.Cipher import PKCS1_OAEP
+# from Crypto.Signature import pkcs1_15
+# from Crypto.Hash import SHA256
+# from Crypto.Random import get_random_bytes
 import base64
 from PyPDF2 import PdfWriter, PdfReader
 import io
 import datetime
+from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 
 
 # 引入 Table
@@ -78,6 +84,12 @@ def register_received(request):
 
         with connection.cursor() as cursor:
             cursor.execute('INSERT INTO User  VALUES (%s, %s)',(Users['username'],Users['password']))
+
+            cursor.execute('INSERT INTO Member VALUES (%s, %s, %s, %s, %s, %s, %s)'
+                           ,(mId,Users['gender'],Users['email'],Users['phone'],None,Users['realname'],Users['username']))
+
+            cursor.execute('INSERT INTO Member VALUES (%s, %s, %s, %s, %s, %s, %s, %s)',(mId,Users['gender'],Users['email'],Users['phone'],Users['realname'],Users['username'],private_key,public_key))
+
             cursor.execute('INSERT INTO Member VALUES (%s, %s, %s, %s, %s, %s, %s)'
                            ,(mId,Users['gender'],Users['email'],Users['phone'],None,Users['realname'],Users['username']))
             cursor.execute('INSERT INTO Member VALUES (%s, %s, %s, %s, %s, %s, %s, %s)',(mId,Users['gender'],Users['email'],Users['phone'],Users['realname'],Users['username'],private_key,public_key))
@@ -109,7 +121,8 @@ def login_act(request):
             return redirect("homepage")
         else:
             return HttpResponse("Wrong username or password")
-            # return redirect('/login/')
+    else:
+        return redirect('/login/')
 
 
 def logout(request):
@@ -123,6 +136,11 @@ def logout(request):
 
 #region Part 3：房屋顯示相關（包括search）
 def house_list(request):
+    if(ip_recognize()):
+        pass
+    else:
+        return redirect('/face_recognize.html')
+
     login=0
     if 'user' in request.session and 'mId' in request.session :
         member = request.session['mId']
@@ -191,6 +209,7 @@ def house_rent_cont(request,hId):
     equipment = Equipment.objects.raw('SELECT * FROM Equipment WHERE Equipment.hId_id=%s', [hId])
 
     return render(request, "house_rent_cont.html",{'row': rows[0],'images':image,'equipment':equipment[0]})
+
 
 def house_rent(request,hId):
     # House Data
@@ -1112,3 +1131,31 @@ def recognize_face():
         print(f"Error in recognize_face: {str(e)}")
         raise
 
+def get_current_ip():
+    try:
+        response = requests.get('https://api.ipify.org')
+        if response.status_code == 200:
+            return response.text
+        else:
+            return "Failed to retrieve IP address."
+    except requests.RequestException as e:
+        return "Error: {}".format(e)
+
+
+def is_taiwan_ip(ip):
+    print("IP Address:", ip)  # 打印 IP 地址
+    try:
+        response = requests.get('https://ipapi.co/{}/json/'.format(ip))
+        if response.status_code == 200:
+            data = response.json()
+            currency_code = data.get('currency')
+            return currency_code == 'TWD'  # 如果是台灣的IP，返回True，否則返回False
+        else:
+            return False
+    except requests.RequestException:
+        return False
+
+
+def ip_recognize():
+    ip = get_current_ip()
+    return is_taiwan_ip(ip)
