@@ -14,13 +14,13 @@
         <h1>驗證憑證</h1>
         <form action="{% url 'verify' %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            交易序號 <input type="text" name="booking_seq" required>
+            <label>預約編號: <input type="text" name="booking_seq" required></label>
             <br/><br/>
-            <input type="file" name="certificate">
+            <label>租約憑證: <input type="file" name="certificate"></label>
             <br/>
             <br/>
             <div>
-                <button type="submit">上傳</button>
+                <button type="submit">上傳待驗證租約</button>
             </div>
         </form>
         {% if validity %}
