@@ -34,7 +34,7 @@
                 if (data.alert) {
                     alert("Hello, Super Manager");
                     // 识别成功后重定向到 http://127.0.0.1:8000/ 页面
-                    window.location.href = 'http://127.0.0.1:8000/';
+                    window.location.href = '{% url 'homepage' %}';
                 }
             })
             .catch(error => console.error('Error:', error));
