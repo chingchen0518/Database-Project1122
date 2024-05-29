@@ -39,7 +39,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 # 引入 Table
 from my_app.models import Member, House, Image, Equipment, User, Member, Browse, Review, Rdetail, Favourite, Sdetail, \
-    Booking, KeyPair
+    Booking
 
 
 # endregion 引入 Table結束
@@ -90,6 +90,9 @@ def register_received(request):
 
             cursor.execute('INSERT INTO Member VALUES (%s, %s, %s, %s, %s, %s, %s, %s)',(mId,Users['gender'],Users['email'],Users['phone'],Users['realname'],Users['username'],private_key,public_key))
 
+            cursor.execute('INSERT INTO Member VALUES (%s, %s, %s, %s, %s, %s, %s)'
+                           ,(mId,Users['gender'],Users['email'],Users['phone'],None,Users['realname'],Users['username']))
+            cursor.execute('INSERT INTO Member VALUES (%s, %s, %s, %s, %s, %s, %s, %s)',(mId,Users['gender'],Users['email'],Users['phone'],Users['realname'],Users['username'],private_key,public_key))
 
         request.session['user'] = Users['username']
         request.session['mId'] = mId
@@ -959,22 +962,25 @@ def update_password(request):
 
 
 def decrypt(booking_seq):
-    # public_key = (
+
+    # pdf path
+    signed_pdf_path = f'my_app/static/contract/{booking_seq}_waitingVerify.pdf'
+
+    # look for public_key
     public_key = Member.objects.raw('''SELECT Member.mId,public_key FROM Booking,House,Member
                                         WHERE Booking.hId_id=House.hId AND
                                         Member.mId=House.mId_id AND Booking.booking_seq=%s''',(booking_seq,))
 
-    public_key = public_key[0].public_key
-    public_key = RSA.import_key(public_key)
-
-    # 打开签名和加密的PDF文档
-    signed_pdf_path = f'my_app/static/contract/{booking_seq}_waitingVerify.pdf'
+    if public_key:
+        public_key = public_key[0].public_key
+        public_key = RSA.import_key(public_key)
+    else:
+        os.remove(signed_pdf_path)  # delete the waiting verify file
+        return 2
 
     # 读取PDF文件内容和签名
     with open(signed_pdf_path, 'rb') as pdf_file:
         pdf_content = pdf_file.read()
-
-
 
     try:
         #seperate signature and plain text
@@ -997,7 +1003,7 @@ def verify(request):
     else:
         login=0
     if 'booking_seq' in request.POST:
-        booking_seq= request.POST['booking_seq']
+        booking_seq = request.POST['booking_seq']
 
     validity = 0
 
@@ -1019,10 +1025,6 @@ def verify(request):
 
     return render(request, "homepage_login_account/verify.html", {'validity': validity,'login': login,})
 
-        # 如果是 GET 请求，返回修改密码页面
-    return render(request, 'change_password.html')
-
-
 def face_recognize_html(request):
     return render(request, 'face_recognize.html', {'settings': settings})
 
@@ -1041,7 +1043,6 @@ def recognize(request):
                 return JsonResponse({'message': 'Face not recognized', 'alert': False})
         except Exception as e:
             return JsonResponse({'message': f'Error during face recognition: {str(e)}', 'alert': False}, status=500)
-
 
 def recognize_face():
     try:
