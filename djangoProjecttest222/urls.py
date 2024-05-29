@@ -78,7 +78,7 @@ urlpatterns = [
     path('add_appointment/<str:hId>/', my_app.views.add_appointment, name='add_appointment'),
     path('accept_booking/<int:booking_seq>', my_app.views.accept_booking, name='accept_booking'),
     path('reject_booking/<int:booking_seq>', my_app.views.reject_booking, name='reject_booking'),
-    # path('renew_booking/<int:booking_seq>', my_app.views.renew_booking, name='renew_booking'),
+    path('renew_booking/<int:booking_seq>', my_app.views.renew_booking, name='renew_booking'),
     path('renew_booking_time/<int:booking_seq>', my_app.views.renew_booking_time, name='renew_booking_time'),
 
     path('update_user_detail/', my_app.views.update_user_detail, name='update_user_detail'),
@@ -88,8 +88,8 @@ urlpatterns = [
 
 
     
-    path('recognize_page', my_app.views.face_recognize_html, name='face_html_page'),
-    path('recognize', my_app.views.recognize, name='recognize'),  # recognize路径映射到recognize视图
+    path('recognize_page/', my_app.views.face_recognize_html, name='face_html_page'),
+    path('recognize/', my_app.views.recognize, name='recognize'),  # recognize路径映射到recognize视图
 
 
 ]
