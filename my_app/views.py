@@ -78,12 +78,10 @@ def register_received(request):
 
         with connection.cursor() as cursor:
             cursor.execute('INSERT INTO User  VALUES (%s, %s)',(Users['username'],Users['password']))
-<<<<<<< HEAD
             cursor.execute('INSERT INTO Member VALUES (%s, %s, %s, %s, %s, %s, %s)'
                            ,(mId,Users['gender'],Users['email'],Users['phone'],None,Users['realname'],Users['username']))
-=======
             cursor.execute('INSERT INTO Member VALUES (%s, %s, %s, %s, %s, %s, %s, %s)',(mId,Users['gender'],Users['email'],Users['phone'],Users['realname'],Users['username'],private_key,public_key))
->>>>>>> 6244b680f953bd51d9b9fee53792a5a84d0aab6d
+
 
         request.session['user'] = Users['username']
         request.session['mId'] = mId
@@ -188,8 +186,7 @@ def house_list(request):
         numbers = len(list(rows))  # 转换为列表再计数
         return render(request, "house/house_list.html", {'numbers': numbers,'login':login,'rows': rows})
 
-<<<<<<< HEAD
-=======
+
 
 def house_rent_cont(request,hId):
     rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId=%s AND House.hId=Info.hId_id', [hId])
@@ -197,7 +194,6 @@ def house_rent_cont(request,hId):
     equipment = Equipment.objects.raw('SELECT * FROM Equipment WHERE Equipment.hId_id=%s', [hId])
 
     return render(request, "house_rent_cont.html",{'row': rows[0],'images':image,'equipment':equipment[0]})
->>>>>>> 6244b680f953bd51d9b9fee53792a5a84d0aab6d
 
 
 def house_rent(request,hId):
@@ -236,7 +232,8 @@ def house_rent(request,hId):
 def search_test(request):
     keyword = request.POST['keyword']
 
-    rows = House.objects.raw('SELECT * FROM House,Info WHERE House.title LIKE %s OR Info.address LIKE %s AND House.hId=Info.hId_id', ['%'+keyword+'%'], ['%'+keyword+'%'])
+    rows = House.objects.raw('SELECT * FROM House,Info WHERE House.title LIKE %s OR Info.address LIKE %s AND House.hId=Info.hId_id',
+                             ['%'+keyword+'%'], ['%'+keyword+'%'])
 
     return render(request, "house_list.html", {'rows': rows})
 
@@ -306,8 +303,13 @@ def add_house(request):
 
     with connection.cursor() as cursor:
         cursor.execute('INSERT INTO House VALUES (%s, %s, %s,%s, %s, %s)',(next_id, 0,title,region,member,1))
-        cursor.execute('INSERT INTO Info  VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s)',(next_id,Info['price'],Info['address'],Info['level'],Info['room'],Info['living'],Info['bath'],Info['type'],current_date,Info['size']))
-        cursor.execute("INSERT INTO Rdetail VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",(next_id,"0",Rdetails['parking'],Rdetails['pet'],Rdetails['cook'],Rdetails['direction'],Rdetails['level'],Rdetails['security'],Rdetails['management'],Rdetails['period'],Rdetails['bus'],Rdetails['train'],Rdetails['mrt'],Rdetails['age']))
+        cursor.execute('INSERT INTO Info  VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s)',
+                       (next_id,Info['price'],Info['address'],Info['level'],Info['room'],Info['living'],
+                        Info['bath'],Info['type'],current_date,Info['size']))
+        cursor.execute("INSERT INTO Rdetail VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                       (next_id,"0",Rdetails['parking'],Rdetails['pet'],Rdetails['cook'],Rdetails['direction'],
+                        Rdetails['level'],Rdetails['security'],Rdetails['management'],Rdetails['period'],Rdetails['bus'],
+                        Rdetails['train'],Rdetails['mrt'],Rdetails['age']))
 
     # 處理圖片上傳+重命名
     if request.method == 'POST' and request.FILES.getlist('images'):
@@ -370,8 +372,12 @@ def add_house_sold(request):
 
     with connection.cursor() as cursor:
         cursor.execute('INSERT INTO House VALUES (%s, %s, %s,%s, %s, %s)',(next_id, 1,title,region,member,1))
-        cursor.execute('INSERT INTO Info  VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s)',(next_id,Info['price'],Info['address'],Info['level'],Info['room'],Info['living'],Info['bath'],Info['type'],current_date,Info['size']))
-        cursor.execute("INSERT INTO Sdetail VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",(next_id,"1",Rdetails['parking'],Rdetails['direction'],Rdetails['level'],Rdetails['age'],Rdetails['security'],Rdetails['management'],Rdetails['bus'],Rdetails['train'],Rdetails['mrt'],lift))
+        cursor.execute('INSERT INTO Info  VALUES (%s, %s,%s, %s, %s, %s, %s, %s, %s, %s)',(next_id,Info['price'],
+                        Info['address'],Info['level'],Info['room'],Info['living'],Info['bath'],Info['type'],
+                        current_date,Info['size']))
+        cursor.execute("INSERT INTO Sdetail VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                       (next_id,"1",Rdetails['parking'],Rdetails['direction'],Rdetails['level'],Rdetails['age'],
+                        Rdetails['security'],Rdetails['management'],Rdetails['bus'],Rdetails['train'],Rdetails['mrt'],lift))
 
     # 處理圖片上傳+重命名
     if request.method == 'POST' and request.FILES.getlist('images'):
@@ -396,8 +402,9 @@ def edit_page_show(request,hId):
 
     if 'user' in request.session:
         # 查询数据库，获取对应 hId 的标题数据
-        house = House.objects.raw("SELECT * FROM House,Info,Equipment,Rdetail WHERE House.hId=%s AND House.hId=Info.hId_id AND House.hId=Equipment.hId_id AND House.hId=Rdetail.hId_id", [hId])
-        img_path = Image.objects.raw("SELECT * FROM Image WHERE Image.hId_id=%s",[hId])
+        house = House.objects.raw('''SELECT * FROM House,Info,Equipment,Rdetail WHERE House.hId=%s 
+        AND House.hId=Info.hId_id AND House.hId=Equipment.hId_id AND House.hId=Rdetail.hId_id''', [hId])
+        img_path = Image.objects.raw('SELECT * FROM Image WHERE Image.hId_id=%s',[hId])
         return render(request, "add_renew_delete/edit_house.html", {'house': house[0], 'img_path': img_path})
 
     else:
@@ -436,13 +443,17 @@ def edit_page_update(request,hId):
 
     with connection.cursor() as cursor:
         cursor.execute('UPDATE House SET  title = %s, region = %s WHERE hId = %s',(title,region,hId))
-        cursor.execute('UPDATE Info  SET price = %s, address = %s, level = %s, room = %s, living = %s, bath = %s, type = %s, size = %s, renewdate = %s WHERE hId_id = %s',
-                       (Info['price'],Info['address'],Info['level'],Info['room'],Info['living'],Info['bath'],Info['type'],current_date,Info['size'],hId))
-        cursor.execute('UPDATE Equipment  SET sofa = %s, tv = %s, washer = %s, wifi = %s, bed = %s, refrigerator = %s, heater = %s, channel4 = %s, cabinet = %s, aircond = %s, gas = %s WHERE hId_id = %s',
-                       (Equip['sofa'], Equip['tv'], Equip['washer'], Equip['wifi'], Equip['bed'], Equip['refrigerator'], Equip['heater'], Equip['channel4'], Equip['cabinet'], Equip['aircond'], Equip['gas'],hId))
-        cursor.execute("UPDATE Rdetail SET parking = %s, pet = %s, cook = %s, direction = %s, level = %s, security = %s, management = %s, period = %s, bus = %s, train = %s, mrt = %s, age = %s WHERE hId_id = %s",
-                       (Rdetails['parking'],Rdetails['pet'],Rdetails['cook'],Rdetails['direction'],Rdetails['level'],Rdetails['security'],Rdetails['management'],Rdetails['period'],
-                        Rdetails['bus'],Rdetails['train'],Rdetails['mrt'],Rdetails['age'],hId))
+        cursor.execute('''UPDATE Info  SET price = %s, address = %s, level = %s, room = %s, living = %s, bath = %s, type = %s, 
+        size = %s,renewdate = %s WHERE hId_id = %s''',(Info['price'],Info['address'],Info['level'],Info['room'],Info['living'],
+        Info['bath'],Info['type'],current_date,Info['size'],hId))
+        cursor.execute('''UPDATE Equipment  SET sofa = %s, tv = %s, washer = %s, wifi = %s, bed = %s, refrigerator = %s, heater = %s, 
+        channel4 = %s, cabinet = %s, aircond = %s, gas = %s WHERE hId_id = %s''',(Equip['sofa'], Equip['tv'], Equip['washer'],
+        Equip['wifi'], Equip['bed'], Equip['refrigerator'], Equip['heater'], Equip['channel4'], Equip['cabinet'], Equip['aircond'],
+        Equip['gas'],hId))
+        cursor.execute('''UPDATE Rdetail SET parking = %s, pet = %s, cook = %s, direction = %s, level = %s, security = %s, 
+        management = %s, period = %s, bus = %s, train = %s, mrt = %s, age = %s WHERE hId_id = %s''',(Rdetails['parking'],
+        Rdetails['pet'],Rdetails['cook'],Rdetails['direction'],Rdetails['level'],Rdetails['security'],Rdetails['management'],
+        Rdetails['period'],Rdetails['bus'],Rdetails['train'],Rdetails['mrt'],Rdetails['age'],hId))
     house = f'/house_rent/{hId}'
 
     return redirect(house)
@@ -452,7 +463,8 @@ def edit_page_show_sold(request,hId):
 
     if 'user' in request.session:
         # 查询数据库，获取对应 hId 的标题数据
-        house = House.objects.raw("SELECT * FROM House,Info,Sdetail WHERE House.hId=%s AND House.hId=Info.hId_id AND House.hId=Sdetail.hId_id", [hId])
+        house = House.objects.raw('''SELECT * FROM House,Info,Sdetail WHERE House.hId=%s AND House.hId=Info.hId_id 
+        AND House.hId=Sdetail.hId_id''', [hId])
         img_path = Image.objects.raw("SELECT * FROM Image WHERE Image.hId_id=%s",[hId])
         return render(request, "add_renew_delete/edit_house_sold.html", {'house': house[0], 'img_path': img_path})
 
@@ -487,11 +499,13 @@ def edit_page_update_sold(request,hId):
 
     with connection.cursor() as cursor:
         cursor.execute('UPDATE House SET title = %s, region = %s WHERE hId = %s',(title,region,hId))
-        cursor.execute('UPDATE Info SET price = %s, address = %s, level = %s, room = %s, living = %s, bath = %s, type = %s, size = %s, renewdate = %s WHERE hId_id = %s',
-                       (Info['price'],Info['address'],Info['level'],Info['room'],Info['living'],Info['bath'],Info['type'],current_date,Info['size'],hId))
-        cursor.execute("UPDATE Sdetail SET parking = %s, direction = %s, level = %s, security = %s, management = %s, bus = %s, train = %s, mrt = %s, age = %s, lift=%s WHERE hId_id = %s",
-                       (Rdetails['parking'],Rdetails['direction'],Rdetails['level'],Rdetails['security'],Rdetails['management'],
-                        Rdetails['bus'],Rdetails['train'],Rdetails['mrt'],Rdetails['age'],Rdetails['lift'],hId))
+        cursor.execute('''UPDATE Info SET price = %s, address = %s, level = %s, room = %s, living = %s, bath = %s, type = %s, 
+        size = %s, renewdate = %s WHERE hId_id = %s''',(Info['price'],Info['address'],Info['level'],Info['room'],Info['living'],
+        Info['bath'],Info['type'],current_date,Info['size'],hId))
+        cursor.execute('''UPDATE Sdetail SET parking = %s, direction = %s, level = %s, security = %s, management = %s, bus = %s, 
+        train = %s, mrt = %s, age = %s, lift=%s WHERE hId_id = %s''',(Rdetails['parking'],Rdetails['direction'],Rdetails['level'],
+        Rdetails['security'],Rdetails['management'],Rdetails['bus'],Rdetails['train'],Rdetails['mrt'],Rdetails['age'],
+        Rdetails['lift'],hId))
     house = f'/house_sold/{hId}'
 
     return redirect(house)
@@ -516,7 +530,8 @@ def add_comment(request,hId):
         latest_review_seq = 1
     #
     with connection.cursor() as cursor:
-        cursor.execute('INSERT INTO Review VALUES (%s, %s, %s, %s, %s, %s, %s)', (latest_review_seq, message, environment, attitude, facilities, hId, member))
+        cursor.execute('INSERT INTO Review VALUES (%s, %s, %s, %s, %s, %s, %s)',
+                       (latest_review_seq, message, environment, attitude, facilities, hId, member))
 
     house = f'/house_rent/{hId}'
     return redirect(house)
@@ -807,7 +822,8 @@ def house_sold(request, hId):
     details = Sdetail.objects.raw('SELECT * FROM Sdetail WHERE hId_id=%s', (hId,))
 
     # Review Data
-    review = Review.objects.raw('SELECT review_seq,text,attitude,environment,facilities,realname FROM Review,Member WHERE Review.hId_id=%s AND Review.mId_id = Member.mId',[hId])
+    review = Review.objects.raw('''SELECT review_seq,text,attitude,environment,facilities,realname FROM Review,Member 
+    WHERE Review.hId_id=%s AND Review.mId_id = Member.mId''',[hId])
 
     if 'mId' in request.session and 'user' in request.session:
             login_people = request.session['mId']
@@ -850,15 +866,13 @@ def account_center(request):
             LEFT OUTER JOIN Favourite ON Favourite.hId_id=hId  ORDER BY f.browse_seq DESC
             ''',(member,))
 
-    booking_seller = House.objects.raw('''SELECT booking_seq,date,time,hId,title,status,address,mId_id,situation,realname FROM Booking,House,Info,Member
-        WHERE Booking.hId_id=House.hId AND House.hId=Info.hId_id AND Member.mId=Booking.customer_id_id
-            AND House.mId_id=%s ORDER BY Booking.booking_seq DESC''',[member])
+    booking_seller = House.objects.raw('''SELECT booking_seq,date,time,hId,title,status,address,mId_id,situation,realname 
+    FROM Booking,House,Info,Member WHERE Booking.hId_id=House.hId AND House.hId=Info.hId_id AND Member.mId=Booking.customer_id_id
+    AND House.mId_id=%s ORDER BY Booking.booking_seq DESC''',[member])
 
-    booking_customer = House.objects.raw('''SELECT booking_seq,date,time,hId,title,status,address,mId_id,situation FROM Booking,House,Info
-            WHERE Booking.hId_id=House.hId 
-            AND House.hId=Info.hId_id 
-            AND Booking.customer_id_id=%s
-            ORDER BY Booking.booking_seq DESC''', (member,))
+    booking_customer = House.objects.raw('''SELECT booking_seq,date,time,hId,title,status,address,mId_id,situation 
+    FROM Booking,House,Info WHERE Booking.hId_id=House.hId AND House.hId=Info.hId_id AND Booking.customer_id_id=%s
+    ORDER BY Booking.booking_seq DESC''', (member,))
 
     member_detail = User.objects.raw('SELECT * FROM Member,User WHERE Member.username_id=User.username AND Member.mId=%s',[member])
 

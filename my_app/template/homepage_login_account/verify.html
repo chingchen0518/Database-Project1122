@@ -25,9 +25,9 @@
         </form>
         {% if validity %}
             {% if validity == 1 %}
-            <p>驗證成功!</p>
+            <p class="success">驗證成功!</p>
             {% elif validity == 2 %}
-            <p>此租約非本交易產生/經過修改</p>
+            <p class="fail">此租約非本交易產生/經過修改</p>
             {% endif %}
         {% endif %}
     </div>
