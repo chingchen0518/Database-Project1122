@@ -136,9 +136,12 @@ body{
     border:1px black solid;
 }
 
+#formFile{
+    margin:10px;
+}
 .file{
     margin:10px;
-    border:1 px black solid;
+    border:1px black solid;
 }
 /*History*/
 #delete_history_button_up{

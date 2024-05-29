@@ -12,15 +12,24 @@
     </div>
     <div class="file_verify">
         <h1>驗證憑證</h1>
-        <form action="{% url 'verify' %}" method="post">
+        <form action="{% url 'verify' %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
+            交易序號 <input type="text" name="booking_seq" required>
+            <br/><br/>
             <input type="file" name="certificate">
+            <br/>
+            <br/>
             <div>
                 <button type="submit">上傳</button>
             </div>
         </form>
-        <p>驗證成功!</p>
-        <p>驗證失敗...請重新上傳新的檔案</p>
+        {% if validity %}
+            {% if validity == 1 %}
+            <p>驗證成功!</p>
+            {% elif validity == 2 %}
+            <p>此租約非本交易產生/經過修改</p>
+            {% endif %}
+        {% endif %}
     </div>
 
 </body>
