@@ -1,4 +1,4 @@
-from django.shortcuts import HttpResponse,render,redirect
+from django.shortcuts import HttpResponse, render, redirect
 import json
 from django.http import JsonResponse
 from django.db import connection
@@ -7,17 +7,18 @@ from django.urls import reverse_lazy
 from django.views.generic import DeleteView
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Max
-import os
+from django.conf import settings
 from django.db.models import Count
+from pathlib import Path
 
-# import cv2
+import os
+import cv2
 import numpy as np
 import time
 import tkinter as tk
 from tkinter import messagebox
 import logging
 from django.views.decorators.csrf import csrf_exempt  # 添加 CSRF 装饰器
-# from .face_recognition import recognize_face
 
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
@@ -30,22 +31,23 @@ import io
 import datetime
 
 
-#引入 Table
+# 引入 Table
 from my_app.models import Member, House, Image, Equipment, User, Member, Browse, Review, Rdetail, Favourite, Sdetail, \
     Booking, KeyPair
 
 
-#endregion 引入 Table結束
+# endregion 引入 Table結束
 
 # region Part 1：首頁
 def homepage(request):
     if 'user' in request.session:
-        return render(request, "homepage_login_account/homepage.html",{'user':request.session['user']})
-    return render(request,"homepage_login_account/homepage.html",{'user':0})
+        return render(request, "homepage_login_account/homepage.html", {'user': request.session['user']})
+    return render(request,"homepage_login_account/homepage.html", {'user': 0})
 
-#endregion
+# endregion
 
-#region Part 2：用戶、注冊、登錄
+
+# region Part 2：用戶、注冊、登錄
 def register(request):
     if 'user' in request.session:
         return redirect('homepage')
@@ -54,8 +56,9 @@ def register(request):
         error_message = request.GET.get('error_message', '')
         return render(request,"homepage_login_account/register.html",{'error_message': error_message})
 
+
 def register_received(request):
-    fields=['username','realname','phone','password','email','gender']
+    fields = ['username','realname','phone','password','email','gender']
     Users = {field: request.POST[field] for field in fields}
 
     names = User.objects.raw('SELECT username FROM User WHERE username=%s',[Users['username']])
@@ -67,11 +70,15 @@ def register_received(request):
             latestid = Member.objects.latest('mId')
             mId = int(latestid.mId)+1
         except ObjectDoesNotExist:
-            mId ="888"
+            mId = "888"
+
+        key = RSA.generate(2048)
+        private_key = key.export_key()
+        public_key = key.publickey().export_key()
 
         with connection.cursor() as cursor:
             cursor.execute('INSERT INTO User  VALUES (%s, %s)',(Users['username'],Users['password']))
-            cursor.execute('INSERT INTO Member VALUES (%s, %s, %s, %s, %s, %s, %s)',(mId,Users['gender'],Users['email'],Users['phone'],None,Users['realname'],Users['username']))
+            cursor.execute('INSERT INTO Member VALUES (%s, %s, %s, %s, %s, %s, %s, %s)',(mId,Users['gender'],Users['email'],Users['phone'],Users['realname'],Users['username'],private_key,public_key))
 
         request.session['user'] = Users['username']
         request.session['mId'] = mId
@@ -84,6 +91,7 @@ def login_page(request):
 
     else:
         return render(request,"homepage_login_account/login.html")
+
 
 def login_act(request):
     username = request.POST['username']
@@ -99,6 +107,7 @@ def login_act(request):
         else:
             return HttpResponse("Wrong username or password")
             return redirect('/login/')
+
 
 def logout(request):
     del request.session['user']
@@ -173,12 +182,14 @@ def house_list(request):
         numbers = len(list(rows))  # 转换为列表再计数
         return render(request, "house/house_list.html", {'numbers': numbers,'login':login,'rows': rows})
 
+
 def house_rent_cont(request,hId):
     rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId=%s AND House.hId=Info.hId_id', [hId])
     image = Image.objects.raw('SELECT path FROM Image WHERE Image.hId_id=%s', [hId])
     equipment = Equipment.objects.raw('SELECT * FROM Equipment WHERE Equipment.hId_id=%s', [hId])
 
     return render(request, "house_rent_cont.html",{'row': rows[0],'images':image,'equipment':equipment[0]})
+
 
 def house_rent(request,hId):
     # House Data
@@ -211,6 +222,7 @@ def house_rent(request,hId):
     # print(login)
     return render(request, "house/house_rent.html", {"rows":rows[0], "image":image, "equipment":equipment[0], "seller":seller[0],  "details":details[0],"login_people":login_people, "login":login,"review":review,"numbers":numbers})
 
+
 def search_test(request):
     keyword = request.POST['keyword']
 
@@ -237,6 +249,7 @@ def delete_house(request,hId):
     houses_to_delete.delete()
     return redirect('house_lists')
 
+
 def upload_page(request):
 
     if 'user' in request.session and 'mId' in request.session:
@@ -244,6 +257,7 @@ def upload_page(request):
 
     else:
         return redirect('/login/')
+
 
 def add_house(request):
     # del request.session['user']
@@ -303,6 +317,7 @@ def add_house(request):
     house = f'/house_sold/{next_id}'
     return redirect(house)
 
+
 def upload_page_sold(request):
 
     if 'user' in request.session and 'mId' in request.session:
@@ -310,6 +325,7 @@ def upload_page_sold(request):
 
     else:
         return redirect('/login/')
+
 
 def add_house_sold(request):
     # del request.session['user']
@@ -365,6 +381,7 @@ def add_house_sold(request):
     house = f'/house_sold/{next_id}'
     return redirect(house)
 
+
 def edit_page_show(request,hId):
 
     if 'user' in request.session:
@@ -375,6 +392,7 @@ def edit_page_show(request,hId):
 
     else:
         return redirect('/login/')
+
 
 def edit_page_update(request,hId):
     current_date = datetime.date.today()
@@ -419,6 +437,7 @@ def edit_page_update(request,hId):
 
     return redirect(house)
 
+
 def edit_page_show_sold(request,hId):
 
     if 'user' in request.session:
@@ -429,6 +448,7 @@ def edit_page_show_sold(request,hId):
 
     else:
         return redirect('/login/')
+
 
 def edit_page_update_sold(request,hId):
     current_date = datetime.date.today()
@@ -466,6 +486,7 @@ def edit_page_update_sold(request,hId):
 
     return redirect(house)
 
+
 def add_comment(request,hId):
     message = request.POST['comment_message']
     environment = request.POST['comment_environment']
@@ -491,13 +512,18 @@ def add_comment(request,hId):
     return redirect(house)
 #endregion
 
-def testing(request):
-    # 获取当前日期
 
-    images=request.POST.getlist('images')
-    with connection.cursor() as cursor:
-        for img_path in images:
-            cursor.execute('DELETE FROM Image WHERE path=%s',[img_path])
+def testing(request):
+    # member = Member.objects.raw("SELECT * FROM Member")
+    #
+    # for i in member:
+    #     key = RSA.generate(2048)
+    #     private_key = key.export_key()
+    #     public_key = key.publickey().export_key()
+    #     with connection.cursor() as cursor:
+    #         cursor.execute('UPDATE Member SET private_key = %s,public_key = %s WHERE mId=%s', (private_key,public_key,i.mId))
+
+        # public_key = key.publickey().export_key()
 
     # print(imag[0])
     # print(imag[1])
@@ -531,6 +557,7 @@ def testing(request):
 def image_upload(request):
     # return render(request, "elements/comment.html")
     return render(request, "upload_image.html")
+
 
 def upload_image(request):
     if request.method == 'POST' and request.FILES.getlist('images'):
@@ -570,6 +597,7 @@ def delete_comment(request,hId,review_seq):
     house = f'/house_rent/{hId}'
     return redirect(house)
 
+
 def add_favor(request,hId):
     latest_favourite_seq = Favourite.objects.aggregate(Max('favourite_seq'))['favourite_seq__max']
     if latest_favourite_seq:
@@ -585,6 +613,7 @@ def add_favor(request,hId):
     else:
         return redirect('/house_list_sold/')
 
+
 def del_favor(request,favourite_seq,hId):
 
     member = request.session['mId']
@@ -596,35 +625,35 @@ def del_favor(request,favourite_seq,hId):
     else:
         return redirect('/house_list_sold/')
 
+
 def accept_booking(request,booking_seq):
     with connection.cursor() as cursor:
         cursor.execute('UPDATE Booking SET situation=%s WHERE booking_seq=%s',("同意看房",booking_seq))
 
     return redirect('/account_center/')
+
+
 def reject_booking(request,booking_seq):
     with connection.cursor() as cursor:
         cursor.execute('DELETE FROM Booking WHERE booking_seq=%s',(booking_seq,))
     return redirect('/account_center/')
 
+
 def encrypt(booking_seq):
-    # print("123")
-    # 生成RSA密钥对
-    key = RSA.generate(2048)
-    private_key = key.export_key()
-    public_key = key.publickey().export_key()
 
-    with connection.cursor() as cursor:
-        if KeyPair.objects.filter(booking_seq=booking_seq):
-            cursor.execute('UPDATE KeyPair SET private_key=%s,public_key=%s',(private_key,public_key))
-        else:
-            cursor.execute('INSERT INTO KeyPair VALUES (%s,%s,%s)', (booking_seq,private_key,public_key))
+    private_key = Member.objects.raw('''SELECT Member.mId,private_key FROM Booking,House,Member
+                                        WHERE Booking.hId_id=House.hId AND
+                                        Member.mId=House.mId_id AND Booking.booking_seq=%s''',(booking_seq,))
 
-    # 保存密钥到文件
-    with open("private.pem", "wb") as f:
-        f.write(private_key)
-
-    with open("public.pem", "wb") as f:
-        f.write(public_key)
+    private_key = private_key[0].private_key
+    private_key = RSA.import_key(private_key)
+    #
+    # # 保存密钥到文件
+    # with open("private.pem", "wb") as f:
+    #     f.write(private_key)
+    #
+    # with open("public.pem", "wb") as f:
+    #     f.write(public_key)
     input_pdf_path = f'my_app/static/contract/{booking_seq}.pdf'
         # f'static/contract/{booking_seq}.pdf'
     output_pdf_path = f'my_app/static/contract/{booking_seq}.pdf'
@@ -647,17 +676,18 @@ def encrypt(booking_seq):
     hash_obj = SHA256.new(pdf_data)
 
     # 使用私钥签名PDF数据
-    signature = pkcs1_15.new(key).sign(hash_obj)
+    signature = pkcs1_15.new(private_key).sign(hash_obj)
 
     with open(output_pdf_path, 'wb') as output_pdf_file:
         writer.write(output_pdf_file)
         # 添加签名到文件末尾
         output_pdf_file.write(b'\nSignature: ' + signature)
 
-def renew_booking(request,booking_seq):
-    latest_sitaution=request.POST['booking_renew']
 
-    if request.method == 'POST' and request.FILES['file']:
+def renew_booking(request,booking_seq):
+    latest_sitaution = request.POST['booking_renew']
+
+    if request.method == 'POST' and 'file' in request.FILES:
         file = request.FILES['file']
         # 設置文件上傳的目錄
         upload_dir = 'my_app/static/contract/'
@@ -674,15 +704,14 @@ def renew_booking(request,booking_seq):
         return redirect('/account_center/')
 
     with connection.cursor() as cursor:
-            cursor.execute('UPDATE Booking SET situation=%s WHERE booking_seq=%s',(latest_sitaution,booking_seq))
-            cursor.execute('UPDATE House SET available=1 WHERE hId=(SELECT hId_id FROM Booking WHERE booking_seq=%s)',
-                           (booking_seq,))
-            if latest_sitaution=="已成交":
-                cursor.execute('UPDATE House SET available=0 WHERE hId=(SELECT hId_id FROM Booking WHERE booking_seq=%s)',(booking_seq,))
+        cursor.execute('UPDATE Booking SET situation=%s WHERE booking_seq=%s',(latest_sitaution,booking_seq))
+        cursor.execute('UPDATE House SET available=1 WHERE hId=(SELECT hId_id FROM Booking WHERE booking_seq=%s)',
+                       (booking_seq,))
+        if latest_sitaution=="已成交":
+            cursor.execute('UPDATE House SET available=0 WHERE hId=(SELECT hId_id FROM Booking WHERE booking_seq=%s)',(booking_seq,))
 
     return redirect('/account_center/')
 
-# def decrypt(booking_seq):
 
 
 def renew_booking_time(request,booking_seq):
@@ -693,6 +722,7 @@ def renew_booking_time(request,booking_seq):
         cursor.execute('UPDATE Booking SET time=%s,date=%s  WHERE booking_seq=%s', (time,date,booking_seq))
 
     return redirect('/account_center/')
+
 
 def house_list_sold(request):
     login=0
@@ -756,12 +786,14 @@ def house_list_sold(request):
         numbers = len(list(rows))  # 转换为列表再计数
         return render(request, "house/house_list_sold.html", {'numbers': numbers, 'login': login, 'rows': rows})
 
+
 def house_sold(request, hId):
     # House Data
     rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId=%s AND House.hId=Info.hId_id', [hId])
     image = Image.objects.raw('SELECT path FROM Image WHERE Image.hId_id=%s', [hId])
     seller = Member.objects.raw('SELECT * FROM Member JOIN House ON House.mId_id=Member.mId WHERE House.hId=%s',
                                 [hId])
+
     details = Sdetail.objects.raw('SELECT * FROM Sdetail WHERE hId_id=%s', (hId,))
 
     # Review Data
@@ -786,6 +818,7 @@ def house_sold(request, hId):
     return render(request, "house/house_sold.html",
                       {"rows": rows[0], "image": image, "seller": seller[0],
                        "details": details[0], "login_people": login_people, "login": login, "review": review})
+
 
 def account_center(request):
     login = 0
@@ -827,6 +860,7 @@ def account_center(request):
 
     # return render(request, "homepage_login_account/account_center.html", {'login': login, 'rows': Favourite, 'browse':browse})
 
+
 def city_filter(request, city_id, status):
     if 'user' in request.session and 'mId' in request.session :
         login=1
@@ -843,6 +877,7 @@ def city_filter(request, city_id, status):
             'SELECT * FROM House,Info WHERE House.region=%s AND House.hId=Info.hId_id  AND House.status=1 AND House.available=1',
             [city_id])
         return render(request, "house/house_list_sold.html", {'numbers': len(rows),'login':login,'rows': rows})
+
 
 def add_appointment(request,hId):
     date = request.POST['date']
@@ -866,6 +901,7 @@ def add_appointment(request,hId):
         house = f'/house_rent/{hId}'
     return redirect(house)
 
+
 def delete_browse(request):
     mId = request.session['mId']
 
@@ -886,6 +922,7 @@ def update_user_detail(request):
 
     return redirect('/account_center/')
 
+
 def update_password(request):
     mId = request.session['mId']
     users = User.objects.raw('SELECT * FROM Member,User WHERE Member.username_id=User.username AND Member.mId=%s',[mId])
@@ -902,40 +939,38 @@ def update_password(request):
         else:
             return redirect('/account_center/?error_message=舊密碼輸入錯誤')
 
+
 def decrypt(booking_seq):
     # public_key = (
-    Keys = KeyPair.objects.raw('SELECT * FROM KeyPair WHERE booking_seq_id=%s',[booking_seq])
+    public_key = Member.objects.raw('''SELECT Member.mId,public_key FROM Booking,House,Member
+                                        WHERE Booking.hId_id=House.hId AND
+                                        Member.mId=House.mId_id AND Booking.booking_seq=%s''',(booking_seq,))
 
-    if Keys:
-        key=Keys[0].public_key
-        # with open("public.pem", "rb") as f:
-        #     # print(f.read())
-        public_key = RSA.import_key(key)
+    public_key = public_key[0].public_key
+    public_key = RSA.import_key(public_key)
 
-        # 打开签名和加密的PDF文档
-        signed_pdf_path = f'my_app/static/contract/{booking_seq}_waitingVerify.pdf'
+    # 打开签名和加密的PDF文档
+    signed_pdf_path = f'my_app/static/contract/{booking_seq}_waitingVerify.pdf'
 
-        # 读取PDF文件内容和签名
-        with open(signed_pdf_path, 'rb') as pdf_file:
-            pdf_content = pdf_file.read()
+    # 读取PDF文件内容和签名
+    with open(signed_pdf_path, 'rb') as pdf_file:
+        pdf_content = pdf_file.read()
 
-        # 分离PDF内容和签名
-        # try:
 
-        try:
-            content, signature = pdf_content.rsplit(b'\nSignature: ', 1)
-            signature = bytes(signature)
-            hash_obj = SHA256.new(content)
-            pkcs1_15.new(public_key).verify(hash_obj, signature)
-            return 1
-        except (ValueError, TypeError):
-            return 2
-        # pkcs1_15.new(public_key).verify(hash_obj, signature)
-        # print("The signature is valid.")
-        # except ValueError:
-        #     print("The signature is not valid.")
-        #     exit()
-    else:
+
+    try:
+        #seperate signature and plain text
+        content, signature = pdf_content.rsplit(b'\nSignature: ', 1)
+        #convert to bytes
+        signature = bytes(signature)
+        #hash the plain text
+        hash_obj = SHA256.new(content)
+        #compare
+        pkcs1_15.new(public_key).verify(hash_obj, signature)
+        os.remove(signed_pdf_path) # delete the waiting verify file
+        return 1
+    except (ValueError, TypeError):
+        os.remove(signed_pdf_path) # delete the waiting verify file
         return 2
 
 def verify(request):
@@ -968,37 +1003,38 @@ def verify(request):
 
         # 如果是 GET 请求，返回修改密码页面
     return render(request, 'change_password.html')
+
+
 def face_recognize_html(request):
-    return render(request, 'face_recognize.html')
+    return render(request, 'face_recognize.html', {'settings': settings})
+
 
 logger = logging.getLogger(__name__)
+
+
 @csrf_exempt
 def recognize(request):
-    try:
-        recognized_name = recognize_face()
-        if recognized_name:
-            message = "Hello, super manager"
-            alert = True
-        else:
-            message = "Face not recognized"
-            alert = False
-        return JsonResponse({'message': message, 'alert': alert})
-    except Exception as e:
-        # 捕获并记录异常信息
-        print(f"Error during face recognition: {str(e)}")
-        return JsonResponse({'error': str(e)}, status=500)
+    if request.method == 'POST':
+        try:
+            recognized_name = recognize_face()
+            if recognized_name:
+                return JsonResponse({'message': f'Hello, {recognized_name}!', 'alert': True})
+            else:
+                return JsonResponse({'message': 'Face not recognized', 'alert': False})
+        except Exception as e:
+            return JsonResponse({'message': f'Error during face recognition: {str(e)}', 'alert': False}, status=500)
 
 
 def recognize_face():
     try:
         # 加载模型文件
         recognizer = cv2.face.LBPHFaceRecognizer_create()
-        recognizer.read("C:/Users/YOYOBILL/Desktop/Database-Project1122/my_app/template/trainer.yml")
-        face_cascade_Path = "C:/Users/YOYOBILL/Desktop/Database-Project1122/my_app/template/haarcascade_frontalface_default.xml"
-        faceCascade = cv2.CascadeClassifier(face_cascade_Path)
+        recognizer.read(str(settings.BASE_DIR / 'my_app/template/trainer.yml'))
+        face_cascade_path = str(settings.BASE_DIR / 'my_app/template/haarcascade_frontalface_default.xml')
+        face_cascade = cv2.CascadeClassifier(face_cascade_path)
 
         # 加载姓名数据
-        with open('C:/Users/YOYOBILL/Desktop/Database-Project1122/my_app/template/names.json', 'r') as fs:
+        with open(settings.BASE_DIR / 'my_app/template/names.json', 'r') as fs:
             names = json.load(fs)
             names = list(names.values())
 
@@ -1023,7 +1059,7 @@ def recognize_face():
                 raise Exception("Failed to capture image")
 
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            faces = faceCascade.detectMultiScale(
+            faces = face_cascade.detectMultiScale(
                 gray,
                 scaleFactor=1.3,
                 minNeighbors=8,
@@ -1065,6 +1101,11 @@ def recognize_face():
 
         cam.release()
         cv2.destroyAllWindows()
+
+        if recognized_name:
+            root = tk.Tk()
+            root.withdraw()
+            # messagebox.showinfo("Alert", "hello, super manager")
 
         return recognized_name
     except Exception as e:
