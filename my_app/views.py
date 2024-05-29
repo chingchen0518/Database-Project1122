@@ -69,9 +69,13 @@ def register_received(request):
         except ObjectDoesNotExist:
             mId ="888"
 
+        key = RSA.generate(2048)
+        private_key = key.export_key()
+        public_key = key.publickey().export_key()
+
         with connection.cursor() as cursor:
             cursor.execute('INSERT INTO User  VALUES (%s, %s)',(Users['username'],Users['password']))
-            cursor.execute('INSERT INTO Member VALUES (%s, %s, %s, %s, %s, %s, %s)',(mId,Users['gender'],Users['email'],Users['phone'],None,Users['realname'],Users['username']))
+            cursor.execute('INSERT INTO Member VALUES (%s, %s, %s, %s, %s, %s, %s, %s)',(mId,Users['gender'],Users['email'],Users['phone'],Users['realname'],Users['username'],private_key,public_key))
 
         request.session['user'] = Users['username']
         request.session['mId'] = mId
@@ -492,12 +496,16 @@ def add_comment(request,hId):
 #endregion
 
 def testing(request):
-    # 获取当前日期
+    # member = Member.objects.raw("SELECT * FROM Member")
+    #
+    # for i in member:
+    #     key = RSA.generate(2048)
+    #     private_key = key.export_key()
+    #     public_key = key.publickey().export_key()
+    #     with connection.cursor() as cursor:
+    #         cursor.execute('UPDATE Member SET private_key = %s,public_key = %s WHERE mId=%s', (private_key,public_key,i.mId))
 
-    images=request.POST.getlist('images')
-    with connection.cursor() as cursor:
-        for img_path in images:
-            cursor.execute('DELETE FROM Image WHERE path=%s',[img_path])
+        # public_key = key.publickey().export_key()
 
     # print(imag[0])
     # print(imag[1])
@@ -607,24 +615,20 @@ def reject_booking(request,booking_seq):
     return redirect('/account_center/')
 
 def encrypt(booking_seq):
-    # print("123")
-    # 生成RSA密钥对
-    key = RSA.generate(2048)
-    private_key = key.export_key()
-    public_key = key.publickey().export_key()
 
-    with connection.cursor() as cursor:
-        if KeyPair.objects.filter(booking_seq=booking_seq):
-            cursor.execute('UPDATE KeyPair SET private_key=%s,public_key=%s',(private_key,public_key))
-        else:
-            cursor.execute('INSERT INTO KeyPair VALUES (%s,%s,%s)', (booking_seq,private_key,public_key))
+    private_key = Member.objects.raw('''SELECT Member.mId,private_key FROM Booking,House,Member
+                                        WHERE Booking.hId_id=House.hId AND
+                                        Member.mId=House.mId_id AND Booking.booking_seq=%s''',(booking_seq,))
 
-    # 保存密钥到文件
-    with open("private.pem", "wb") as f:
-        f.write(private_key)
-
-    with open("public.pem", "wb") as f:
-        f.write(public_key)
+    private_key = private_key[0].private_key
+    private_key = RSA.import_key(private_key)
+    #
+    # # 保存密钥到文件
+    # with open("private.pem", "wb") as f:
+    #     f.write(private_key)
+    #
+    # with open("public.pem", "wb") as f:
+    #     f.write(public_key)
     input_pdf_path = f'my_app/static/contract/{booking_seq}.pdf'
         # f'static/contract/{booking_seq}.pdf'
     output_pdf_path = f'my_app/static/contract/{booking_seq}.pdf'
@@ -647,7 +651,7 @@ def encrypt(booking_seq):
     hash_obj = SHA256.new(pdf_data)
 
     # 使用私钥签名PDF数据
-    signature = pkcs1_15.new(key).sign(hash_obj)
+    signature = pkcs1_15.new(private_key).sign(hash_obj)
 
     with open(output_pdf_path, 'wb') as output_pdf_file:
         writer.write(output_pdf_file)
@@ -655,9 +659,9 @@ def encrypt(booking_seq):
         output_pdf_file.write(b'\nSignature: ' + signature)
 
 def renew_booking(request,booking_seq):
-    latest_sitaution=request.POST['booking_renew']
+    latest_sitaution = request.POST['booking_renew']
 
-    if request.method == 'POST' and request.FILES['file']:
+    if request.method == 'POST' and 'file' in request.FILES:
         file = request.FILES['file']
         # 設置文件上傳的目錄
         upload_dir = 'my_app/static/contract/'
@@ -674,15 +678,14 @@ def renew_booking(request,booking_seq):
         return redirect('/account_center/')
 
     with connection.cursor() as cursor:
-            cursor.execute('UPDATE Booking SET situation=%s WHERE booking_seq=%s',(latest_sitaution,booking_seq))
-            cursor.execute('UPDATE House SET available=1 WHERE hId=(SELECT hId_id FROM Booking WHERE booking_seq=%s)',
-                           (booking_seq,))
-            if latest_sitaution=="已成交":
-                cursor.execute('UPDATE House SET available=0 WHERE hId=(SELECT hId_id FROM Booking WHERE booking_seq=%s)',(booking_seq,))
+        cursor.execute('UPDATE Booking SET situation=%s WHERE booking_seq=%s',(latest_sitaution,booking_seq))
+        cursor.execute('UPDATE House SET available=1 WHERE hId=(SELECT hId_id FROM Booking WHERE booking_seq=%s)',
+                       (booking_seq,))
+        if latest_sitaution=="已成交":
+            cursor.execute('UPDATE House SET available=0 WHERE hId=(SELECT hId_id FROM Booking WHERE booking_seq=%s)',(booking_seq,))
 
     return redirect('/account_center/')
 
-# def decrypt(booking_seq):
 
 
 def renew_booking_time(request,booking_seq):
@@ -762,6 +765,7 @@ def house_sold(request, hId):
     image = Image.objects.raw('SELECT path FROM Image WHERE Image.hId_id=%s', [hId])
     seller = Member.objects.raw('SELECT * FROM Member JOIN House ON House.mId_id=Member.mId WHERE House.hId=%s',
                                 [hId])
+
     details = Sdetail.objects.raw('SELECT * FROM Sdetail WHERE hId_id=%s', (hId,))
 
     # Review Data
@@ -904,38 +908,35 @@ def update_password(request):
 
 def decrypt(booking_seq):
     # public_key = (
-    Keys = KeyPair.objects.raw('SELECT * FROM KeyPair WHERE booking_seq_id=%s',[booking_seq])
+    public_key = Member.objects.raw('''SELECT Member.mId,public_key FROM Booking,House,Member
+                                        WHERE Booking.hId_id=House.hId AND
+                                        Member.mId=House.mId_id AND Booking.booking_seq=%s''',(booking_seq,))
 
-    if Keys:
-        key=Keys[0].public_key
-        # with open("public.pem", "rb") as f:
-        #     # print(f.read())
-        public_key = RSA.import_key(key)
+    public_key = public_key[0].public_key
+    public_key = RSA.import_key(public_key)
 
-        # 打开签名和加密的PDF文档
-        signed_pdf_path = f'my_app/static/contract/{booking_seq}_waitingVerify.pdf'
+    # 打开签名和加密的PDF文档
+    signed_pdf_path = f'my_app/static/contract/{booking_seq}_waitingVerify.pdf'
 
-        # 读取PDF文件内容和签名
-        with open(signed_pdf_path, 'rb') as pdf_file:
-            pdf_content = pdf_file.read()
+    # 读取PDF文件内容和签名
+    with open(signed_pdf_path, 'rb') as pdf_file:
+        pdf_content = pdf_file.read()
 
-        # 分离PDF内容和签名
-        # try:
 
-        try:
-            content, signature = pdf_content.rsplit(b'\nSignature: ', 1)
-            signature = bytes(signature)
-            hash_obj = SHA256.new(content)
-            pkcs1_15.new(public_key).verify(hash_obj, signature)
-            return 1
-        except (ValueError, TypeError):
-            return 2
-        # pkcs1_15.new(public_key).verify(hash_obj, signature)
-        # print("The signature is valid.")
-        # except ValueError:
-        #     print("The signature is not valid.")
-        #     exit()
-    else:
+
+    try:
+        #seperate signature and plain text
+        content, signature = pdf_content.rsplit(b'\nSignature: ', 1)
+        #convert to bytes
+        signature = bytes(signature)
+        #hash the plain text
+        hash_obj = SHA256.new(content)
+        #compare
+        pkcs1_15.new(public_key).verify(hash_obj, signature)
+        os.remove(signed_pdf_path) # delete the waiting verify file
+        return 1
+    except (ValueError, TypeError):
+        os.remove(signed_pdf_path) # delete the waiting verify file
         return 2
 
 def verify(request):
