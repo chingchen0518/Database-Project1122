@@ -35,7 +35,6 @@ urlpatterns = [
 
     # 房屋顯示
     path('house_list/',my_app.views.house_list, name='house_lists'),
-    path('house_rent_cont/<str:hId>',my_app.views.house_rent_cont),
     path('house_rent/<str:hId>', my_app.views.house_rent, name='house_rent'),
     path('house_list_sold/',my_app.views.house_list_sold, name='house_lists_sold'),
     path('house_sold/<str:hId>', my_app.views.house_sold, name='house_sold'),

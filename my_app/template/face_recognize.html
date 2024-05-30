@@ -21,7 +21,7 @@
             // 获取CSRF令牌
             var csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
 
-            fetch('/recognize', {
+            fetch('/recognize/', {
                 method: 'POST',
                 // 将CSRF令牌添加到请求头中
                 headers: {
