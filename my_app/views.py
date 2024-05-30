@@ -768,6 +768,10 @@ def house_list_sold(request):
         query = f"SELECT * FROM Info JOIN House ON Info.hId_id=House.hId AND House.status=1 AND House.available=1 LEFT OUTER JOIN (SELECT * FROM Favourite WHERE Favourite.mId_id={member}) f ON f.hId_id=House.hId WHERE Info.address LIKE '%{keyword}%' ORDER BY Info.{order_by_field}"
         rows = House.objects.raw(query)  # 将变量插入SQL查询中并执行
 
+
+        # query = f"SELECT * FROM Info JOIN House ON Info.hId_id=House.hId AND House.status=1 AND House.available=1 LEFT OUTER JOIN (SELECT * FROM Favourite WHERE Favourite.mId_id={member}) f ON f.hId_id=House.hId WHERE Info.address LIKE '%{keyword}%' ORDER BY Info.{order_by_field}"
+        # rows = House.objects.raw(query)  # 将变量插入SQL查询中并执行
+
         numbers = len(list(rows))  # 转换为列表再计数
 
         return render(request, "house/house_list_sold.html", {'numbers': numbers, 'login': login, 'rows': rows})
@@ -1132,4 +1136,4 @@ def is_taiwan_ip(ip):
 
 def ip_recognize():
     ip = get_current_ip()
-    return is_taiwan_ip(ip)
+    return is_taiwan_ip(ip)ㄋ
