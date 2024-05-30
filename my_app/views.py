@@ -148,19 +148,19 @@ def house_list(request):
     # else:
     #     return redirect('/face_recognize.html')
 
-    login=0
-    if 'user' in request.session and 'mId' in request.session :
+    login = 0
+    if 'user' in request.session and 'mId' in request.session:
         member = request.session['mId']
-        login=1
+        login = 1
     else:
-        login=0
-        member="000"
+        login = 0
+        member = "000"
 
     # 如果有search東西
     if 'index' in request.GET:
         index = int(request.GET['index'])
     else:
-        index=0
+        index = 0
 
     my_list = ["renewdate", "price", "size"]
     order_by_field = my_list[index]  # 获取列表中的第一个元素作为排序字段
@@ -173,8 +173,7 @@ def house_list(request):
 
         numbers = len(list(rows))  # 转换为列表再计数
 
-
-        return render(request, "house/house_list.html", {'numbers': numbers,'login':login,'rows': rows})
+        return render(request, "house/house_list.html", {'numbers': numbers, 'login': login, 'rows': rows})
 
         # 如果沒有search
     else:
@@ -183,16 +182,8 @@ def house_list(request):
         rows = House.objects.raw(query)
 
         numbers = len(list(rows))  # 转换为列表再计数
-        return render(request, "house/house_list.html", {'numbers': numbers,'login':login,'rows': rows})
+        return render(request, "house/house_list.html", {'numbers': numbers, 'login': login, 'rows': rows})
 
-
-
-def house_rent_cont(request,hId):
-    rows = House.objects.raw('SELECT * FROM House,Info WHERE House.hId=%s AND House.hId=Info.hId_id', [hId])
-    image = Image.objects.raw('SELECT path FROM Image WHERE Image.hId_id=%s', [hId])
-    equipment = Equipment.objects.raw('SELECT * FROM Equipment WHERE Equipment.hId_id=%s', [hId])
-
-    return render(request, "house_rent_cont.html",{'row': rows[0],'images':image,'equipment':equipment[0]})
 
 
 def house_rent(request,hId):
@@ -307,8 +298,12 @@ def add_house(request):
                         Info['bath'],Info['type'],current_date,Info['size']))
         cursor.execute("INSERT INTO Rdetail VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
                        (next_id,"0",Rdetails['parking'],Rdetails['pet'],Rdetails['cook'],Rdetails['direction'],
-                        Rdetails['level'],Rdetails['security'],Rdetails['management'],Rdetails['period'],Rdetails['bus'],
-                        Rdetails['train'],Rdetails['mrt'],Rdetails['age']))
+                        Rdetails['level'],Rdetails['age'],Rdetails['security'],Rdetails['management'],Rdetails['period'],Rdetails['bus'],
+                        Rdetails['train'],Rdetails['mrt']))
+        cursor.execute("INSERT INTO Equipment VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                       (next_id,Equip['sofa'],Equip['tv'],Equip['washer'],Equip['wifi'],Equip['bed'],
+                        Equip['refrigerator'],Equip['heater'],Equip['channel4'],Equip['cabinet'],Equip['aircond'],
+                        Equip['gas'],lift))
 
     # 處理圖片上傳+重命名
     if request.method == 'POST' and request.FILES.getlist('images'):
@@ -325,7 +320,7 @@ def add_house(request):
                 cursor.execute('INSERT INTO Image VALUES (%s, %s)',(next_id,next_path))
             i=i+1
 
-    house = f'/house_sold/{next_id}'
+    house = f'/house_rent/{next_id}'
     return redirect(house)
 
 
@@ -433,18 +428,19 @@ def edit_page_update(request,hId):
     images = request.POST.getlist('img_delete')
 
     # 删除指定路径的文件
-
     with connection.cursor() as cursor:
         for img_path in images:
             cursor.execute('DELETE FROM Image WHERE path=%s', [img_path])
             file_path = f'my_app/static/img/house/{img_path}'
             os.remove(file_path)
 
+
+
     with connection.cursor() as cursor:
         cursor.execute('UPDATE House SET  title = %s, region = %s WHERE hId = %s',(title,region,hId))
         cursor.execute('''UPDATE Info  SET price = %s, address = %s, level = %s, room = %s, living = %s, bath = %s, type = %s, 
         size = %s,renewdate = %s WHERE hId_id = %s''',(Info['price'],Info['address'],Info['level'],Info['room'],Info['living'],
-        Info['bath'],Info['type'],current_date,Info['size'],hId))
+        Info['bath'],Info['type'],Info['size'],current_date,hId))
         cursor.execute('''UPDATE Equipment  SET sofa = %s, tv = %s, washer = %s, wifi = %s, bed = %s, refrigerator = %s, heater = %s, 
         channel4 = %s, cabinet = %s, aircond = %s, gas = %s WHERE hId_id = %s''',(Equip['sofa'], Equip['tv'], Equip['washer'],
         Equip['wifi'], Equip['bed'], Equip['refrigerator'], Equip['heater'], Equip['channel4'], Equip['cabinet'], Equip['aircond'],
@@ -454,6 +450,7 @@ def edit_page_update(request,hId):
         Rdetails['pet'],Rdetails['cook'],Rdetails['direction'],Rdetails['level'],Rdetails['security'],Rdetails['management'],
         Rdetails['period'],Rdetails['bus'],Rdetails['train'],Rdetails['mrt'],Rdetails['age'],hId))
     house = f'/house_rent/{hId}'
+
 
     return redirect(house)
 
@@ -747,9 +744,8 @@ def renew_booking_time(request,booking_seq):
 
     return redirect('/account_center/')
 
-
 def house_list_sold(request):
-    login=0
+    login = 0
     if 'user' in request.session and 'mId' in request.session:
         member = request.session['mId']
         login = 1
@@ -761,7 +757,7 @@ def house_list_sold(request):
     if 'index' in request.GET:
         index = int(request.GET['index'])
     else:
-        index=0
+        index = 0
 
     my_list = ["renewdate", "price", "size"]
     order_by_field = my_list[index]  # 获取列表中的第一个元素作为排序字段
@@ -769,9 +765,12 @@ def house_list_sold(request):
     if 'keyword' in request.POST:
         keyword = request.POST['keyword']
 
-
         query = f"SELECT * FROM Info JOIN House ON Info.hId_id=House.hId AND House.status=1 AND House.available=1 LEFT OUTER JOIN (SELECT * FROM Favourite WHERE Favourite.mId_id={member}) f ON f.hId_id=House.hId WHERE Info.address LIKE '%{keyword}%' ORDER BY Info.{order_by_field}"
         rows = House.objects.raw(query)  # 将变量插入SQL查询中并执行
+
+
+        # query = f"SELECT * FROM Info JOIN House ON Info.hId_id=House.hId AND House.status=1 AND House.available=1 LEFT OUTER JOIN (SELECT * FROM Favourite WHERE Favourite.mId_id={member}) f ON f.hId_id=House.hId WHERE Info.address LIKE '%{keyword}%' ORDER BY Info.{order_by_field}"
+        # rows = House.objects.raw(query)  # 将变量插入SQL查询中并执行
 
         numbers = len(list(rows))  # 转换为列表再计数
 
@@ -781,12 +780,10 @@ def house_list_sold(request):
     else:
         query = f'SELECT * FROM Info JOIN House ON Info.hId_id=House.hId AND House.status=1 AND House.available=1 LEFT OUTER JOIN (SELECT * FROM Favourite WHERE Favourite.mId_id={member}) f ON f.hId_id=House.hId ORDER BY Info.{order_by_field}'
 
-
         rows = House.objects.raw(query)
 
         numbers = len(list(rows))  # 转换为列表再计数
         return render(request, "house/house_list_sold.html", {'numbers': numbers, 'login': login, 'rows': rows})
-
 
 def house_sold(request, hId):
     # House Data
@@ -885,16 +882,18 @@ def add_appointment(request,hId):
     member = request.session['mId']
 
     latest_booking_seq = Booking.objects.aggregate(Max('booking_seq'))['booking_seq__max']
+
     if latest_booking_seq:
         latest_booking_seq = latest_booking_seq + 1
     else:
         latest_booking_seq = 1
-    #
+
     with connection.cursor() as cursor:
         cursor.execute('INSERT INTO Booking VALUES (%s, %s, %s, %s, %s, %s)',
                        (latest_booking_seq, date, time, member, hId, "未確認"))
-    status = Member.objects.raw('SELECT status FROM House WHERE hId=%s', [hId])
 
+    status = House.objects.raw('SELECT * FROM House WHERE hId=%s', [hId])
+    status = status[0].status
     if(status):
         house = f'/house_sold/{hId}'
     else:
@@ -1137,4 +1136,4 @@ def is_taiwan_ip(ip):
 
 def ip_recognize():
     ip = get_current_ip()
-    return is_taiwan_ip(ip)
+    return is_taiwan_ip(ip)ㄋ
